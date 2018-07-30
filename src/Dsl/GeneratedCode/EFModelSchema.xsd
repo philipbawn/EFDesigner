@@ -110,6 +110,21 @@
               </xsd:sequence>
             </xsd:complexType>
           </xsd:element>
+          <!-- Relationship: ModelRootHasModelViews -->
+          <xsd:element name="modelViews" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>Instances of ModelRootHasModelViews</xsd:documentation>
+            </xsd:annotation>
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element ref="modelRootHasModelViews" minOccurs="1" maxOccurs="unbounded">
+                  <xsd:annotation>
+                    <xsd:documentation>[Instance of ModelRootHasModelViews needs to be serialized in full-form]</xsd:documentation>
+                  </xsd:annotation>
+                </xsd:element>
+              </xsd:sequence>
+            </xsd:complexType>
+          </xsd:element>
         </xsd:sequence>
         <!-- Id -->
         <xsd:attribute name="Id" type="xsd:string">
@@ -916,6 +931,38 @@
     </xsd:complexContent>
   </xsd:complexType>
   
+  <!-- ModelView -->
+  <xsd:element name="modelView" type="ModelView" substitutionGroup="namedElement" />
+  <xsd:complexType name="ModelView">
+    <xsd:annotation>
+      <xsd:documentation>Describes the elements present on a diagram</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="NamedElement">
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+        <!-- Property: Name -->
+        <xsd:attribute name="name" type="xsd:string" />
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ModelView Moniker -->
+  <xsd:element name="modelViewMoniker" type="ModelViewMoniker" substitutionGroup="namedElementMoniker" />
+  <xsd:complexType name="ModelViewMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ModelView instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="NamedElementMoniker">
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
   <!-- Association -->
   <xsd:element name="association" abstract="true" type="Association" substitutionGroup="core:modelElement" />
   <xsd:complexType name="Association" abstract="true" >
@@ -1392,6 +1439,46 @@
   <xsd:complexType name="ModelEnumHasValuesMoniker">
     <xsd:annotation>
       <xsd:documentation>Moniker for ModelEnumHasValues instance.</xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElementMoniker">
+        <xsd:attribute name="Id" type="xsd:string" >
+          <xsd:annotation>
+            <xsd:documentation>Attribute to store the moniker string.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ModelRootHasModelViews -->
+  <xsd:element name="modelRootHasModelViews" type="ModelRootHasModelViews" substitutionGroup="core:modelElement" />
+  <xsd:complexType name="ModelRootHasModelViews">
+    <xsd:complexContent>
+      <xsd:extension base="core:ModelElement">
+        <xsd:sequence minOccurs="0" maxOccurs="1">
+          <!-- Target end ModelView -->
+          <xsd:element ref="modelView" minOccurs="1" maxOccurs="1">
+            <xsd:annotation>
+              <xsd:documentation>[Target role-player]</xsd:documentation>
+            </xsd:annotation>
+          </xsd:element>
+        </xsd:sequence>
+        <!-- Id -->
+        <xsd:attribute name="Id" type="xsd:string">
+          <xsd:annotation>
+            <xsd:documentation>Instance Guid of this element, needed because SerializeId is set to true.</xsd:documentation>
+          </xsd:annotation>
+        </xsd:attribute>
+      </xsd:extension>
+    </xsd:complexContent>
+  </xsd:complexType>
+  
+  <!-- ModelRootHasModelViews Moniker -->
+  <xsd:element name="modelRootHasModelViewsMoniker" type="ModelRootHasModelViewsMoniker" substitutionGroup="core:modelElementMoniker" />
+  <xsd:complexType name="ModelRootHasModelViewsMoniker">
+    <xsd:annotation>
+      <xsd:documentation>Moniker for ModelRootHasModelViews instance.</xsd:documentation>
     </xsd:annotation>
     <xsd:complexContent>
       <xsd:extension base="core:ModelElementMoniker">

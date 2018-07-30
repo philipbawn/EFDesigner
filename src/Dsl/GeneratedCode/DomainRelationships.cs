@@ -3919,3 +3919,240 @@ namespace Sawczyn.EFDesigner.EFModel
 		#endregion
 	}
 }
+namespace Sawczyn.EFDesigner.EFModel
+{
+	/// <summary>
+	/// DomainRelationship ModelRootHasModelViews
+	/// Description for Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews
+	/// </summary>
+	[DslDesign::DisplayNameResource("Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews.DisplayName", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+	[DslDesign::DescriptionResource("Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews.Description", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+	[DslModeling::DomainModelOwner(typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel))]
+	[global::System.CLSCompliant(true)]
+	[DslModeling::DomainRelationship(IsEmbedding=true)]
+	[DslModeling::DomainObjectId("218ed74e-4727-4fc7-92ab-d4cc6dbe85c9")]
+	public partial class ModelRootHasModelViews : DslModeling::ElementLink
+	{
+		#region Constructors, domain class Id
+		
+		/// <summary>
+		/// ModelRootHasModelViews domain class Id.
+		/// </summary>
+		public static readonly new global::System.Guid DomainClassId = new global::System.Guid(0x218ed74e, 0x4727, 0x4fc7, 0x92, 0xab, 0xd4, 0xcc, 0x6d, 0xbe, 0x85, 0xc9);
+	
+				
+		/// <summary>
+		/// Constructor
+		/// Creates a ModelRootHasModelViews link in the same Partition as the given ModelRoot
+		/// </summary>
+		/// <param name="source">ModelRoot to use as the source of the relationship.</param>
+		/// <param name="target">ModelView to use as the target of the relationship.</param>
+		public ModelRootHasModelViews(ModelRoot source, ModelView target)
+			: base((source != null ? source.Partition : null), new DslModeling::RoleAssignment[]{new DslModeling::RoleAssignment(ModelRootHasModelViews.ModelRootDomainRoleId, source), new DslModeling::RoleAssignment(ModelRootHasModelViews.ModelViewDomainRoleId, target)}, null)
+		{
+		}
+		
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="store">Store where new link is to be created.</param>
+		/// <param name="roleAssignments">List of relationship role assignments.</param>
+		public ModelRootHasModelViews(DslModeling::Store store, params DslModeling::RoleAssignment[] roleAssignments)
+			: base(store != null ? store.DefaultPartitionForClass(DomainClassId) : null, roleAssignments, null)
+		{
+		}
+		
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="store">Store where new link is to be created.</param>
+		/// <param name="roleAssignments">List of relationship role assignments.</param>
+		/// <param name="propertyAssignments">List of properties assignments to set on the new link.</param>
+		public ModelRootHasModelViews(DslModeling::Store store, DslModeling::RoleAssignment[] roleAssignments, DslModeling::PropertyAssignment[] propertyAssignments)
+			: base(store != null ? store.DefaultPartitionForClass(DomainClassId) : null, roleAssignments, propertyAssignments)
+		{
+		}
+		
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="partition">Partition where new link is to be created.</param>
+		/// <param name="roleAssignments">List of relationship role assignments.</param>
+		public ModelRootHasModelViews(DslModeling::Partition partition, params DslModeling::RoleAssignment[] roleAssignments)
+			: base(partition, roleAssignments, null)
+		{
+		}
+		
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="partition">Partition where new link is to be created.</param>
+		/// <param name="roleAssignments">List of relationship role assignments.</param>
+		/// <param name="propertyAssignments">List of properties assignments to set on the new link.</param>
+		public ModelRootHasModelViews(DslModeling::Partition partition, DslModeling::RoleAssignment[] roleAssignments, DslModeling::PropertyAssignment[] propertyAssignments)
+			: base(partition, roleAssignments, propertyAssignments)
+		{
+		}
+		#endregion
+		#region ModelRoot domain role code
+		
+		/// <summary>
+		/// ModelRoot domain role Id.
+		/// </summary>
+		public static readonly global::System.Guid ModelRootDomainRoleId = new global::System.Guid(0x38bd6d5a, 0xc9f2, 0x4a29, 0x9d, 0x86, 0xfa, 0xf9, 0x8c, 0xb8, 0x02, 0x3c);
+		
+		/// <summary>
+		/// DomainRole ModelRoot
+		/// </summary>
+		[DslDesign::DisplayNameResource("Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews/ModelRoot.DisplayName", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslDesign::DescriptionResource("Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews/ModelRoot.Description", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslModeling::DomainRole(DslModeling::DomainRoleOrder.Source, PropertyName = "ModelViews", PropertyDisplayNameKey="Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews/ModelRoot.PropertyDisplayName",  PropagatesCopy = DslModeling::PropagatesCopyOption.PropagatesCopyToLinkAndOppositeRolePlayer, Multiplicity = DslModeling::Multiplicity.OneMany)]
+		[DslModeling::DomainObjectId("38bd6d5a-c9f2-4a29-9d86-faf98cb8023c")]
+		public virtual ModelRoot ModelRoot
+		{
+			[global::System.Diagnostics.DebuggerStepThrough]
+			get
+			{
+				return (ModelRoot)DslModeling::DomainRoleInfo.GetRolePlayer(this, ModelRootDomainRoleId);
+			}
+			[global::System.Diagnostics.DebuggerStepThrough]
+			set
+			{
+				DslModeling::DomainRoleInfo.SetRolePlayer(this, ModelRootDomainRoleId, value);
+			}
+		}
+				
+		#endregion
+		#region Static methods to access ModelRoot of a ModelView
+		/// <summary>
+		/// Gets ModelRoot.
+		/// </summary>
+		[global::System.Diagnostics.DebuggerStepThrough]
+		[global::System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011")]
+		public static ModelRoot GetModelRoot(ModelView element)
+		{
+			return DslModeling::DomainRoleInfo.GetLinkedElement(element, ModelViewDomainRoleId) as ModelRoot;
+		}
+		
+		/// <summary>
+		/// Sets ModelRoot.
+		/// </summary>
+		[global::System.Diagnostics.DebuggerStepThrough]
+		[global::System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011")]
+		public static void SetModelRoot(ModelView element, ModelRoot newModelRoot)
+		{
+			DslModeling::DomainRoleInfo.SetLinkedElement(element, ModelViewDomainRoleId, newModelRoot);
+		}
+		#endregion
+		#region ModelView domain role code
+		
+		/// <summary>
+		/// ModelView domain role Id.
+		/// </summary>
+		public static readonly global::System.Guid ModelViewDomainRoleId = new global::System.Guid(0x40bdddff, 0xd3ee, 0x4827, 0xa2, 0xd7, 0x48, 0x79, 0xbf, 0xdb, 0xae, 0x08);
+		
+		/// <summary>
+		/// DomainRole ModelView
+		/// </summary>
+		[DslDesign::DisplayNameResource("Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews/ModelView.DisplayName", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslDesign::DescriptionResource("Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews/ModelView.Description", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslModeling::DomainRole(DslModeling::DomainRoleOrder.Target, PropertyName = "ModelRoot", PropertyDisplayNameKey="Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews/ModelView.PropertyDisplayName", PropagatesDelete = true,  PropagatesCopy = DslModeling::PropagatesCopyOption.DoNotPropagateCopy, Multiplicity = DslModeling::Multiplicity.One)]
+		[DslModeling::DomainObjectId("40bdddff-d3ee-4827-a2d7-4879bfdbae08")]
+		public virtual ModelView ModelView
+		{
+			[global::System.Diagnostics.DebuggerStepThrough]
+			get
+			{
+				return (ModelView)DslModeling::DomainRoleInfo.GetRolePlayer(this, ModelViewDomainRoleId);
+			}
+			[global::System.Diagnostics.DebuggerStepThrough]
+			set
+			{
+				DslModeling::DomainRoleInfo.SetRolePlayer(this, ModelViewDomainRoleId, value);
+			}
+		}
+				
+		#endregion
+		#region Static methods to access ModelViews of a ModelRoot
+		/// <summary>
+		/// Gets a list of ModelViews.
+		/// </summary>
+		[global::System.Diagnostics.DebuggerStepThrough]
+		[global::System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011")]
+		public static DslModeling::LinkedElementCollection<ModelView> GetModelViews(ModelRoot element)
+		{
+			return GetRoleCollection<DslModeling::LinkedElementCollection<ModelView>, ModelView>(element, ModelRootDomainRoleId);
+		}
+		#endregion
+		#region ModelRoot link accessor
+		/// <summary>
+		/// Get the list of ModelRootHasModelViews links to a ModelRoot.
+		/// </summary>
+		[global::System.Diagnostics.DebuggerStepThrough]
+		[global::System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011")]
+		public static global::System.Collections.ObjectModel.ReadOnlyCollection<global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews> GetLinksToModelViews ( global::Sawczyn.EFDesigner.EFModel.ModelRoot modelRootInstance )
+		{
+			return DslModeling::DomainRoleInfo.GetElementLinks<global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews>(modelRootInstance, global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews.ModelRootDomainRoleId);
+		}
+		#endregion
+		#region ModelView link accessor
+		/// <summary>
+		/// Get the ModelRootHasModelViews link to a ModelView.
+		/// </summary>
+		[global::System.Diagnostics.DebuggerStepThrough]
+		[global::System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011")]
+		public static global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews GetLinkToModelRoot (global::Sawczyn.EFDesigner.EFModel.ModelView modelViewInstance)
+		{
+			global::System.Collections.Generic.IList<global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews> links = DslModeling::DomainRoleInfo.GetElementLinks<global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews>(modelViewInstance, global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews.ModelViewDomainRoleId);
+			global::System.Diagnostics.Debug.Assert(links.Count <= 1, "Multiplicity of ModelView not obeyed.");
+			if ( links.Count == 0 )
+			{
+				return null;
+			}
+			else
+			{
+				return links[0];
+			}
+		}
+		#endregion
+		#region ModelRootHasModelViews instance accessors
+		
+		/// <summary>
+		/// Get any ModelRootHasModelViews links between a given ModelRoot and a ModelView.
+		/// </summary>
+		[global::System.Diagnostics.DebuggerStepThrough]
+		[global::System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011")]
+		public static global::System.Collections.ObjectModel.ReadOnlyCollection<global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews> GetLinks( global::Sawczyn.EFDesigner.EFModel.ModelRoot source, global::Sawczyn.EFDesigner.EFModel.ModelView target )
+		{
+			global::System.Collections.Generic.List<global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews> outLinks = new global::System.Collections.Generic.List<global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews>();
+			global::System.Collections.Generic.IList<global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews> links = DslModeling::DomainRoleInfo.GetElementLinks<global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews>(source, global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews.ModelRootDomainRoleId);
+			foreach ( global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews link in links )
+			{
+				if ( target.Equals(link.ModelView) )
+				{
+					outLinks.Add(link);
+				}
+			}
+			return outLinks.AsReadOnly();
+		}
+		/// <summary>
+		/// Get the one ModelRootHasModelViews link between a given ModelRootand a ModelView.
+		/// </summary>
+		[global::System.Diagnostics.DebuggerStepThrough]
+		[global::System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1011")]
+		public static global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews GetLink( global::Sawczyn.EFDesigner.EFModel.ModelRoot source, global::Sawczyn.EFDesigner.EFModel.ModelView target )
+		{
+			global::System.Collections.Generic.IList<global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews> links = DslModeling::DomainRoleInfo.GetElementLinks<global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews>(source, global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews.ModelRootDomainRoleId);
+			foreach ( global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews link in links )
+			{
+				if ( target.Equals(link.ModelView) )
+				{
+					return link;
+				}
+			}
+			return null;
+		}
+		
+		#endregion
+	}
+}

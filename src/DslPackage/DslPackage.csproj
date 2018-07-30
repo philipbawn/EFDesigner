@@ -196,17 +196,14 @@
     <Compile Include="CustomCode\AddCodeForm.Designer.cs">
       <DependentUpon>AddCodeForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="CustomCode\CommandSet.cs" />
-    <Compile Include="CustomCode\EFModelDocData.cs" />
+    <Compile Include="CustomCode\Partials\CommandSet.cs" />
+    <Compile Include="CustomCode\Constants.cs" />
+    <Compile Include="CustomCode\Partials\EFModelDocData.cs" />
     <Compile Include="CustomCode\Extensions\ProjectExtensions.cs" />
-    <Compile Include="CustomCode\FindForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="CustomCode\FindForm.Designer.cs">
-      <DependentUpon>FindForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CustomCode\Package.cs" />
+    <Compile Include="CustomCode\Partials\Package.cs" />
     <Compile Include="CustomCode\Messages.cs" />
+    <Compile Include="CustomCode\Partials\EFModelDocView.cs" />
+    <Compile Include="CustomCode\Partials\EFModelEditorFactory.cs" />
     <Compile Include="CustomCode\Partials\EFModelExplorerToolWindow.cs" />
     <Compile Include="GeneratedCode\CommandSet.cs">
       <AutoGen>True</AutoGen>
@@ -393,9 +390,6 @@
   <ItemGroup>
     <EmbeddedResource Include="CustomCode\AddCodeForm.resx">
       <DependentUpon>AddCodeForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CustomCode\FindForm.resx">
-      <DependentUpon>FindForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="VSPackage.resx">
       <SubType>Designer</SubType>

@@ -7,17 +7,21 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 using EnvDTE;
+
 using EnvDTE80;
 
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.Modeling;
+using Microsoft.VisualStudio.Modeling.Diagrams;
+using Microsoft.VisualStudio.Modeling.Shell;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Modeling;
-using Microsoft.VisualStudio.Modeling.Shell;
 
 using NuGet.VisualStudio;
 
 using Sawczyn.EFDesigner.EFModel.DslPackage.CustomCode;
+
 using VSLangProj;
 
 namespace Sawczyn.EFDesigner.EFModel
@@ -32,7 +36,6 @@ namespace Sawczyn.EFDesigner.EFModel
       private IVsPackageUninstaller _nugetUninstaller;
       private IVsPackageInstallerServices _nugetInstallerServices;
 
-
       private static DTE Dte => _dte ?? (_dte = Package.GetGlobalService(typeof(DTE)) as DTE);
       private static DTE2 Dte2 => _dte2 ?? (_dte2 = Package.GetGlobalService(typeof(SDTE)) as DTE2);
       private IComponentModel ComponentModel => _componentModel ?? (_componentModel = (IComponentModel)GetService(typeof(SComponentModel)));
@@ -45,27 +48,7 @@ namespace Sawczyn.EFDesigner.EFModel
                                                  ? activeSolutionProjects.GetValue(0) as Project
                                                  : null;
 
-      public static IEnumerable<string> GetSelectedSourceFilePaths()
-      {
-         List<string> result = new List<string>();
-         UIHierarchy uiHierarchy = Dte2.ToolWindows.SolutionExplorer;
-         Array selectedItems = (Array)uiHierarchy.SelectedItems;
-
-         if (selectedItems != null)
-         {
-            foreach (UIHierarchyItem selectedItem in selectedItems)
-            {
-               if (selectedItem.Object is ProjectItem projectItem)
-               {
-                  string filename = projectItem.Properties.Item("FullPath").Value.ToString();
-                  if (filename.ToLower().EndsWith(".cs"))
-                     result.Add(filename);
-               }
-            }
-         }
-
-         return result;
-      }
+      protected override string DiagramExtension => Constants.DiagramxExtension;
 
       internal static void GenerateCode(string filepath = null)
       {
@@ -97,26 +80,39 @@ namespace Sawczyn.EFDesigner.EFModel
          WarningDisplay.RegisterDisplayHandler(ShowWarning);
          QuestionDisplay.RegisterDisplayHandler(ShowBooleanQuestionBox);
 
-         if (!(RootElement is ModelRoot modelRoot)) return;
+         if (!(RootElement is ModelRoot modelRoot))
+            return;
 
-         if (NuGetInstaller == null || NuGetUninstaller == null || NuGetInstallerServices == null)
+         IList<PresentationElement> presentationElementList = PresentationViewsSubject.GetPresentation(modelRoot);
+
+         foreach (EFModelDiagram diagram in presentationElementList.Select(x => x as EFModelDiagram))
+            diagram?.SubscribeCompartmentItemsEvents();
+
+         if (NuGetInstaller == null
+          || NuGetUninstaller == null
+          || NuGetInstallerServices == null)
             ModelRoot.CanLoadNugetPackages = false;
 
          // set to the project's namespace if no namespace set
          if (string.IsNullOrEmpty(modelRoot.Namespace))
          {
-            using (Transaction tx = modelRoot.Store.TransactionManager.BeginTransaction("SetDefaultNamespace"))
+            using (Transaction tx =
+                modelRoot.Store.TransactionManager.BeginTransaction("SetDefaultNamespace"))
             {
-               modelRoot.Namespace = ActiveProject.Properties.Item("DefaultNamespace")?.Value as string;
+               modelRoot.Namespace =
+                   ActiveProject.Properties.Item("DefaultNamespace")?.Value as string;
+
                tx.Commit();
             }
          }
 
-         ReadOnlyCollection<Association> associations = modelRoot.Store.ElementDirectory.FindElements<Association>();
+         ReadOnlyCollection<Association> associations =
+             modelRoot.Store.ElementDirectory.FindElements<Association>();
 
          if (associations.Any())
          {
-            using (Transaction tx = modelRoot.Store.TransactionManager.BeginTransaction("StyleConnectors"))
+            using (Transaction tx =
+                modelRoot.Store.TransactionManager.BeginTransaction("StyleConnectors"))
             {
                // style association connectors if needed
                foreach (Association element in associations)
@@ -130,6 +126,8 @@ namespace Sawczyn.EFDesigner.EFModel
 
                tx.Commit();
             }
+
+            ErrorHandler.ThrowOnFailure(SetDocDataDirty(0));
          }
 
          List<GeneralizationConnector> generalizationConnectors = modelRoot.Store.ElementDirectory.FindElements<GeneralizationConnector>().Where(x => !x.FromShape.IsVisible || !x.ToShape.IsVisible).ToList();
@@ -148,6 +146,8 @@ namespace Sawczyn.EFDesigner.EFModel
 
                tx.Commit();
             }
+
+            ErrorHandler.ThrowOnFailure(SetDocDataDirty(0));
          }
       }
 
@@ -195,12 +195,201 @@ namespace Sawczyn.EFDesigner.EFModel
 
          if (RootElement is ModelRoot modelRoot)
          {
+            base.OnDocumentSaved(e);
+
             // if false, don't even check
             if (modelRoot.InstallNuGetPackages != AutomaticAction.False)
                EnsureCorrectNuGetPackages(modelRoot, false);
 
             if (modelRoot.TransformOnSave)
                GenerateCode(((DocumentSavedEventArgs)e).NewFileName);
+         }
+      }
+
+      /// <summary>
+      /// Saves the given file.
+      /// </summary>
+      protected override void Save(string fileName)
+      {
+         SerializationResult serializationResult = new SerializationResult();
+         ModelRoot modelRoot = (ModelRoot)RootElement;
+
+         // Only save the diagrams if
+         // a) There are any to save
+         // b) This is NOT a SaveAs operation.  SaveAs should allow the subordinate document to control the save of its data as it is writing a new file.
+         //    Except DO save the diagram on SaveAs if there isn't currently a diagram as there won't be a subordinate document yet to save it.
+
+         bool saveAs = StringComparer.OrdinalIgnoreCase.Compare(fileName, FileName) != 0;
+
+         IList<PresentationElement> presentationElementList = PresentationViewsSubject.GetPresentation(modelRoot);
+         Diagram[] diagramList = presentationElementList.OfType<Diagram>().ToArray();
+
+         if (diagramList.Length > 0 && (!saveAs || diagramDocumentLockHolder == null))
+         {
+            string diagramxFileName = fileName + Constants.DiagramxExtension;
+            try
+            {
+               SuspendFileChangeNotification(diagramxFileName);
+               EFModelSerializationHelper.Instance.SaveModelAndDiagrams(serializationResult, RootElement, fileName, diagramList, diagramxFileName, Encoding, false);
+            }
+            finally
+            {
+               ResumeFileChangeNotification(diagramxFileName);
+            }
+         }
+         else
+         {
+            EFModelSerializationHelper.Instance.SaveModel(serializationResult, modelRoot, fileName, Encoding, false);
+         }
+
+         // Report serialization messages.
+         SuspendErrorListRefresh();
+         try
+         {
+            foreach (SerializationMessage serializationMessage in serializationResult)
+            {
+               AddErrorListItem(new SerializationErrorListItem(ServiceProvider, serializationMessage));
+            }
+         }
+         finally
+         {
+            ResumeErrorListRefresh();
+         }
+
+         if (serializationResult.Failed)
+            throw new InvalidOperationException(EFModelDomainModel.SingletonResourceManager.GetString("CannotSaveDocument"));
+      }
+
+      /// <summary>Called to open a particular view on this DocData.</summary>
+      /// <param name="viewContext">Object that gives further context about the view to open.  The editor factory that
+      /// supports the given logical view must be able to interpret this object.</param>
+      /// <param name="logicalView">Guid that specifies the view to open.  Must match the value specified in the
+      /// registry for the editor that supports this view.</param>
+      public override void OpenView(Guid logicalView, object viewContext)
+      {
+         if (viewContext is string context)
+         {
+            Diagram diagram = Store.ElementDirectory.FindElements<Diagram>().SingleOrDefault(d => d.Name == context);
+
+            if (diagram == null)
+            {
+               using (Transaction transaction = Store.TransactionManager.BeginTransaction("DocData.OpenView", true))
+               {
+                  diagram = new EFModelDiagram(Store, new PropertyAssignment(Diagram.NameDomainPropertyId, context)) { ModelElement = RootElement };
+                  transaction.Commit();
+               }
+            }
+
+            base.OpenView(logicalView, diagram);
+         }
+         else
+            base.OpenView(logicalView, viewContext);
+      }
+
+      /// <summary>
+      /// Save the given document that is subordinate to this document.
+      /// </summary>
+      /// <param name="subordinateDocument"></param>
+      /// <param name="fileName"></param>
+      protected override void SaveSubordinateFile(DocData subordinateDocument, string fileName)
+      {
+         // In this case, the only subordinate is the diagram.
+         SerializationResult serializationResult = new SerializationResult();
+         Diagram[] diagrams = PresentationViewsSubject.GetPresentation(RootElement).OfType<Diagram>().ToArray();
+
+         if (diagrams.Length > 0)
+         {
+            try
+            {
+               SuspendFileChangeNotification(fileName);
+               EFModelSerializationHelper.Instance.SaveDiagrams(serializationResult, diagrams, fileName, Encoding, false);
+            }
+            finally
+            {
+               ResumeFileChangeNotification(fileName);
+            }
+         }
+
+         // Report serialization messages.
+         SuspendErrorListRefresh();
+         try
+         {
+            foreach (SerializationMessage serializationMessage in serializationResult)
+               AddErrorListItem(new SerializationErrorListItem(ServiceProvider, serializationMessage));
+         }
+         finally
+         {
+            ResumeErrorListRefresh();
+         }
+
+         if (serializationResult.Failed)
+            throw new InvalidOperationException(EFModelDomainModel.SingletonResourceManager.GetString("CannotSaveDocument"));
+
+         NotifySubordinateDocumentSaved(subordinateDocument.FileName, fileName);
+      }
+
+      protected override void Load(string fileName, bool isReload)
+      {
+         SerializationResult serializationResult = new SerializationResult();
+         ISchemaResolver schemaResolver = new ModelingSchemaResolver(ServiceProvider);
+        
+         //clear the current root element
+         SetRootElement(null);
+        
+         // Enable diagram fixup rules in our store, because we will load diagram data.
+         EFModelDomainModel.EnableDiagramRules(Store);
+         string diagramFileName = fileName + DiagramExtension;
+
+         ModelRoot modelRoot = EFModelSerializationHelper.Instance.LoadModelAndDiagrams(serializationResult, GetModelPartition().Store, fileName, diagramFileName, schemaResolver, ValidationController, SerializerLocator);
+
+         // Report serialization messages.
+         SuspendErrorListRefresh();
+         try
+         {
+            foreach (SerializationMessage serializationMessage in serializationResult)
+            {
+               AddErrorListItem(new SerializationErrorListItem(ServiceProvider, serializationMessage));
+            }
+         }
+         finally
+         {
+            ResumeErrorListRefresh();
+         }
+
+         if (serializationResult.Failed)
+         {
+            // Load failed, can't open the file.
+            throw new InvalidOperationException(EFModelDomainModel.SingletonResourceManager.GetString("CannotOpenDocument"));
+         }
+         else
+         {
+            SetRootElement(modelRoot);
+
+            // Attempt to set the encoding
+            if (serializationResult.Encoding != null)
+            {
+               ModelingDocStore.SetEncoding(serializationResult.Encoding);
+               ErrorHandler.ThrowOnFailure(SetDocDataDirty(0)); // Setting the encoding will mark the document as dirty, so clear the dirty flag.
+            }
+
+            if (Hierarchy != null && File.Exists(diagramFileName))
+            {
+               // Add a lock to the subordinate diagram file.
+               if (diagramDocumentLockHolder == null)
+               {
+                  uint itemId = SubordinateFileHelper.GetChildProjectItemId(Hierarchy, ItemId, DiagramExtension);
+                  if (itemId != VSConstants.VSITEMID_NIL)
+                  {
+                     diagramDocumentLockHolder = SubordinateFileHelper.LockSubordinateDocument(ServiceProvider, this, diagramFileName, itemId);
+                     if (diagramDocumentLockHolder == null)
+                     {
+                        throw new InvalidOperationException(string.Format(System.Globalization.CultureInfo.CurrentCulture,
+                                       EFModelDomainModel.SingletonResourceManager.GetString("CannotCloseExistingDiagramDocument"),
+                                       diagramFileName));
+                     }
+                  }
+               }
+            }
          }
       }
 
@@ -268,9 +457,9 @@ namespace Sawczyn.EFDesigner.EFModel
          Version currentPackageVersion = new Version(versionInfo.CurrentPackageVersion);
          Version targetPackageVersion = new Version(versionInfo.TargetPackageVersion);
 
-         return ModelRoot.CanLoadNugetPackages && 
-                (versionInfo.CurrentPackageId != versionInfo.TargetPackageId || currentPackageVersion != targetPackageVersion) && 
-                (modelRoot.InstallNuGetPackages == AutomaticAction.True || 
+         return ModelRoot.CanLoadNugetPackages &&
+                (versionInfo.CurrentPackageId != versionInfo.TargetPackageId || currentPackageVersion != targetPackageVersion) &&
+                (modelRoot.InstallNuGetPackages == AutomaticAction.True ||
                  ShowQuestionBox($"Referenced libraries don't match Entity Framework {modelRoot.NuGetPackageVersion.ActualPackageVersion}. Fix that now?") == DialogResult.Yes);
       }
 
@@ -278,12 +467,15 @@ namespace Sawczyn.EFDesigner.EFModel
       {
 
          EFVersionDetails versionInfo = new EFVersionDetails
-                                        {
-                                           TargetPackageId = modelRoot.NuGetPackageVersion.PackageId
-                                         , TargetPackageVersion = modelRoot.NuGetPackageVersion.ActualPackageVersion
-                                         , CurrentPackageId = null
-                                         , CurrentPackageVersion = null
-                                        };
+         {
+            TargetPackageId = modelRoot.NuGetPackageVersion.PackageId
+                                         ,
+            TargetPackageVersion = modelRoot.NuGetPackageVersion.ActualPackageVersion
+                                         ,
+            CurrentPackageId = null
+                                         ,
+            CurrentPackageVersion = null
+         };
 
          References references = ((VSProject)ActiveProject.Object).References;
 

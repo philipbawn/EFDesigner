@@ -221,6 +221,7 @@
     <Compile Include="CustomCode\Partials\ModelEnumValue.cs" />
     <Compile Include="CustomCode\Partials\ModelRoot.cs" />
     <Compile Include="CustomCode\Partials\ModelRootTypeDescriptor.cs" />
+    <Compile Include="CustomCode\Rules\FixupDiagramIOnElementAddedRule.cs" />
     <Compile Include="CustomCode\Rules\ModelAttributeAddRules.cs" />
     <Compile Include="CustomCode\Utilities\FileDropHelper.cs" />
     <Compile Include="CustomCode\Utilities\Nuget\NuGetHelper.cs" />
@@ -239,14 +240,14 @@
     <Compile Include="CustomCode\Rules\ModelRootChangeRules.cs" />
     <Compile Include="CustomCode\Rules\RuleRegistrations.cs" />
     <Compile Include="CustomCode\Utilities\AttributeParser.cs" />
-    <Compile Include="CustomCode\Utilities\QuestionDisplay.cs" />
+    <Compile Include="CustomCode\Utilities\UI\QuestionDisplay.cs" />
     <Compile Include="CustomCode\Utilities\TypeConverters\BaseClassTypeConverter.cs" />
     <Compile Include="CustomCode\Utilities\TypeConverters\CollectionTypeTypeConverter.cs" />
     <Compile Include="CustomCode\Partials\ModelClassTypeDescriptor.cs" />
     <Compile Include="CustomCode\Utilities\ConnectionStringEditor.cs" />
     <Compile Include="CustomCode\Utilities\EFCoreValidator.cs" />
     <Compile Include="CustomCode\Utilities\TypeConverters\EFPackageVersionTypeConverter.cs" />
-    <Compile Include="CustomCode\Utilities\ErrorDisplay.cs" />
+    <Compile Include="CustomCode\Utilities\UI\ErrorDisplay.cs" />
     <Compile Include="CustomCode\Utilities\TypeConverters\IdentityAttributeTypeTypeConverter.cs" />
     <Compile Include="CustomCode\Utilities\NameProviders\ModelAttributeNameProvider.cs" />
     <Compile Include="CustomCode\Utilities\NameProviders\ModelClassNameProvider.cs" />
@@ -267,9 +268,9 @@
     <Compile Include="CustomCode\Utilities\TypeConverters\SourceMultiplicityTypeConverter.cs" />
     <Compile Include="CustomCode\Utilities\TypeConverters\TargetMultiplicityTypeConverter.cs" />
     <Compile Include="CustomCode\Utilities\TrackingHelper.cs" />
-    <Compile Include="CustomCode\Utilities\EFModelSerializationHelperBase.cs" />
+    <Compile Include="CustomCode\Partials\EFModelSerializationHelperBase.cs" />
     <Compile Include="CustomCode\Utilities\TypeConverters\TypeConverterBase.cs" />
-    <Compile Include="CustomCode\Utilities\WarningDisplay.cs" />
+    <Compile Include="CustomCode\Utilities\UI\WarningDisplay.cs" />
     <Compile Include="GeneratedCode\Serializer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

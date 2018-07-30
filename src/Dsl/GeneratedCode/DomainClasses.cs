@@ -236,25 +236,27 @@ namespace Sawczyn.EFDesigner.EFModel
 		/// ModelRoot domain class Id.
 		/// </summary>
 		public static readonly new global::System.Guid DomainClassId = new global::System.Guid(0x95532cb8, 0x3452, 0x4b09, 0xa6, 0x54, 0xae, 0xb2, 0xe2, 0xd0, 0xb3, 0xad);
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="store">Store where new element is to be created.</param>
-		/// <param name="propertyAssignments">List of domain property id/value pairs to set once the element is created.</param>
-		public ModelRoot(DslModeling::Store store, params DslModeling::PropertyAssignment[] propertyAssignments)
-			: this(store != null ? store.DefaultPartitionForClass(DomainClassId) : null, propertyAssignments)
-		{
-		}
-		
-		/// <summary>
-		/// Constructor
-		/// </summary>
-		/// <param name="partition">Partition where new element is to be created.</param>
-		/// <param name="propertyAssignments">List of domain property id/value pairs to set once the element is created.</param>
-		public ModelRoot(DslModeling::Partition partition, params DslModeling::PropertyAssignment[] propertyAssignments)
-			: base(partition, propertyAssignments)
-		{
-		}
+		// Constructors were not generated for this class because it had HasCustomConstructor
+		// set to true. Please provide the constructors below in a partial class.
+		///// <summary>
+		///// Constructor
+		///// </summary>
+		///// <param name="store">Store where new element is to be created.</param>
+		///// <param name="propertyAssignments">List of domain property id/value pairs to set once the element is created.</param>
+		//public ModelRoot(DslModeling::Store store, params DslModeling::PropertyAssignment[] propertyAssignments)
+		//	: this(store != null ? store.DefaultPartitionForClass(DomainClassId) : null, propertyAssignments)
+		//{
+		//}
+		//
+		///// <summary>
+		///// Constructor
+		///// </summary>
+		///// <param name="partition">Partition where new element is to be created.</param>
+		///// <param name="propertyAssignments">List of domain property id/value pairs to set once the element is created.</param>
+		//public ModelRoot(DslModeling::Partition partition, params DslModeling::PropertyAssignment[] propertyAssignments)
+		//	: base(partition, propertyAssignments)
+		//{
+		//}
 		#endregion
 		#region LazyLoadingEnabled domain property code
 		
@@ -2793,6 +2795,20 @@ namespace Sawczyn.EFDesigner.EFModel
 			}
 		}
 		#endregion
+		#region ModelViews opposite domain role accessor
+		
+		/// <summary>
+		/// Gets a list of ModelViews.
+		/// </summary>
+		public virtual DslModeling::LinkedElementCollection<ModelView> ModelViews
+		{
+			[global::System.Diagnostics.DebuggerStepThrough]
+			get
+			{
+				return GetRoleCollection<DslModeling::LinkedElementCollection<ModelView>, ModelView>(global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews.ModelRootDomainRoleId);
+			}
+		}
+		#endregion
 		#region ElementGroupPrototype Merge methods
 		/// <summary>
 		/// Returns a value indicating whether the source element represented by the
@@ -2819,6 +2835,11 @@ namespace Sawczyn.EFDesigner.EFModel
 				}
 				
 				if (rootElementDomainInfo.IsDerivedFrom(global::Sawczyn.EFDesigner.EFModel.ModelEnum.DomainClassId)) 
+				{
+					return true;
+				}
+				
+				if (rootElementDomainInfo.IsDerivedFrom(global::Sawczyn.EFDesigner.EFModel.ModelView.DomainClassId)) 
 				{
 					return true;
 				}
@@ -2870,11 +2891,20 @@ namespace Sawczyn.EFDesigner.EFModel
 				return;
 			}
 				
-			global::Sawczyn.EFDesigner.EFModel.Comment sourceComment3 = sourceElement as global::Sawczyn.EFDesigner.EFModel.Comment;
-			if (sourceComment3 != null)
+			global::Sawczyn.EFDesigner.EFModel.ModelView sourceModelView3 = sourceElement as global::Sawczyn.EFDesigner.EFModel.ModelView;
+			if (sourceModelView3 != null)
+			{
+				// Create link for path ModelRootHasModelViews.ModelViews
+				this.ModelViews.Add(sourceModelView3);
+
+				return;
+			}
+				
+			global::Sawczyn.EFDesigner.EFModel.Comment sourceComment4 = sourceElement as global::Sawczyn.EFDesigner.EFModel.Comment;
+			if (sourceComment4 != null)
 			{
 				// Create link for path ModelRootHasComments.Comments
-				this.Comments.Add(sourceComment3);
+				this.Comments.Add(sourceComment4);
 
 				return;
 			}
@@ -2929,12 +2959,26 @@ namespace Sawczyn.EFDesigner.EFModel
 				return;
 			}
 				
-			global::Sawczyn.EFDesigner.EFModel.Comment sourceComment3 = sourceElement as global::Sawczyn.EFDesigner.EFModel.Comment;
-			if (sourceComment3 != null)
+			global::Sawczyn.EFDesigner.EFModel.ModelView sourceModelView3 = sourceElement as global::Sawczyn.EFDesigner.EFModel.ModelView;
+			if (sourceModelView3 != null)
+			{
+				// Delete link for path ModelRootHasModelViews.ModelViews
+				
+				foreach (DslModeling::ElementLink link in global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews.GetLinks((global::Sawczyn.EFDesigner.EFModel.ModelRoot)this, sourceModelView3))
+				{
+					// Delete the link, but without possible delete propagation to the element since it's moving to a new location.
+					link.Delete(global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews.ModelRootDomainRoleId, global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews.ModelViewDomainRoleId);
+				}
+
+				return;
+			}
+				
+			global::Sawczyn.EFDesigner.EFModel.Comment sourceComment4 = sourceElement as global::Sawczyn.EFDesigner.EFModel.Comment;
+			if (sourceComment4 != null)
 			{
 				// Delete link for path ModelRootHasComments.Comments
 				
-				foreach (DslModeling::ElementLink link in global::Sawczyn.EFDesigner.EFModel.ModelRootHasComments.GetLinks((global::Sawczyn.EFDesigner.EFModel.ModelRoot)this, sourceComment3))
+				foreach (DslModeling::ElementLink link in global::Sawczyn.EFDesigner.EFModel.ModelRootHasComments.GetLinks((global::Sawczyn.EFDesigner.EFModel.ModelRoot)this, sourceComment4))
 				{
 					// Delete the link, but without possible delete propagation to the element since it's moving to a new location.
 					link.Delete(global::Sawczyn.EFDesigner.EFModel.ModelRootHasComments.ModelRootDomainRoleId, global::Sawczyn.EFDesigner.EFModel.ModelRootHasComments.CommentDomainRoleId);
@@ -8067,6 +8111,155 @@ namespace Sawczyn.EFDesigner.EFModel
 			set
 			{
 				DslModeling::DomainRoleInfo.SetLinkedElement(this, global::Sawczyn.EFDesigner.EFModel.ModelEnumHasValues.ValueDomainRoleId, value);
+			}
+		}
+		#endregion
+	}
+}
+namespace Sawczyn.EFDesigner.EFModel
+{
+	/// <summary>
+	/// DomainClass ModelView
+	/// Describes the elements present on a diagram
+	/// </summary>
+	[DslDesign::DisplayNameResource("Sawczyn.EFDesigner.EFModel.ModelView.DisplayName", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+	[DslDesign::DescriptionResource("Sawczyn.EFDesigner.EFModel.ModelView.Description", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+	[DslModeling::DomainModelOwner(typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel))]
+	[global::System.CLSCompliant(true)]
+	[global::System.Diagnostics.DebuggerDisplay("{GetType().Name,nq} (Name = {namePropertyStorage})")]
+	[DslModeling::DomainObjectId("ae45943a-5a79-4f3a-a69a-9b5ab95690a3")]
+	public partial class ModelView : NamedElement
+	{
+		#region Constructors, domain class Id
+	
+		/// <summary>
+		/// ModelView domain class Id.
+		/// </summary>
+		public static readonly new global::System.Guid DomainClassId = new global::System.Guid(0xae45943a, 0x5a79, 0x4f3a, 0xa6, 0x9a, 0x9b, 0x5a, 0xb9, 0x56, 0x90, 0xa3);
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="store">Store where new element is to be created.</param>
+		/// <param name="propertyAssignments">List of domain property id/value pairs to set once the element is created.</param>
+		public ModelView(DslModeling::Store store, params DslModeling::PropertyAssignment[] propertyAssignments)
+			: this(store != null ? store.DefaultPartitionForClass(DomainClassId) : null, propertyAssignments)
+		{
+		}
+		
+		/// <summary>
+		/// Constructor
+		/// </summary>
+		/// <param name="partition">Partition where new element is to be created.</param>
+		/// <param name="propertyAssignments">List of domain property id/value pairs to set once the element is created.</param>
+		public ModelView(DslModeling::Partition partition, params DslModeling::PropertyAssignment[] propertyAssignments)
+			: base(partition, propertyAssignments)
+		{
+		}
+		#endregion
+		#region Name domain property code
+		
+		/// <summary>
+		/// Name domain property Id.
+		/// </summary>
+		public static readonly global::System.Guid NameDomainPropertyId = new global::System.Guid(0xc3e8d08e, 0x53be, 0x4e8e, 0x8e, 0x0b, 0x5d, 0xfa, 0xd9, 0xdf, 0x5b, 0xc6);
+		
+		/// <summary>
+		/// Storage for Name
+		/// </summary>
+		private global::System.String namePropertyStorage = string.Empty;
+		
+		/// <summary>
+		/// Gets or sets the value of Name domain property.
+		/// </summary>
+		[DslDesign::DisplayNameResource("Sawczyn.EFDesigner.EFModel.ModelView/Name.DisplayName", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslDesign::CategoryResource("Sawczyn.EFDesigner.EFModel.ModelView/Name.Category", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslDesign::DescriptionResource("Sawczyn.EFDesigner.EFModel.ModelView/Name.Description", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[global::System.ComponentModel.DefaultValue("")]
+		[DslModeling::ElementName]
+		[DslModeling::DomainObjectId("c3e8d08e-53be-4e8e-8e0b-5dfad9df5bc6")]
+		public global::System.String Name
+		{
+			[global::System.Diagnostics.DebuggerStepThrough]
+			get
+			{
+				return namePropertyStorage;
+			}
+			[global::System.Diagnostics.DebuggerStepThrough]
+			set
+			{
+				NamePropertyHandler.Instance.SetValue(this, value);
+			}
+		}
+		/// <summary>
+		/// Value handler for the ModelView.Name domain property.
+		/// </summary>
+		internal sealed partial class NamePropertyHandler : DslModeling::DomainPropertyValueHandler<ModelView, global::System.String>
+		{
+			private NamePropertyHandler() { }
+		
+			/// <summary>
+			/// Gets the singleton instance of the ModelView.Name domain property value handler.
+			/// </summary>
+			public static readonly NamePropertyHandler Instance = new NamePropertyHandler();
+		
+			/// <summary>
+			/// Gets the Id of the ModelView.Name domain property.
+			/// </summary>
+			public sealed override global::System.Guid DomainPropertyId
+			{
+				[global::System.Diagnostics.DebuggerStepThrough]
+				get
+				{
+					return NameDomainPropertyId;
+				}
+			}
+			
+			/// <summary>
+			/// Gets a strongly-typed value of the property on specified element.
+			/// </summary>
+			/// <param name="element">Element which owns the property.</param>
+			/// <returns>Property value.</returns>
+			public override sealed global::System.String GetValue(ModelView element)
+			{
+				if (element == null) throw new global::System.ArgumentNullException("element");
+				return element.namePropertyStorage;
+			}
+		
+			/// <summary>
+			/// Sets property value on an element.
+			/// </summary>
+			/// <param name="element">Element which owns the property.</param>
+			/// <param name="newValue">New property value.</param>
+			public override sealed void SetValue(ModelView element, global::System.String newValue)
+			{
+				if (element == null) throw new global::System.ArgumentNullException("element");
+		
+				global::System.String oldValue = GetValue(element);
+				if (newValue != oldValue)
+				{
+					ValueChanging(element, oldValue, newValue);
+					element.namePropertyStorage = newValue;
+					ValueChanged(element, oldValue, newValue);
+				}
+			}
+		}
+		
+		#endregion
+		#region ModelRoot opposite domain role accessor
+		/// <summary>
+		/// Gets or sets ModelRoot.
+		/// </summary>
+		public virtual ModelRoot ModelRoot
+		{
+			[global::System.Diagnostics.DebuggerStepThrough]
+			get
+			{
+				return DslModeling::DomainRoleInfo.GetLinkedElement(this, global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews.ModelViewDomainRoleId) as ModelRoot;
+			}
+			[global::System.Diagnostics.DebuggerStepThrough]
+			set
+			{
+				DslModeling::DomainRoleInfo.SetLinkedElement(this, global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelViews.ModelViewDomainRoleId, value);
 			}
 		}
 		#endregion

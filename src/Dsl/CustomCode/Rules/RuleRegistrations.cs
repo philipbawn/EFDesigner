@@ -10,6 +10,7 @@ namespace Sawczyn.EFDesigner.EFModel
       {
          typeof(AssociationAddRules),
          typeof(AssociationChangeRules),
+         typeof(FixupDiagramIOnElementAddedRule),
          typeof(GeneralizationAddRules),
          typeof(GeneralizationChangeRules),
          typeof(ModelAttributeAddRules),

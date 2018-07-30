@@ -2,46 +2,73 @@
 using System.Data.Entity.Design.PluralizationServices;
 using System.Globalization;
 using System.Linq;
+
+using Microsoft.VisualStudio.Modeling;
 using Microsoft.VisualStudio.Modeling.Validation;
 
 namespace Sawczyn.EFDesigner.EFModel
 {
-   [ValidationState(ValidationState.Enabled)]
-   public partial class ModelRoot
-   {
-      public static readonly PluralizationService PluralizationService;
+    [ValidationState(ValidationState.Enabled)]
+    public partial class ModelRoot
+    {
+        public static readonly PluralizationService PluralizationService;
 
-      static ModelRoot()
-      {
-         try
-         {
-            PluralizationService = PluralizationService.CreateService(CultureInfo.CurrentCulture);
-         }
-         catch (NotImplementedException)
-         {
-            PluralizationService = null;
-         }
-      }
+        static ModelRoot()
+        {
+            try
+            {
+                PluralizationService = PluralizationService.CreateService(CultureInfo.CurrentCulture);
+            }
+            catch (NotImplementedException)
+            {
+                PluralizationService = null;
+            }
+        }
 
-      #region Nuget
+        #region Constructors
 
-      public NuGetDisplay NuGetPackageVersion
-      {
-         get
-         {
-            return NuGetHelper.NuGetPackageDisplay.FirstOrDefault(x => x.EFVersion == EntityFrameworkVersion && 
-                                                                           x.DisplayVersion == EntityFrameworkPackageVersion);
-         }
-      }
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="store">Store where new element is to be created.</param>
+        /// <param name="propertyAssignments">List of domain property id/value pairs to set once the element is created.</param>
+        public ModelRoot(Store store, params PropertyAssignment[] propertyAssignments)
+            : this(store?.DefaultPartitionForClass(DomainClassId), propertyAssignments)
+        {
+        }
 
-      /// <summary>
-      /// DslPackage might set this to false depending on whether or not it can find the resources needed to load Nuget packages
-      /// </summary>
-      public static bool CanLoadNugetPackages { get; set; } = true;
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="partition">Partition where new element is to be created.</param>
+        /// <param name="propertyAssignments">List of domain property id/value pairs to set once the element is created.</param>
+        public ModelRoot(Partition partition, params PropertyAssignment[] propertyAssignments)
+            : base(partition, propertyAssignments)
+        {
+            ModelViews.Add(new ModelView(partition, new PropertyAssignment(ModelView.NameDomainPropertyId, "Default")));
+        }
 
-      // ReSharper disable once UnusedMember.Global
-      public double GetEntityFrameworkPackageVersionNum()
-      {
+        #endregion
+
+        #region Nuget
+
+        public NuGetDisplay NuGetPackageVersion
+        {
+            get
+            {
+                return NuGetHelper.NuGetPackageDisplay.FirstOrDefault(x => x.EFVersion == EntityFrameworkVersion &&
+                                                                               x.DisplayVersion == EntityFrameworkPackageVersion);
+            }
+        }
+
+        /// <summary>
+        /// DslPackage might set this to false depending on whether or not it can find the resources needed to load Nuget packages
+        /// </summary>
+        public static bool CanLoadNugetPackages { get; set; } = true;
+
+        // ReSharper disable once UnusedMember.Global
+        public double GetEntityFrameworkPackageVersionNum()
+        {
             string[] parts = EntityFrameworkPackageVersion.Split('.');
 
             string resultString = parts.Length > 1
@@ -51,87 +78,87 @@ namespace Sawczyn.EFDesigner.EFModel
             return double.TryParse(resultString, out double result)
                       ? result
                       : 0;
-      }
+        }
 
-      #endregion Nuget
+        #endregion Nuget
 
-      #region Validation methods
+        #region Validation methods
 
-      [ValidationMethod(ValidationCategories.Open | ValidationCategories.Save | ValidationCategories.Menu)]
-      // ReSharper disable once UnusedMember.Local
-      private void ConnectionStringMustExist(ValidationContext context)
-      {
-         if (!Types.OfType<ModelRoot>().Any() && !Types.OfType<ModelEnum>().Any())
-            return;
+        [ValidationMethod(ValidationCategories.Open | ValidationCategories.Save | ValidationCategories.Menu)]
+        // ReSharper disable once UnusedMember.Local
+        private void ConnectionStringMustExist(ValidationContext context)
+        {
+            if (!Types.OfType<ModelRoot>().Any() && !Types.OfType<ModelEnum>().Any())
+                return;
 
-         if (string.IsNullOrEmpty(ConnectionString) && string.IsNullOrEmpty(ConnectionStringName))
-            context.LogWarning("Model: Default connection string missing", "MRWConnectionString", this);
+            if (string.IsNullOrEmpty(ConnectionString) && string.IsNullOrEmpty(ConnectionStringName))
+                context.LogWarning("Model: Default connection string missing", "MRWConnectionString", this);
 
-         if (string.IsNullOrEmpty(EntityContainerName))
-            context.LogError("Model: Entity container needs a name", "MREContainerNameEmpty", this);
-      }
+            if (string.IsNullOrEmpty(EntityContainerName))
+                context.LogError("Model: Entity container needs a name", "MREContainerNameEmpty", this);
+        }
 
-      #endregion Validation methods
+        #endregion Validation methods
 
-      #region DatabaseSchema tracking property
+        #region DatabaseSchema tracking property
 
-      protected virtual void OnDatabaseSchemaChanged(string oldValue, string newValue)
-      {
-         TrackingHelper.UpdateTrackingCollectionProperty(Store, Types, ModelClass.DatabaseSchemaDomainPropertyId, ModelClass.IsDatabaseSchemaTrackingDomainPropertyId);
-      }
+        protected virtual void OnDatabaseSchemaChanged(string oldValue, string newValue)
+        {
+            TrackingHelper.UpdateTrackingCollectionProperty(Store, Types, ModelClass.DatabaseSchemaDomainPropertyId, ModelClass.IsDatabaseSchemaTrackingDomainPropertyId);
+        }
 
-      internal sealed partial class DatabaseSchemaPropertyHandler
-      {
-         protected override void OnValueChanged(ModelRoot element, string oldValue, string newValue)
-         {
-            base.OnValueChanged(element, oldValue, newValue);
+        internal sealed partial class DatabaseSchemaPropertyHandler
+        {
+            protected override void OnValueChanged(ModelRoot element, string oldValue, string newValue)
+            {
+                base.OnValueChanged(element, oldValue, newValue);
 
-            if (!element.Store.InUndoRedoOrRollback)
-               element.OnDatabaseSchemaChanged(oldValue, newValue);
-         }
-      }
+                if (!element.Store.InUndoRedoOrRollback)
+                    element.OnDatabaseSchemaChanged(oldValue, newValue);
+            }
+        }
 
-      #endregion DatabaseSchema tracking property
+        #endregion DatabaseSchema tracking property
 
-      #region Namespace tracking property
+        #region Namespace tracking property
 
-      protected virtual void OnNamespaceChanged(string oldValue, string newValue)
-      {
-         TrackingHelper.UpdateTrackingCollectionProperty(Store, Types, ModelClass.NamespaceDomainPropertyId, ModelClass.IsNamespaceTrackingDomainPropertyId);
-         TrackingHelper.UpdateTrackingCollectionProperty(Store, Types, ModelEnum.NamespaceDomainPropertyId, ModelEnum.IsNamespaceTrackingDomainPropertyId);
-      }
+        protected virtual void OnNamespaceChanged(string oldValue, string newValue)
+        {
+            TrackingHelper.UpdateTrackingCollectionProperty(Store, Types, ModelClass.NamespaceDomainPropertyId, ModelClass.IsNamespaceTrackingDomainPropertyId);
+            TrackingHelper.UpdateTrackingCollectionProperty(Store, Types, ModelEnum.NamespaceDomainPropertyId, ModelEnum.IsNamespaceTrackingDomainPropertyId);
+        }
 
-      internal sealed partial class NamespacePropertyHandler
-      {
-         protected override void OnValueChanged(ModelRoot element, string oldValue, string newValue)
-         {
-            base.OnValueChanged(element, oldValue, newValue);
+        internal sealed partial class NamespacePropertyHandler
+        {
+            protected override void OnValueChanged(ModelRoot element, string oldValue, string newValue)
+            {
+                base.OnValueChanged(element, oldValue, newValue);
 
-            if (!element.Store.InUndoRedoOrRollback)
-               element.OnNamespaceChanged(oldValue, newValue);
-         }
-      }
+                if (!element.Store.InUndoRedoOrRollback)
+                    element.OnNamespaceChanged(oldValue, newValue);
+            }
+        }
 
-      #endregion Namespace tracking property
+        #endregion Namespace tracking property
 
-      #region DefaultCollectionClass tracking property
+        #region DefaultCollectionClass tracking property
 
-      protected virtual void OnCollectionClassChanged(string oldValue, string newValue)
-      {
-         TrackingHelper.UpdateTrackingCollectionProperty(Store, Types, Association.CollectionClassDomainPropertyId, Association.IsCollectionClassTrackingDomainPropertyId);
-      }
+        protected virtual void OnCollectionClassChanged(string oldValue, string newValue)
+        {
+            TrackingHelper.UpdateTrackingCollectionProperty(Store, Types, Association.CollectionClassDomainPropertyId, Association.IsCollectionClassTrackingDomainPropertyId);
+        }
 
-      internal sealed partial class DefaultCollectionClassPropertyHandler
-      {
-         protected override void OnValueChanged(ModelRoot element, string oldValue, string newValue)
-         {
-            base.OnValueChanged(element, oldValue, newValue);
+        internal sealed partial class DefaultCollectionClassPropertyHandler
+        {
+            protected override void OnValueChanged(ModelRoot element, string oldValue, string newValue)
+            {
+                base.OnValueChanged(element, oldValue, newValue);
 
-            if (!element.Store.InUndoRedoOrRollback)
-               element.OnCollectionClassChanged(oldValue, newValue);
-         }
-      }
+                if (!element.Store.InUndoRedoOrRollback)
+                    element.OnCollectionClassChanged(oldValue, newValue);
+            }
+        }
 
-      #endregion DefaultCollectionClass tracking property
-   }
+        #endregion DefaultCollectionClass tracking property
+    }
 }
