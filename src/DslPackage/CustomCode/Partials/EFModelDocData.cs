@@ -73,6 +73,18 @@ namespace Sawczyn.EFDesigner.EFModel
          }
       }
 
+      /// <summary>
+      /// Called before the document is initially loaded with data.
+      /// </summary>
+      protected override void OnDocumentLoading(EventArgs e)
+      {
+         base.OnDocumentLoading(e);
+         ValidationController?.ClearMessages();
+      }
+
+      /// <summary>
+      /// Called on both document load and reload.
+      /// </summary>
       protected override void OnDocumentLoaded()
       {
          base.OnDocumentLoaded();
@@ -130,8 +142,14 @@ namespace Sawczyn.EFDesigner.EFModel
             ErrorHandler.ThrowOnFailure(SetDocDataDirty(0));
          }
 
-         List<GeneralizationConnector> generalizationConnectors = modelRoot.Store.ElementDirectory.FindElements<GeneralizationConnector>().Where(x => !x.FromShape.IsVisible || !x.ToShape.IsVisible).ToList();
-         List<AssociationConnector> associationConnectors = modelRoot.Store.ElementDirectory.FindElements<AssociationConnector>().Where(x => !x.FromShape.IsVisible || !x.ToShape.IsVisible).ToList();
+         List<GeneralizationConnector> generalizationConnectors = modelRoot.Store
+                                                                           .ElementDirectory
+                                                                           .FindElements<GeneralizationConnector>()
+                                                                           .Where(x => !x.FromShape.IsVisible || !x.ToShape.IsVisible).ToList();
+         List<AssociationConnector> associationConnectors = modelRoot.Store
+                                                                     .ElementDirectory
+                                                                     .FindElements<AssociationConnector>()
+                                                                     .Where(x => !x.FromShape.IsVisible || !x.ToShape.IsVisible).ToList();
 
          if (generalizationConnectors.Any() || associationConnectors.Any())
          {
@@ -146,9 +164,16 @@ namespace Sawczyn.EFDesigner.EFModel
 
                tx.Commit();
             }
-
-            ErrorHandler.ThrowOnFailure(SetDocDataDirty(0));
          }
+
+         using (Transaction tx = modelRoot.Store.TransactionManager.BeginTransaction("ColorShapeOutlines"))
+         {
+            foreach (ModelClass modelClass in modelRoot.Store.ElementDirectory.FindElements<ModelClass>())
+               PresentationHelper.ColorShapeOutline(modelClass);
+            tx.Commit();
+         }
+
+         SetDocDataDirty(0);
       }
 
       // ReSharper disable once UnusedMember.Local
@@ -179,6 +204,16 @@ namespace Sawczyn.EFDesigner.EFModel
       private void ShowWarning(string message)
       {
          Messages.AddWarning(message);
+      }
+
+      /// <summary>
+      /// Validate the model before the file is saved.
+      /// </summary>
+      protected override bool CanSave(bool allowUserInterface)
+      {
+         if (allowUserInterface)
+            ValidationController?.ClearMessages();
+         return base.CanSave(allowUserInterface);
       }
 
       /// <summary>Called before the document is saved.</summary>
