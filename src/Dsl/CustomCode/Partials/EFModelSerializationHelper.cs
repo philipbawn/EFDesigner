@@ -135,21 +135,21 @@ namespace Sawczyn.EFDesigner.EFModel
       // ReSharper disable once UnusedMethodReturnValue.Local
       private Diagram LoadDiagram(SerializationResult serializationResult, Store store, ModelElement modelRoot, Stream diagramStream, ISchemaResolver schemaResolver, ValidationController validationController)
       {
-         Diagram l_diagram = null;
+         Diagram diagram = null;
          DomainXmlSerializerDirectory directory = GetDirectory(store);
-         DomainClassXmlSerializer l_diagramSerializer = directory.GetSerializer(EFModelDiagram.DomainClassId);
+         DomainClassXmlSerializer diagramSerializer = directory.GetSerializer(EFModelDiagram.DomainClassId);
 
-         if (l_diagramSerializer != null)
+         if (diagramSerializer != null)
          {
             if (diagramStream == Stream.Null || diagramStream == null || !diagramStream.CanRead)
             {
                // missing diagram file indicates we should create a new diagram.
-               l_diagram = CreateDiagramHelper(store.DefaultPartition, modelRoot);
+               diagram = CreateDiagramHelper(store.DefaultPartition, modelRoot);
             }
             else
             {
-               SerializationContext l_serializationContext = new SerializationContext(directory, "LoadDiagram", serializationResult);
-               SetupMonikerResolver(l_serializationContext, store);
+               SerializationContext serializationContext = new SerializationContext(directory, "LoadDiagram", serializationResult);
+               SetupMonikerResolver(serializationContext, store);
 
                using (Transaction transaction = store.TransactionManager.BeginTransaction("LoadDiagram", true))
                {
@@ -157,39 +157,35 @@ namespace Sawczyn.EFDesigner.EFModel
                   // files will cause a new diagram to be created and returned 
                   if (diagramStream.Length > 5)
                   {
-                     XmlReaderSettings l_settings = new XmlReaderSettings();
+                     XmlReaderSettings settings = new XmlReaderSettings();
                      try
                      {
-                        using (XmlReader reader = XmlReader.Create(diagramStream, l_settings))
+                        using (XmlReader reader = XmlReader.Create(diagramStream, settings))
                         {
                            reader.MoveToContent();
-                           l_diagram = l_diagramSerializer.TryCreateInstance(l_serializationContext, reader, store.DefaultPartition) as EFModelDiagram;
-                           if (l_diagram != null)
-                           {
-                              l_diagramSerializer.ReadRootElement(l_serializationContext, l_diagram, reader, schemaResolver);
-                           }
+                           diagram = diagramSerializer.TryCreateInstance(serializationContext, reader, store.DefaultPartition) as EFModelDiagram;
+
+                           if (diagram != null)
+                              diagramSerializer.ReadRootElement(serializationContext, diagram, reader, schemaResolver);
                         }
                      }
-                     catch (XmlException xEx)
+                     catch (XmlException ex)
                      {
-                        SerializationUtilities.AddMessage(
-                            l_serializationContext,
-                            SerializationMessageKind.Error,
-                            xEx
-                        );
+                        SerializationUtilities.AddMessage(serializationContext, SerializationMessageKind.Error, ex);
                      }
+
                      if (serializationResult.Failed)
                      {
                         // Serialization error encountered, rollback the transaction.
-                        l_diagram = null;
+                        diagram = null;
                         transaction.Rollback();
                      }
                   }
 
-                  if (l_diagram == null && !serializationResult.Failed)
+                  if (diagram == null && !serializationResult.Failed)
                   {
                      // Create diagram if it doesn't exist
-                     l_diagram = CreateDiagramHelper(store.DefaultPartition, modelRoot);
+                     diagram = CreateDiagramHelper(store.DefaultPartition, modelRoot);
                   }
 
                   if (transaction.IsActive)
@@ -206,21 +202,22 @@ namespace Sawczyn.EFDesigner.EFModel
                }
             }
 
-            if (l_diagram != null)
+            if (diagram != null)
             {
                if (!serializationResult.Failed)
-               {  // Succeeded.
-                  l_diagram.ModelElement = modelRoot;
-                  l_diagram.PostDeserialization(true);
-                  CheckForOrphanedShapes(l_diagram, serializationResult);
+               {  
+                  diagram.ModelElement = modelRoot;
+                  diagram.PostDeserialization(true);
+                  CheckForOrphanedShapes(diagram, serializationResult);
                }
                else
-               {  // Failed.
-                  l_diagram.PostDeserialization(false);
+               {  
+                  diagram.PostDeserialization(false);
                }
             }
          }
-         return l_diagram;
+
+         return diagram;
       }
 
       private void SetupMonikerResolver(SerializationContext lSerializationContext, Store store)

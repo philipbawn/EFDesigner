@@ -242,14 +242,12 @@
     <Compile Include="CustomCode\Rules\RuleRegistrations.cs" />
     <Compile Include="CustomCode\ModelAttribute Parser\AttributeParser.cs" />
     <Compile Include="CustomCode\Utilities\PresentationHelper.cs" />
-    <Compile Include="CustomCode\Utilities\QuestionDisplay.cs" />
     <Compile Include="CustomCode\TypeConverters\BaseClassTypeConverter.cs" />
     <Compile Include="CustomCode\TypeConverters\CollectionTypeTypeConverter.cs" />
     <Compile Include="CustomCode\Type Descriptors\ModelClassTypeDescriptor.cs" />
     <Compile Include="CustomCode\Utilities\ConnectionStringEditor.cs" />
     <Compile Include="CustomCode\Utilities\EFCoreValidator.cs" />
     <Compile Include="CustomCode\TypeConverters\EFPackageVersionTypeConverter.cs" />
-    <Compile Include="CustomCode\Utilities\ErrorDisplay.cs" />
     <Compile Include="CustomCode\TypeConverters\IdentityAttributeTypeTypeConverter.cs" />
     <Compile Include="CustomCode\NameProviders\ModelAttributeNameProvider.cs" />
     <Compile Include="CustomCode\NameProviders\ModelClassNameProvider.cs" />
@@ -269,10 +267,13 @@
     <Compile Include="CustomCode\TypeConverters\ProjectDirectoryTypeConverter.cs" />
     <Compile Include="CustomCode\TypeConverters\SourceMultiplicityTypeConverter.cs" />
     <Compile Include="CustomCode\TypeConverters\TargetMultiplicityTypeConverter.cs" />
+    <Compile Include="CustomCode\Utilities\SerializationValidationObserver.cs" />
     <Compile Include="CustomCode\Utilities\TrackingHelper.cs" />
     <Compile Include="CustomCode\Partials\EFModelSerializationHelperBase.cs" />
     <Compile Include="CustomCode\TypeConverters\TypeConverterBase.cs" />
-    <Compile Include="CustomCode\Utilities\WarningDisplay.cs" />
+    <Compile Include="CustomCode\Utilities\UI\ErrorDisplay.cs" />
+    <Compile Include="CustomCode\Utilities\UI\QuestionDisplay.cs" />
+    <Compile Include="CustomCode\Utilities\UI\WarningDisplay.cs" />
     <Compile Include="GeneratedCode\Serializer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -511,6 +512,7 @@
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
