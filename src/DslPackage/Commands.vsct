@@ -218,7 +218,7 @@
 
    <Symbols>
       <GuidSymbol name="guidEFDiagramMenuCmdSet" value="{31178ecb-5da7-46cc-bd4a-ce4e5420bd3e}" >
-         <IDSymbol name="grpidEFDiagram" value="0x01001"/>
+         <IDSymbol name="grpidEFDiagram"         value="0x01001"/>
 
          <IDSymbol name="cmdidFind"              value="0x00011"/>
          <IDSymbol name="cmdidLayoutDiagram"     value="0x00012"/>

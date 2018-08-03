@@ -200,10 +200,12 @@
     <Compile Include="CustomCode\Constants.cs" />
     <Compile Include="CustomCode\Partials\EFModelDocData.cs" />
     <Compile Include="CustomCode\Extensions\ProjectExtensions.cs" />
+    <Compile Include="CustomCode\Partials\EFModelExplorer.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CustomCode\Partials\Package.cs" />
     <Compile Include="CustomCode\Messages.cs" />
     <Compile Include="CustomCode\Partials\EFModelDocView.cs" />
-    <Compile Include="CustomCode\Partials\EFModelEditorFactory.cs" />
     <Compile Include="CustomCode\Partials\EFModelExplorerToolWindow.cs" />
     <Compile Include="GeneratedCode\CommandSet.cs">
       <AutoGen>True</AutoGen>
@@ -211,6 +213,9 @@
       <DependentUpon>CommandSet.tt</DependentUpon>
     </Compile>
     <Compile Include="CustomCode\WizardImplementation.cs" />
+    <Compile Include="VSPackage.Designer.cs">
+      <DependentUpon>VSPackage.resx</DependentUpon>
+    </Compile>
     <Content Include="Logo.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

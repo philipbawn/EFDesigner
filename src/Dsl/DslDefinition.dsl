@@ -596,7 +596,7 @@
         </DomainProperty>
       </Properties>
     </DomainClass>
-    <DomainClass Id="ae45943a-5a79-4f3a-a69a-9b5ab95690a3" Description="Describes the elements present on a diagram" Name="ModelView" DisplayName="Model View" Namespace="Sawczyn.EFDesigner.EFModel">
+    <DomainClass Id="ae45943a-5a79-4f3a-a69a-9b5ab95690a3" Description="Describes the elements present on a diagram" Name="ModelView" DisplayName="Diagram" Namespace="Sawczyn.EFDesigner.EFModel">
       <BaseClass>
         <DomainClassMoniker Name="NamedElement" />
       </BaseClass>

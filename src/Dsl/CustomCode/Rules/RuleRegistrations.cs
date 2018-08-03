@@ -19,7 +19,10 @@ namespace Sawczyn.EFDesigner.EFModel
          typeof(ModelEnumChangeRules),
          typeof(ModelEnumValueAddRules),
          typeof(ModelEnumValueChangeRules),
-         typeof(ModelRootChangeRules)
+         typeof(ModelRootChangeRules),
+         typeof(ModelViewAddRules),
+         typeof(ModelViewChangeRules),
+         typeof(ModelViewDeleteRules)
       };
 
       protected override Type[] GetCustomDomainModelTypes()

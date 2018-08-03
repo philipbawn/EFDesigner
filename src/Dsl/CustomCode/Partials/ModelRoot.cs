@@ -45,7 +45,6 @@ namespace Sawczyn.EFDesigner.EFModel
         public ModelRoot(Partition partition, params PropertyAssignment[] propertyAssignments)
             : base(partition, propertyAssignments)
         {
-            ModelViews.Add(new ModelView(partition, new PropertyAssignment(ModelView.NameDomainPropertyId, "Default")));
         }
 
         #endregion

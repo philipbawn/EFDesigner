@@ -1098,7 +1098,7 @@
     <comment>Description for DomainClass &apos;ModelView&apos;</comment>
   </data>
   <data name="Sawczyn.EFDesigner.EFModel.ModelView.DisplayName" xml:space="preserve">
-    <value>Model View</value>
+    <value>Diagram</value>
     <comment>DisplayName for DomainClass &apos;ModelView&apos;</comment>
   </data>
   <data name="Sawczyn.EFDesigner.EFModel.ModelView/Name.Description" xml:space="preserve">

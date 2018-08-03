@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.VisualStudio.Modeling.Diagrams;
 using Microsoft.VisualStudio.Modeling.Shell;
@@ -24,10 +25,9 @@ namespace Sawczyn.EFDesigner.EFModel
 
             if (DocData.RootElement != null)
             {
-                List<Diagram> diagramList =
-                    new List<Diagram>(DocData.Store.ElementDirectory.FindElements<Diagram>());
+               List<Diagram> diagramList = DocData.Store.ElementDirectory.FindElements<Diagram>().ToList();
 
-                if (diagramList.Count != 0)
+                if (diagramList.Any())
                 {
                     Diagram diagram = string.IsNullOrEmpty(physicalView) || physicalView == "Default"
                                           ? diagramList[0]
