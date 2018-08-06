@@ -26,7 +26,8 @@ namespace Sawczyn.EFDesigner.EFModel
          if (current.IsSerializing)
             return;
 
-         // TODO: delete diagram
+         EFModelDiagram diagram = store.ElementDirectory.AllElements.OfType<EFModelDiagram>().FirstOrDefault(d => d.Name == element.Name);
+         diagram?.Delete();
       }
    }
 }

@@ -1542,7 +1542,7 @@
     <comment>DisplayName for DomainRole &apos;ModelRoot&apos; on DomainRelationship &apos;ModelRootHasTypes&apos;</comment>
   </data>
   <data name="Sawczyn.EFDesigner.EFModel.ModelRootHasTypes/ModelRoot.PropertyDisplayName" xml:space="preserve">
-    <value>Types</value>
+    <value>Entities</value>
     <comment>PropertyDisplayName for DomainRole &apos;ModelRoot&apos; on DomainRelationship &apos;ModelRootHasTypes&apos;</comment>
   </data>
   <data name="Sawczyn.EFDesigner.EFModel.ModelRootHasTypes/Type.Description" xml:space="preserve">

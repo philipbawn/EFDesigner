@@ -176,7 +176,7 @@ namespace Sawczyn.EFDesigner.EFModel
 		/// </remarks>
 		protected override bool ShouldAddShapeForElement(DslModeling::ModelElement element)
 		{
-			return true;
+			return base.ShouldAddShapeForElement(element) || FocusedDiagramView != null;
 		}
 		
 		/// <summary>

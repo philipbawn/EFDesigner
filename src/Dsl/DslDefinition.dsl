@@ -841,7 +841,7 @@
     </DomainRelationship>
     <DomainRelationship Id="fdfb922e-0f6e-4c3e-9292-038124674b17" Description="" Name="ModelRootHasTypes" DisplayName="Model Root Has Types" Namespace="Sawczyn.EFDesigner.EFModel" IsEmbedding="true">
       <Source>
-        <DomainRole Id="74f84fb7-10fe-4609-a1b3-02d225749770" Description="" Name="ModelRoot" DisplayName="Model Root" PropertyName="Types" PropagatesCopy="PropagatesCopyToLinkAndOppositeRolePlayer" PropertyDisplayName="Types">
+        <DomainRole Id="74f84fb7-10fe-4609-a1b3-02d225749770" Description="" Name="ModelRoot" DisplayName="Model Root" PropertyName="Types" PropagatesCopy="PropagatesCopyToLinkAndOppositeRolePlayer" PropertyDisplayName="Entities">
           <RolePlayer>
             <DomainClassMoniker Name="ModelRoot" />
           </RolePlayer>

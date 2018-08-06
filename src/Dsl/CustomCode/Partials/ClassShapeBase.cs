@@ -1,6 +1,8 @@
 ﻿using System.Drawing;
 using Microsoft.VisualStudio.Modeling;
 
+using Sawczyn.EFDesigner.EFModel.CustomCode.Extensions;
+
 namespace Sawczyn.EFDesigner.EFModel
 {
    public abstract partial class ClassShapeBase

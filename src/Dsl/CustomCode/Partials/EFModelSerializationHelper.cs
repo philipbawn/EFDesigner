@@ -64,21 +64,21 @@ namespace Sawczyn.EFDesigner.EFModel
 
          DomainXmlSerializerDirectory directory = GetDirectory(modelRoot.Store);
          DomainClassXmlSerializer modelRootSerializer = directory.GetSerializer(modelRoot.GetDomainClass().Id);
-         
+
          if (modelRootSerializer != null)
          {
             SerializationContext serializationContext = new SerializationContext(directory, fileName, serializationResult)
-                                                        {
-                                                           WriteOptionalPropertiesWithDefaultValue = writeOptionalPropertiesWithDefaultValue
-                                                        };
+            {
+               WriteOptionalPropertiesWithDefaultValue = writeOptionalPropertiesWithDefaultValue
+            };
 
             // MonikerResolver shouldn't be required in Save operation, so not calling SetupMonikerResolver() here.
 
             XmlWriterSettings settings = new XmlWriterSettings
-                                         {
-                                            Indent = true
+            {
+               Indent = true
                                           , Encoding = encoding
-                                         };
+            };
 
             using (StreamWriter streamWriter = new StreamWriter(newFileContent, encoding))
             {
@@ -109,17 +109,17 @@ namespace Sawczyn.EFDesigner.EFModel
          if (diagramSerializer != null)
          {
             SerializationContext serializationContext = new SerializationContext(directory, diagramFileName, serializationResult)
-                                                        {
-                                                           WriteOptionalPropertiesWithDefaultValue = writeOptionalPropertiesWithDefaultValue
-                                                        };
+            {
+               WriteOptionalPropertiesWithDefaultValue = writeOptionalPropertiesWithDefaultValue
+            };
 
             // MonikerResolver shouldn't be required in Save operation, so not calling SetupMonikerResolver() here.
 
             XmlWriterSettings settings = new XmlWriterSettings
-                                         {
-                                            Indent = true
+            {
+               Indent = true
                                           , Encoding = encoding
-                                         };
+            };
 
             using (StreamWriter streamWriter = new StreamWriter(newFileContent, encoding))
             {
@@ -205,13 +205,13 @@ namespace Sawczyn.EFDesigner.EFModel
             if (diagram != null)
             {
                if (!serializationResult.Failed)
-               {  
+               {
                   diagram.ModelElement = modelRoot;
                   diagram.PostDeserialization(true);
                   CheckForOrphanedShapes(diagram, serializationResult);
                }
                else
-               {  
+               {
                   diagram.PostDeserialization(false);
                }
             }
@@ -226,7 +226,7 @@ namespace Sawczyn.EFDesigner.EFModel
          IMonikerResolver monikerResolver = store.FindMonikerResolver(EFModelDomainModel.DomainModelId);
          if (monikerResolver == null)
          {
-            
+
             monikerResolver = new EFModelSerializationBehaviorMonikerResolver(store, lSerializationContext.Directory);
             store.AddMonikerResolver(EFModelDomainModel.DomainModelId, monikerResolver);
          }
@@ -234,14 +234,14 @@ namespace Sawczyn.EFDesigner.EFModel
 
       internal static class PackagingHelper
       {
-         internal static bool IsValid(String fileName)
+         internal static bool IsValid(string fileName)
          {
             FileInfo fileInfo = new FileInfo(fileName);
             return fileInfo.Exists && (fileInfo.Length > 10);
          }
       }
 
-      public ModelRoot LoadModelAndDiagrams(SerializationResult serializationResult, Store store, String modelFileName, String diagramxFileName, ISchemaResolver schemaResolver, ValidationController validationController, ISerializerLocator serializerLocator)
+      public ModelRoot LoadModelAndDiagrams(SerializationResult serializationResult, Store store, string modelFileName, string diagramxFileName, ISchemaResolver schemaResolver, ValidationController validationController, ISerializerLocator serializerLocator)
       {
          #region Check Parameters
 
@@ -273,7 +273,7 @@ namespace Sawczyn.EFDesigner.EFModel
          return modelRoot;
       }
 
-      internal void SaveDiagrams(SerializationResult serializationResult, Diagram[] diagrams, string diagramxFileName, Encoding encoding, bool writeOptionalPropertiesWithDefaultValue)
+      internal bool SaveDiagrams(SerializationResult serializationResult, Diagram[] diagrams, string diagramxFileName, Encoding encoding, bool writeOptionalPropertiesWithDefaultValue)
       {
          #region Check Parameters
 
@@ -288,16 +288,12 @@ namespace Sawczyn.EFDesigner.EFModel
 
          foreach (Diagram diagram in diagrams)
          {
-            // HACK : Add validation rule on Diagram Name (!string.IsNullOrEmpty && Unique )
-            if (string.IsNullOrEmpty(diagram.Name))
-               diagram.Name = "Default";
-
             memoryStreamDictionary.Add(InternalSaveDiagram(serializationResult, diagram, diagramxFileName, encoding, writeOptionalPropertiesWithDefaultValue), diagram.Name);
-        
+
             if (serializationResult.Failed)
             {
                memoryStreamDictionary.Keys.ToList().ForEach(memoryStream => memoryStream.Close());
-               return;
+               return false;
             }
          }
 
@@ -308,23 +304,27 @@ namespace Sawczyn.EFDesigner.EFModel
                byte[] bytes = memoryStream.ToArray();
                Uri uri = new Uri($"/diagrams/{memoryStreamDictionary[memoryStream]}.diagram", UriKind.Relative);
                PackagePart part = pkgOutputDoc.CreatePart(uri, System.Net.Mime.MediaTypeNames.Text.Xml, CompressionOption.Maximum);
-              
+
                using (Stream partStream = part.GetStream(FileMode.Create, FileAccess.Write))
                {
                   partStream.Write(bytes, 0, bytes.Length);
                }
             }
          }
+
+         return true;
       }
 
-      public void SaveModelAndDiagrams(SerializationResult serializationResult, ModelElement modelRoot, string modelFileName, Diagram[] diagrams, String diagramxFileName, Encoding encoding, bool writeOptionalPropertiesWithDefaultValue)
+      public void SaveModelAndDiagrams(SerializationResult serializationResult, ModelElement modelRoot, string modelFileName, Diagram[] diagrams, string diagramxFileName, Encoding encoding, bool writeOptionalPropertiesWithDefaultValue)
       {
          #region Check Parameters
 
          if (serializationResult == null)
             throw new ArgumentNullException(nameof(serializationResult));
+
          if (string.IsNullOrEmpty(modelFileName))
             throw new ArgumentNullException(nameof(modelFileName));
+
          if (string.IsNullOrEmpty(diagramxFileName))
             throw new ArgumentNullException(nameof(diagrams));
 
@@ -334,57 +334,22 @@ namespace Sawczyn.EFDesigner.EFModel
             return;
 
          MemoryStream modelFileContent = InternalSaveModel(serializationResult, modelRoot, modelFileName, encoding, writeOptionalPropertiesWithDefaultValue);
-       
-         if (serializationResult.Failed)
+
+         if (serializationResult.Failed || !SaveDiagrams(serializationResult, diagrams, diagramxFileName, encoding, writeOptionalPropertiesWithDefaultValue))
          {
-            modelFileContent.Close();
+            modelFileContent?.Close();
             return;
          }
 
-         Dictionary<MemoryStream, string> memoryStreamDictionary = new Dictionary<MemoryStream, string>();
-
-         foreach (Diagram diagram in diagrams)
+         using (FileStream fileStream = new FileStream(modelFileName, FileMode.Create, FileAccess.Write, FileShare.None))
          {
-            if (string.IsNullOrEmpty(diagram.Name))
-               diagram.Name = "Default";
-
-            memoryStreamDictionary.Add(InternalSaveDiagram(serializationResult, diagram, diagramxFileName, encoding, writeOptionalPropertiesWithDefaultValue), diagram.Name);
-         
-            if (serializationResult.Failed)
+            using (BinaryWriter writer = new BinaryWriter(fileStream, encoding))
             {
-               modelFileContent.Close();
-               memoryStreamDictionary.Keys.ToList().ForEach(memoryStream => memoryStream.Close());
-               return;
+               writer.Write(modelFileContent.ToArray());
             }
          }
 
-         if (modelFileContent != null)
-         {
-            using (FileStream fileStream = new FileStream(modelFileName, FileMode.Create, FileAccess.Write, FileShare.None))
-            {
-               using (BinaryWriter writer = new BinaryWriter(fileStream, encoding))
-               {
-                  writer.Write(modelFileContent.ToArray());
-               }
-            }
-
-            modelFileContent.Close();
-         }
-
-         using (Package pkgOutputDoc = Package.Open(diagramxFileName, FileMode.Create, FileAccess.ReadWrite))
-         {
-            foreach (MemoryStream memoryStream in memoryStreamDictionary.Keys)
-            {
-               byte[] bytes = memoryStream.ToArray();
-               Uri uri = new Uri($"/diagrams/{memoryStreamDictionary[memoryStream]}", UriKind.Relative);
-               PackagePart part = pkgOutputDoc.CreatePart(uri, System.Net.Mime.MediaTypeNames.Text.Xml, CompressionOption.Maximum);
-             
-               using (Stream partStream = part.GetStream(FileMode.Create, FileAccess.Write))
-               {
-                  partStream.Write(bytes, 0, bytes.Length);
-               }
-            }
-         }
+         modelFileContent.Close();
       }
    }
 }

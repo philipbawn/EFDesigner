@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using Microsoft.VisualStudio.Modeling;
 using Microsoft.VisualStudio.Modeling.Diagrams;
@@ -9,7 +8,7 @@ namespace Sawczyn.EFDesigner.EFModel
    ///    Override some methods of the compartment shape.
    ///    *** GenerateDoubleDerived must be set for this shape in DslDefinition.dsl. ****
    /// </summary>
-   public partial class EnumShape : IHighlightFromModelExplorer
+   public partial class EnumShape : IHighlightFromModelExplorer, IHasDraggableChildren
    {
       /// <summary>
       /// Exposes NodeShape Collapse() function to DSL's context menu
@@ -110,10 +109,9 @@ namespace Sawczyn.EFDesigner.EFModel
                // Same again for the target:
                DomainRelationshipInfo relationshipTo = parentToLink.GetDomainRelationship();
                DomainRoleInfo parentToRole = relationshipTo.DomainRoles[0];
-               ModelEnum parentTo = parentToLink.LinkedElements[0] as ModelEnum;
 
                // Mouse went down and up in same parent and same compartment:
-               if (parentFrom != null && parentTo != null && parentTo == parentFrom && relationshipTo == relationshipFrom)
+               if (parentFrom != null && parentToLink.LinkedElements[0] is ModelEnum parentTo && parentTo == parentFrom && relationshipTo == relationshipFrom)
                {
                   // Find index of target position:
                   int newIndex = parentToRole.GetElementLinks(parentTo).IndexOf(parentToLink);
@@ -174,4 +172,6 @@ namespace Sawczyn.EFDesigner.EFModel
          dragStartElement = null;
       }
    }
+
+
 }

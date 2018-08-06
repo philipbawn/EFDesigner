@@ -292,7 +292,7 @@ namespace Sawczyn.EFDesigner.EFModel
          }
       }
 
-      #endregion Add Properties
+      #endregion Add Values
       #region Generate Code
 
       private void OnStatusGenerateCode(object sender, EventArgs e)
@@ -526,7 +526,7 @@ namespace Sawczyn.EFDesigner.EFModel
          throw new ArgumentException();
       }
 
-      #endregion
+      #endregion Save as Image
       #region Load NuGet
 
       private void OnStatusLoadNuGet(object sender, EventArgs e)
@@ -632,7 +632,7 @@ namespace Sawczyn.EFDesigner.EFModel
             shape.Diagram.ActiveDiagramView.Selection.Add(new DiagramItem(shape));
       }
 
-      #endregion Find
+      #endregion Select unidirectional associations
       #region Select bidirectional associations
 
       private void OnStatusSelectBidir(object sender, EventArgs e)
@@ -653,6 +653,18 @@ namespace Sawczyn.EFDesigner.EFModel
             shape.Diagram.ActiveDiagramView.Selection.Add(new DiagramItem(shape));
       }
 
-      #endregion Find
+      #endregion Select bidirectional associations
+      #region Prevent delete of default diagram (ModelView) element
+
+      protected override void ProcessOnStatusDeleteCommand(MenuCommand command)
+      {
+         if (command == null) return;
+
+         command.Visible = true;
+         command.Enabled = CurrentDocumentSelection.OfType<ModelView>().All(v => v.Name != "Default") && !IsAnyDocumentSelectionUndeletable();
+      }
+
+      #endregion Prevent delete of default diagram (ModelView) element
+
    }
 }

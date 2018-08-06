@@ -2,43 +2,43 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Microsoft.VisualStudio.Modeling;
 using Microsoft.VisualStudio.Modeling.Diagrams;
 using Microsoft.VisualStudio.Modeling.Shell;
 
 namespace Sawczyn.EFDesigner.EFModel
 {
-    internal partial class EFModelDocView
-    {
-        private readonly string physicalView;
+   internal partial class EFModelDocView
+   {
+      private readonly string physicalView;
 
-        public EFModelDocView(ModelingDocData docData
-                            , IServiceProvider serviceProvider
-                            , string physicalView) 
-            : base(docData, serviceProvider)
-        {
-            this.physicalView = physicalView;
-        }
+      public EFModelDocView(ModelingDocData docData
+                          , IServiceProvider serviceProvider
+                          , string physicalView)
+          : base(docData, serviceProvider)
+      {
+         this.physicalView = physicalView;
+      }
 
-        protected override bool LoadView()
-        {
-            BaseLoadView();
+      protected override bool LoadView()
+      {
+         if (DocData.RootElement != null)
+         {
+            List<Diagram> diagramList = DocData.Store.ElementDirectory.FindElements<Diagram>().ToList();
 
-            if (DocData.RootElement != null)
+            if (diagramList.Any())
             {
-               List<Diagram> diagramList = DocData.Store.ElementDirectory.FindElements<Diagram>().ToList();
+               Diagram = (string.IsNullOrEmpty(physicalView) || physicalView == "Default"
+                             ? diagramList[0]
+                             : diagramList.Find(d => d.Name == physicalView)) 
+                      ?? diagramList[0];
 
-                if (diagramList.Any())
-                {
-                    Diagram diagram = string.IsNullOrEmpty(physicalView) || physicalView == "Default"
-                                          ? diagramList[0]
-                                          : diagramList.Find(d => d.Name == physicalView);
-
-                    return (Diagram = diagram) != null;
-                }
+               return BaseLoadView();
             }
+         }
 
-            return false;
+         return false;
 
-        }
-    }
+      }
+   }
 }

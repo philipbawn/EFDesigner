@@ -196,14 +196,17 @@
     <Compile Include="CustomCode\AddCodeForm.Designer.cs">
       <DependentUpon>AddCodeForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomCode\Extensions\ModelRootExtensions.cs" />
     <Compile Include="CustomCode\Partials\CommandSet.cs" />
     <Compile Include="CustomCode\Constants.cs" />
+    <Compile Include="CustomCode\Partials\EFModelClipboardCommandSet.cs" />
     <Compile Include="CustomCode\Partials\EFModelDocData.cs" />
     <Compile Include="CustomCode\Extensions\ProjectExtensions.cs" />
+    <Compile Include="CustomCode\Partials\EFModelEditorFactory.cs" />
     <Compile Include="CustomCode\Partials\EFModelExplorer.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="CustomCode\Partials\Package.cs" />
+    <Compile Include="CustomCode\Partials\EFModelPackage.cs" />
     <Compile Include="CustomCode\Messages.cs" />
     <Compile Include="CustomCode\Partials\EFModelDocView.cs" />
     <Compile Include="CustomCode\Partials\EFModelExplorerToolWindow.cs" />
@@ -249,6 +252,7 @@
     <Content Include="System.Spatial.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <None Include=".editorconfig" />
     <None Include="app.config" />
     <None Include="MefExtension\CommandExtensionVSCT.vsct">
       <DependentUpon>CommandExtensionVSCT.tt</DependentUpon>

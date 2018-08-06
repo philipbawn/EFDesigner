@@ -1,6 +1,6 @@
 using System.Drawing;
 
-namespace Sawczyn.EFDesigner.EFModel
+namespace Sawczyn.EFDesigner.EFModel.CustomCode.Extensions
 {
    public static class ColorExtensions
    {

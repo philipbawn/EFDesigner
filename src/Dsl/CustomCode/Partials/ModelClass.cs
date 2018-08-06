@@ -48,7 +48,7 @@ namespace Sawczyn.EFDesigner.EFModel
       ///    Calls the pre-reset method on the associated property value handler for each
       ///    tracking property of this model element.
       /// </summary>
-      public virtual void PreResetIsTrackingProperties()
+      internal virtual void PreResetIsTrackingProperties()
       {
          IsDatabaseSchemaTrackingPropertyHandler.Instance.PreResetValue(this);
          IsNamespaceTrackingPropertyHandler.Instance.PreResetValue(this);

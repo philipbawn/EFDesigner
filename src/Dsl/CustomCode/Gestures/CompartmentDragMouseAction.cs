@@ -10,10 +10,10 @@ namespace Sawczyn.EFDesigner.EFModel
    public class CompartmentDragMouseAction : MouseAction
    {
       private readonly ModelElement sourceChild;
-      private readonly EnumShape sourceShape;
+      private readonly IHasDraggableChildren sourceShape;
       private RectangleD sourceCompartmentBounds;
 
-      public CompartmentDragMouseAction(ModelElement sourceChildElement, EnumShape sourceParentShape, RectangleD bounds)
+      public CompartmentDragMouseAction(ModelElement sourceChildElement, IHasDraggableChildren sourceParentShape, RectangleD bounds)
          : base(sourceParentShape.Diagram)
       {
          sourceChild = sourceChildElement;

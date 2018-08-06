@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 using Microsoft.VisualStudio.Modeling;
 
@@ -22,8 +18,7 @@ namespace Sawczyn.EFDesigner.EFModel
          if (current.IsSerializing)
             return;
 
-        // TODO: Add diagram 
-
+         DiagramLoader.LoadDiagram(element.Name);
       }
    }
 }

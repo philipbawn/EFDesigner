@@ -27,10 +27,22 @@ namespace Sawczyn.EFDesigner.EFModel
          if (Equals(e.NewValue, e.OldValue))
             return;
 
+         EFModelDiagram diagram = store.ElementDirectory.AllElements.OfType<EFModelDiagram>().FirstOrDefault(d => d.Name == (string)e.OldValue) 
+                               ?? store.ElementDirectory.AllElements.OfType<EFModelDiagram>().FirstOrDefault(d => d.Name == (string)e.NewValue);
+
          switch (e.DomainProperty.Name)
          {
             case "Name":
-               // TODO: Change name of current diagram
+               if (store.ElementDirectory.AllElements.OfType<EFModelDiagram>().Any(d => d.Name == element.Name && d != diagram))
+               {
+                  current.Rollback();
+                  ErrorDisplay.Show($"Diagram name '{element.Name}' already in use.");
+               }
+               else
+               {
+                  diagram.Name = element.Name;
+               }
+
                break;
          }
       }

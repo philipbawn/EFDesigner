@@ -1,6 +1,8 @@
 ﻿using System.Drawing;
 using Microsoft.VisualStudio.Modeling;
 
+using Sawczyn.EFDesigner.EFModel.CustomCode.Extensions;
+
 namespace Sawczyn.EFDesigner.EFModel
 {
    public partial class EnumShapeBase
@@ -34,8 +36,7 @@ namespace Sawczyn.EFDesigner.EFModel
 
       static string GetDisplayPropertyFromModelEnumForValuesCompartment(ModelElement element)
       {
-         ModelEnumValue enumValue = element as ModelEnumValue;
-         if (enumValue == null)
+         if (!(element is ModelEnumValue enumValue))
             return "?";
 
          return !string.IsNullOrWhiteSpace(enumValue.Value)
