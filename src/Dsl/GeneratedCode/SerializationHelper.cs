@@ -1168,7 +1168,7 @@ namespace Sawczyn.EFDesigner.EFModel
 				// Only model has schema, diagram has no schema.
 				rootElementSettings.SchemaTargetNamespace = "http://schemas.microsoft.com/dsltools/EFModel";
 			}
-			rootElementSettings.Version = new global::System.Version("1.2.1.3");
+			rootElementSettings.Version = new global::System.Version("1.2.2.0");
 	
 			// Carry out the normal serialization.
 			rootSerializer.Write(serializationContext, rootElement, writer, rootElementSettings);
@@ -1190,7 +1190,7 @@ namespace Sawczyn.EFDesigner.EFModel
 				throw new global::System.ArgumentNullException("reader");
 			#endregion
 	
-			global::System.Version expectedVersion = new global::System.Version("1.2.1.3");
+			global::System.Version expectedVersion = new global::System.Version("1.2.2.0");
 			string dslVersionStr = reader.GetAttribute("dslVersion");
 			if (dslVersionStr != null)
 			{
@@ -1584,19 +1584,20 @@ namespace Sawczyn.EFDesigner.EFModel
 							simpleMonikerResolver.ProcessAddedElement(element);
 						}
 						catch (DslModeling::AmbiguousMonikerException amEx)
-						{	// Ambiguous moniker detected.
-							context.LogError(
-								string.Format(
-									global::System.Globalization.CultureInfo.CurrentCulture,
-									EFModelDomainModel.SingletonResourceManager.GetString("AmbiguousMoniker"),
-									amEx.Moniker,
-									DslModeling::SerializationUtilities.GetElementName(element),
-									DslModeling::SerializationUtilities.GetElementName(amEx.Element)
-								),
-								"AmbiguousMoniker", 
-								this,
-								amEx.Element
-							);
+						{	// Ambiguous moniker detected...maybe
+	                  if (DslModeling::SerializationUtilities.GetElementName(element) != DslModeling::SerializationUtilities.GetElementName(amEx.Element))
+	                     context.LogError(
+	                        string.Format(
+	                           global::System.Globalization.CultureInfo.CurrentCulture,
+	                           EFModelDomainModel.SingletonResourceManager.GetString("AmbiguousMoniker"),
+	                           amEx.Moniker,
+	                           DslModeling::SerializationUtilities.GetElementName(element),
+	                           DslModeling::SerializationUtilities.GetElementName(amEx.Element)
+	                        ),
+	                        "AmbiguousMoniker", 
+	                        this,
+	                        amEx.Element
+	                     );
 						}
 					}
 				}
