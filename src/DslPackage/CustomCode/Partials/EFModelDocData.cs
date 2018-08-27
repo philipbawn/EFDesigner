@@ -5,14 +5,20 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+
 using EnvDTE;
+
 using EnvDTE80;
+
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Modeling;
+using Microsoft.VisualStudio.Modeling.Diagrams;
 using Microsoft.VisualStudio.Modeling.Shell;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+
 using NuGet.VisualStudio;
+
 using VSLangProj;
 
 namespace Sawczyn.EFDesigner.EFModel
@@ -22,11 +28,10 @@ namespace Sawczyn.EFDesigner.EFModel
       private static DTE _dte;
       private static DTE2 _dte2;
       private IComponentModel _componentModel;
-      private IVsOutputWindowPane _outputWindow;
       private IVsPackageInstaller _nugetInstaller;
-      private IVsPackageUninstaller _nugetUninstaller;
       private IVsPackageInstallerServices _nugetInstallerServices;
-
+      private IVsPackageUninstaller _nugetUninstaller;
+      private IVsOutputWindowPane _outputWindow;
 
       private static DTE Dte => _dte ?? (_dte = Package.GetGlobalService(typeof(DTE)) as DTE);
       private static DTE2 Dte2 => _dte2 ?? (_dte2 = Package.GetGlobalService(typeof(SDTE)) as DTE2);
@@ -39,6 +44,69 @@ namespace Sawczyn.EFDesigner.EFModel
       private static Project ActiveProject => Dte.ActiveSolutionProjects is Array activeSolutionProjects && activeSolutionProjects.Length > 0
                                                  ? activeSolutionProjects.GetValue(0) as Project
                                                  : null;
+
+      /// <summary>
+      ///    Validate the model before the file is saved.
+      /// </summary>
+      protected override bool CanSave(bool allowUserInterface)
+      {
+         if (allowUserInterface)
+            ValidationController?.ClearMessages();
+
+         return base.CanSave(allowUserInterface);
+      }
+
+      public void EnsureCorrectNuGetPackages(ModelRoot modelRoot, bool force = true)
+      {
+         EFVersionDetails versionInfo = GetEFVersionDetails(modelRoot);
+
+         if (force || ShouldLoadPackages(modelRoot, versionInfo))
+         {
+            // first unload what's there, if anything
+            if (versionInfo.CurrentPackageId != null)
+            {
+               // only remove dependencies if we're switching EF types
+               Dte.StatusBar.Text = $"Uninstalling {versionInfo.CurrentPackageId} v{versionInfo.CurrentPackageVersion}";
+
+               try
+               {
+                  NuGetUninstaller.UninstallPackage(ActiveProject, versionInfo.CurrentPackageId, true);
+                  Dte.StatusBar.Text = $"Finished uninstalling {versionInfo.CurrentPackageId} v{versionInfo.CurrentPackageVersion}";
+               }
+               catch (Exception ex)
+               {
+                  string message = $"Error uninstalling {versionInfo.CurrentPackageId} v{versionInfo.CurrentPackageVersion}";
+                  Dte.StatusBar.Text = message;
+                  OutputWindow.OutputString(message + "\n");
+                  OutputWindow.OutputString(ex.Message + "\n");
+                  OutputWindow.Activate();
+
+                  return;
+               }
+            }
+
+            Dte.StatusBar.Text = $"Installing {versionInfo.TargetPackageId} v{versionInfo.TargetPackageVersion}";
+
+            try
+            {
+               NuGetInstaller.InstallPackage(null, ActiveProject, versionInfo.TargetPackageId, versionInfo.TargetPackageVersion, false);
+               Dte.StatusBar.Text = $"Finished installing {versionInfo.TargetPackageId} v{versionInfo.TargetPackageVersion}";
+            }
+            catch (Exception ex)
+            {
+               string message = $"Error installing {versionInfo.TargetPackageId} v{versionInfo.TargetPackageVersion}";
+               Dte.StatusBar.Text = message;
+               OutputWindow.OutputString(message + "\n");
+               OutputWindow.OutputString(ex.Message + "\n");
+               OutputWindow.Activate();
+            }
+         }
+         else if (versionInfo.CurrentPackageId == versionInfo.TargetPackageId && versionInfo.CurrentPackageVersion == versionInfo.TargetPackageVersion)
+         {
+            string message = $"{versionInfo.TargetPackageId} v{versionInfo.TargetPackageVersion} already installed";
+            Dte.StatusBar.Text = message;
+         }
+      }
 
       internal static void GenerateCode(string filepath = null)
       {
@@ -54,7 +122,6 @@ namespace Sawczyn.EFDesigner.EFModel
             Messages.AddError($"Tried to generate code but couldn't find {templateFilename} in the solution.");
          else
          {
-
             try
             {
                Dte.StatusBar.Text = $"Generating code from {templateFilename}";
@@ -70,17 +137,35 @@ namespace Sawczyn.EFDesigner.EFModel
          }
       }
 
-      /// <summary>
-      /// Called before the document is initially loaded with data.
-      /// </summary>
-      protected override void OnDocumentLoading(EventArgs e)
+      private static EFVersionDetails GetEFVersionDetails(ModelRoot modelRoot)
       {
-         base.OnDocumentLoading(e);
-         ValidationController?.ClearMessages();
+         EFVersionDetails versionInfo = new EFVersionDetails
+                                        {
+                                           TargetPackageId = modelRoot.NuGetPackageVersion.PackageId,
+                                           TargetPackageVersion = modelRoot.NuGetPackageVersion.ActualPackageVersion,
+                                           CurrentPackageId = null,
+                                           CurrentPackageVersion = null
+                                        };
+
+         References references = ((VSProject)ActiveProject.Object).References;
+
+         foreach (Reference reference in references)
+         {
+            if (string.Compare(reference.Name, NuGetHelper.PACKAGEID_EF6, StringComparison.InvariantCultureIgnoreCase) == 0 ||
+                string.Compare(reference.Name, NuGetHelper.PACKAGEID_EFCORE, StringComparison.InvariantCultureIgnoreCase) == 0)
+            {
+               versionInfo.CurrentPackageId = reference.Name;
+               versionInfo.CurrentPackageVersion = reference.Version;
+
+               break;
+            }
+         }
+
+         return versionInfo;
       }
 
       /// <summary>
-      /// Called on both document load and reload.
+      ///    Called on both document load and reload.
       /// </summary>
       protected override void OnDocumentLoaded()
       {
@@ -89,7 +174,8 @@ namespace Sawczyn.EFDesigner.EFModel
          WarningDisplay.RegisterDisplayHandler(ShowWarning);
          QuestionDisplay.RegisterDisplayHandler(ShowBooleanQuestionBox);
 
-         if (!(RootElement is ModelRoot modelRoot)) return;
+         if (!(RootElement is ModelRoot modelRoot))
+            return;
 
          if (NuGetInstaller == null || NuGetUninstaller == null || NuGetInstallerServices == null)
             ModelRoot.CanLoadNugetPackages = false;
@@ -127,11 +213,14 @@ namespace Sawczyn.EFDesigner.EFModel
          List<GeneralizationConnector> generalizationConnectors = modelRoot.Store
                                                                            .ElementDirectory
                                                                            .FindElements<GeneralizationConnector>()
-                                                                           .Where(x => !x.FromShape.IsVisible || !x.ToShape.IsVisible).ToList();
+                                                                           .Where(x => !x.FromShape.IsVisible || !x.ToShape.IsVisible)
+                                                                           .ToList();
+
          List<AssociationConnector> associationConnectors = modelRoot.Store
                                                                      .ElementDirectory
                                                                      .FindElements<AssociationConnector>()
-                                                                     .Where(x => !x.FromShape.IsVisible || !x.ToShape.IsVisible).ToList();
+                                                                     .Where(x => !x.FromShape.IsVisible || !x.ToShape.IsVisible)
+                                                                     .ToList();
 
          if (generalizationConnectors.Any() || associationConnectors.Any())
          {
@@ -152,47 +241,20 @@ namespace Sawczyn.EFDesigner.EFModel
          {
             foreach (ModelClass modelClass in modelRoot.Store.ElementDirectory.FindElements<ModelClass>())
                PresentationHelper.ColorShapeOutline(modelClass);
+
             tx.Commit();
          }
 
          SetDocDataDirty(0);
       }
 
-      private DialogResult ShowQuestionBox(string question)
-      {
-         return PackageUtility.ShowMessageBox(ServiceProvider, question, OLEMSGBUTTON.OLEMSGBUTTON_YESNO, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_SECOND, OLEMSGICON.OLEMSGICON_QUERY);
-      }
-
-      private bool ShowBooleanQuestionBox(string question)
-      {
-         return ShowQuestionBox(question) == DialogResult.Yes;
-      }
-
-      // ReSharper disable once UnusedMember.Local
-      private void ShowMessage(string message)
-      {
-         Messages.AddMessage(message);
-      }
-
-      private void ShowWarning(string message)
-      {
-         Messages.AddWarning(message);
-      }
-
-      private void ShowError(string message)
-      {
-         Messages.AddError(message);
-         PackageUtility.ShowMessageBox(ServiceProvider, message, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_CRITICAL);
-      }
-
       /// <summary>
-      /// Validate the model before the file is saved.
+      ///    Called before the document is initially loaded with data.
       /// </summary>
-      protected override bool CanSave(bool allowUserInterface)
+      protected override void OnDocumentLoading(EventArgs e)
       {
-         if (allowUserInterface)
-            ValidationController?.ClearMessages();
-         return base.CanSave(allowUserInterface);
+         base.OnDocumentLoading(e);
+         ValidationController?.ClearMessages();
       }
 
       protected override void OnDocumentSaved(EventArgs e)
@@ -210,62 +272,65 @@ namespace Sawczyn.EFDesigner.EFModel
          }
       }
 
-      private class EFVersionDetails
+      /// <summary>
+      ///    Saves the given file.
+      /// </summary>
+      protected override void Save(string fileName)
       {
-         public string TargetPackageId { get; set; }
-         public string TargetPackageVersion { get; set; }
-         public string CurrentPackageId { get; set; }
-         public string CurrentPackageVersion { get; set; }
-      }
+         SerializationResult serializationResult = new SerializationResult();
+         ModelRoot modelRoot = (ModelRoot)RootElement;
 
-      public void EnsureCorrectNuGetPackages(ModelRoot modelRoot, bool force = true)
-      {
-         EFVersionDetails versionInfo = GetEFVersionDetails(modelRoot);
+         // Only save the diagrams if
+         // a) There are any to save
+         // b) This is NOT a SaveAs operation.  SaveAs should allow the subordinate document to control the save of its data as it is writing a new file.
+         //    Except DO save the diagram on SaveAs if there isn't currently a diagram as there won't be a subordinate document yet to save it.
 
-         if (force || ShouldLoadPackages(modelRoot, versionInfo))
+         bool saveAs = StringComparer.OrdinalIgnoreCase.Compare(fileName, FileName) != 0;
+
+         IList<PresentationElement> diagrams = PresentationViewsSubject.GetPresentation(RootElement);
+
+         if (diagrams.Count > 0 && (!saveAs || diagramDocumentLockHolder == null))
          {
-            // first unload what's there, if anything
-            if (versionInfo.CurrentPackageId != null)
+            if (diagrams[0] is EFModelDiagram)
             {
-               // only remove dependencies if we're switching EF types
-               Dte.StatusBar.Text = $"Uninstalling {versionInfo.CurrentPackageId} v{versionInfo.CurrentPackageVersion}";
+               string diagramFileName = fileName + DiagramExtension;
 
                try
                {
-                  NuGetUninstaller.UninstallPackage(ActiveProject, versionInfo.CurrentPackageId, true);
-                  Dte.StatusBar.Text = $"Finished uninstalling {versionInfo.CurrentPackageId} v{versionInfo.CurrentPackageVersion}";
+                  SuspendFileChangeNotification(diagramFileName);
+
+                  EFModelSerializationHelper.Instance.SaveModelAndDiagram(serializationResult, modelRoot, fileName, diagrams.OfType<EFModelDiagram>(), diagramFileName, Encoding, false);
                }
-               catch (Exception ex)
+               finally
                {
-                  string message = $"Error uninstalling {versionInfo.CurrentPackageId} v{versionInfo.CurrentPackageVersion}";
-                  Dte.StatusBar.Text = message;
-                  OutputWindow.OutputString(message + "\n");
-                  OutputWindow.OutputString(ex.Message + "\n");
-                  OutputWindow.Activate();
-                  return;
+                  ResumeFileChangeNotification(diagramFileName);
                }
-            }
-
-            Dte.StatusBar.Text = $"Installing {versionInfo.TargetPackageId} v{versionInfo.TargetPackageVersion}";
-
-            try
-            {
-               NuGetInstaller.InstallPackage(null, ActiveProject, versionInfo.TargetPackageId, versionInfo.TargetPackageVersion, false);
-               Dte.StatusBar.Text = $"Finished installing {versionInfo.TargetPackageId} v{versionInfo.TargetPackageVersion}";
-            }
-            catch (Exception ex)
-            {
-               string message = $"Error installing {versionInfo.TargetPackageId} v{versionInfo.TargetPackageVersion}";
-               Dte.StatusBar.Text = message;
-               OutputWindow.OutputString(message + "\n");
-               OutputWindow.OutputString(ex.Message + "\n");
-               OutputWindow.Activate();
             }
          }
-         else if (versionInfo.CurrentPackageId == versionInfo.TargetPackageId && versionInfo.CurrentPackageVersion == versionInfo.TargetPackageVersion)
+         else
          {
-            string message = $"{versionInfo.TargetPackageId} v{versionInfo.TargetPackageVersion} already installed";
-            Dte.StatusBar.Text = message;
+            EFModelSerializationHelper.Instance.SaveModel(serializationResult, modelRoot, fileName, Encoding, false);
+         }
+
+         // Report serialization messages.
+         SuspendErrorListRefresh();
+
+         try
+         {
+            foreach (SerializationMessage serializationMessage in serializationResult)
+            {
+               AddErrorListItem(new SerializationErrorListItem(ServiceProvider, serializationMessage));
+            }
+         }
+         finally
+         {
+            ResumeErrorListRefresh();
+         }
+
+         if (serializationResult.Failed)
+         {
+            // Save failed.
+            throw new InvalidOperationException(EFModelDomainModel.SingletonResourceManager.GetString("CannotSaveDocument"));
          }
       }
 
@@ -280,35 +345,39 @@ namespace Sawczyn.EFDesigner.EFModel
                  ShowQuestionBox($"Referenced libraries don't match Entity Framework {modelRoot.NuGetPackageVersion.ActualPackageVersion}. Fix that now?") == DialogResult.Yes);
       }
 
-      private static EFVersionDetails GetEFVersionDetails(ModelRoot modelRoot)
+      private bool ShowBooleanQuestionBox(string question)
       {
+         return ShowQuestionBox(question) == DialogResult.Yes;
+      }
 
-         EFVersionDetails versionInfo = new EFVersionDetails
-         {
-            TargetPackageId = modelRoot.NuGetPackageVersion.PackageId
-                                         ,
-            TargetPackageVersion = modelRoot.NuGetPackageVersion.ActualPackageVersion
-                                         ,
-            CurrentPackageId = null
-                                         ,
-            CurrentPackageVersion = null
-         };
+      private void ShowError(string message)
+      {
+         Messages.AddError(message);
+         PackageUtility.ShowMessageBox(ServiceProvider, message, OLEMSGBUTTON.OLEMSGBUTTON_OK, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST, OLEMSGICON.OLEMSGICON_CRITICAL);
+      }
 
-         References references = ((VSProject)ActiveProject.Object).References;
+      // ReSharper disable once UnusedMember.Local
+      private void ShowMessage(string message)
+      {
+         Messages.AddMessage(message);
+      }
 
-         foreach (Reference reference in references)
-         {
-            if (string.Compare(reference.Name, NuGetHelper.PACKAGEID_EF6, StringComparison.InvariantCultureIgnoreCase) == 0 ||
-                string.Compare(reference.Name, NuGetHelper.PACKAGEID_EFCORE, StringComparison.InvariantCultureIgnoreCase) == 0)
-            {
-               versionInfo.CurrentPackageId = reference.Name;
-               versionInfo.CurrentPackageVersion = reference.Version;
+      private DialogResult ShowQuestionBox(string question)
+      {
+         return PackageUtility.ShowMessageBox(ServiceProvider, question, OLEMSGBUTTON.OLEMSGBUTTON_YESNO, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_SECOND, OLEMSGICON.OLEMSGICON_QUERY);
+      }
 
-               break;
-            }
-         }
+      private void ShowWarning(string message)
+      {
+         Messages.AddWarning(message);
+      }
 
-         return versionInfo;
+      private class EFVersionDetails
+      {
+         public string TargetPackageId { get; set; }
+         public string TargetPackageVersion { get; set; }
+         public string CurrentPackageId { get; set; }
+         public string CurrentPackageVersion { get; set; }
       }
    }
 }

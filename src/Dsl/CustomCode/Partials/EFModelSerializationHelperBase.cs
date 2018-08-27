@@ -1,66 +1,39 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.IO.Packaging;
+using System.Linq;
+using System.Net.Mime;
+using System.Text;
+using System.Xml;
+
 using Microsoft.VisualStudio.Modeling;
+using Microsoft.VisualStudio.Modeling.Diagrams;
 
 namespace Sawczyn.EFDesigner.EFModel
 {
    public abstract partial class EFModelSerializationHelperBase
    {
-      internal static void ResetTrackingProperties(Store store)
-      {
-         // Two passes required - one to set all elements to storage-based then another to set 
-         // some back to being tracking.  
-         foreach (ModelClass element in store.ElementDirectory.FindElements<ModelClass>())
-            element.PreResetIsTrackingProperties();
-         foreach (ModelClass element in store.ElementDirectory.FindElements<ModelClass>())
-            element.ResetIsTrackingProperties();
-
-         foreach (ModelEnum element in store.ElementDirectory.FindElements<ModelEnum>())
-            element.PreResetIsTrackingProperties();
-         foreach (ModelEnum element in store.ElementDirectory.FindElements<ModelEnum>())
-            element.ResetIsTrackingProperties();
-      }
-
       /// <summary>Customize model loading.</summary>
       /// <param name="serializationResult">The serialization result from the load operation.</param>
       /// <param name="partition">The partition in which the new instance was created.</param>
       /// <param name="fileName">The name of the file from which the instance was deserialized.</param>
       /// <param name="modelRoot">The root of the file that was loaded.</param>
       [SuppressMessage("ReSharper", "UnusedParameter.Local")]
-      private void OnPostLoadModel(SerializationResult serializationResult, Partition partition, string fileName, ModelRoot modelRoot) {}
+      protected void OnPostLoadModel(SerializationResult serializationResult, Partition partition, string fileName, ModelRoot modelRoot) { }
 
       /// <summary>Customize model and diagram loading.</summary>
-      /// <param name="serializationResult">
-      ///    Stores serialization result from
-      ///    the load operation.
-      /// </param>
-      /// <param name="modelPartition">
-      ///    Partition in which the new
-      ///    instance will be created.
-      /// </param>
-      /// <param name="modelFileName">
-      ///    Name of the file from which the
-      ///    instance will be deserialized.
-      /// </param>
-      /// <param name="diagramPartition">
-      ///    Partition in which the new
-      ///    diagram instance will be created.
-      /// </param>
-      /// <param name="diagramFileName">
-      ///    Name of the file from which the
-      ///    diagram instance will be deserialized.
-      /// </param>
+      /// <param name="serializationResult">Stores serialization result from the load operation.</param>
+      /// <param name="modelPartition">Partition in which the new instance will be created.</param>
+      /// <param name="modelFileName">Name of the file from which the instance will be deserialized.</param>
+      /// <param name="diagramPartition">Partition in which the new diagram instance will be created.</param>
+      /// <param name="diagramFileName">Name of the file from which the diagram instance will be deserialized.</param>
       /// <param name="modelRoot">The root of the file that was loaded.</param>
       /// <param name="diagram">The diagram matching the modelRoot.</param>
       [SuppressMessage("ReSharper", "UnusedParameter.Local")]
-      private void OnPostLoadModelAndDiagram(
-         SerializationResult serializationResult,
-         Partition modelPartition,
-         string modelFileName,
-         Partition diagramPartition,
-         string diagramFileName,
-         ModelRoot modelRoot,
-         EFModelDiagram diagram)
+      protected void OnPostLoadModelAndDiagram(SerializationResult serializationResult, Partition modelPartition, string modelFileName, Partition diagramPartition, string diagramFileName, ModelRoot modelRoot, EFModelDiagram diagram)
       {
          Debug.Assert(modelPartition != null);
          Debug.Assert(modelPartition.Store != null);
@@ -68,5 +41,39 @@ namespace Sawczyn.EFDesigner.EFModel
          // Tracking properties need to be set up according to whether the serialization matches the calculated values.  
          ResetTrackingProperties(modelPartition.Store);
       }
+
+      protected void OnPostLoadModelAndDiagram(SerializationResult serializationResult, Partition modelPartition, string modelFileName, Partition diagramPartition, string diagramFileName, ModelRoot modelRoot, IEnumerable<EFModelDiagram> diagrams)
+      {
+         OnPostLoadModelAndDiagram(serializationResult, modelPartition, modelFileName, diagramPartition, diagramFileName, modelRoot, diagrams?.FirstOrDefault(d => string.IsNullOrEmpty(d.Name)));
+      }
+
+      internal static void ResetTrackingProperties(Store store)
+      {
+         // Two passes required - one to set all elements to storage-based then another to set 
+         // some back to being tracking.  
+
+         foreach (ModelAttribute element in store.ElementDirectory.FindElements<ModelAttribute>())
+            element.PreResetIsTrackingProperties();
+
+         foreach (ModelAttribute element in store.ElementDirectory.FindElements<ModelAttribute>())
+            element.ResetIsTrackingProperties();
+
+         /************************************************/
+
+         foreach (ModelClass element in store.ElementDirectory.FindElements<ModelClass>())
+            element.PreResetIsTrackingProperties();
+
+         foreach (ModelClass element in store.ElementDirectory.FindElements<ModelClass>())
+            element.ResetIsTrackingProperties();
+
+         /************************************************/
+
+         foreach (ModelEnum element in store.ElementDirectory.FindElements<ModelEnum>())
+            element.PreResetIsTrackingProperties();
+
+         foreach (ModelEnum element in store.ElementDirectory.FindElements<ModelEnum>())
+            element.ResetIsTrackingProperties();
+      }
+
    }
 }

@@ -245,6 +245,7 @@
     <Compile Include="CustomCode\Connection Builders\GeneralizationBuilder.cs" />
     <Compile Include="CustomCode\Partials\GeneralizationConnector.cs" />
     <Compile Include="CustomCode\Partials\IHighlightFromModelExplorer.cs" />
+    <Compile Include="CustomCode\Partials\IModelElementCompartmented.cs" />
     <Compile Include="CustomCode\Partials\IModelElementWithCompartments.cs" />
     <Compile Include="CustomCode\Partials\ModelAttribute.cs" />
     <Compile Include="CustomCode\Type Descriptors\ModelAttributeTypeDescriptor.cs" />

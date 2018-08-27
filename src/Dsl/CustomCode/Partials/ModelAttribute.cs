@@ -9,15 +9,6 @@ using Sawczyn.EFDesigner.EFModel.CustomCode.Extensions;
 namespace Sawczyn.EFDesigner.EFModel
 {
 
-   /// <summary>
-   /// Tag interface indicating diagram items for this element are compartments in a parent element
-   /// </summary>
-   public interface IModelElementCompartmented
-   {
-      IModelElementWithCompartments ParentModelElement { get; }
-      string CompartmentName { get; }
-   }
-
    [ValidationState(ValidationState.Enabled)]
    public partial class ModelAttribute : IModelElementCompartmented
    {
