@@ -8,6 +8,7 @@ namespace Sawczyn.EFDesigner.EFModel
    {
       private static readonly Type[] RuleClasses =
       {
+         typeof(DiagramFixup),
          typeof(AssociationAddRules),
          typeof(AssociationChangeRules),
          typeof(GeneralizationAddRules),

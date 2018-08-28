@@ -87,9 +87,7 @@ namespace Sawczyn.EFDesigner.EFModel
                      result = diagramSerializer.TryCreateInstance(serializationContext, reader, diagramPartition) as EFModelDiagram;
 
                      if (result != null)
-                     {
                         ReadRootElement(serializationContext, result, reader, schemaResolver);
-                     }
                   }
                }
                catch (XmlException xEx)
@@ -105,57 +103,47 @@ namespace Sawczyn.EFDesigner.EFModel
                }
             }
 
+            // Create diagram if it doesn't exist
             if (result == null && !serializationResult.Failed)
-            {
-               // Create diagram if it doesn't exist
                result = CreateDiagramHelper(diagramPartition, modelRoot);
-            }
 
-            if (t.IsActive)
+            if (t.IsActive) 
                t.Commit();
          } // End inner Tx
 
          return result;
       }
 
-      public override ModelRoot LoadModelAndDiagram(SerializationResult serializationResult, Store store, string modelFileName, string diagramFileName, ISchemaResolver schemaResolver, ValidationController validationController, ISerializerLocator serializerLocator)
+      public override ModelRoot LoadModelAndDiagram(SerializationResult serializationResult, Partition modelPartition, string modelFileName, Partition diagramPartition, string diagramFileName, ISchemaResolver schemaResolver, ValidationController validationController, ISerializerLocator serializerLocator)
       {
          #region Check Parameters
 
-         if (store == null)
-            throw new ArgumentNullException(nameof(store));
-
+         if (modelPartition == null)
+            throw new ArgumentNullException(nameof(modelPartition));
+         if (diagramPartition == null)
+            throw new ArgumentNullException(nameof(diagramPartition));
+         if (modelFileName == null)
+            throw new ArgumentNullException(nameof(modelFileName));
+         if (diagramFileName == null)
+            throw new ArgumentNullException(nameof(diagramFileName));
          #endregion
 
-         // Test fire the packager to see if the diagram is a regular xml file or a zip
-         // Bad form? Sure ... exception handling is not flow control! Would love to see a better way.
-
-         try
-         {
-            using (Package.Open(diagramFileName, FileMode.Open, FileAccess.Read)) { }
-         }
-         catch (FileFormatException)
-         {
-            return LoadModelAndDiagram(serializationResult, store, modelFileName, diagramFileName, schemaResolver, validationController, serializerLocator);
-         }
-
          // Load the model
-         ModelRoot modelRoot = LoadModel(serializationResult, store, modelFileName, schemaResolver, validationController, null);
+         ModelRoot modelRoot = LoadModel(serializationResult, modelPartition.Store, modelFileName, schemaResolver, validationController, null);
 
          // don't try to deserialize diagram data if model load failed.
          if (serializationResult.Failed)
             return modelRoot;
 
-         Partition diagramPartition = store.DefaultPartitionForClass(EFModelDiagram.DomainClassId);
          FileInfo fileInfo = new FileInfo(diagramFileName);
 
          if (!fileInfo.Exists || fileInfo.Length <= MIN_FILE_LENGTH)
          {
             using (Transaction transaction = diagramPartition.Store.TransactionManager.BeginTransaction("New diagram"))
             {
-               EFModelDiagram newDiagram = CreateDiagramHelper(store.DefaultPartition, modelRoot);
+               EFModelDiagram newDiagram = CreateDiagramHelper(modelPartition, modelRoot);
                newDiagram.ModelElement = modelRoot;
-               OnPostLoadModelAndDiagram(serializationResult, store.DefaultPartition, modelFileName, diagramPartition, diagramFileName, modelRoot, new[] { newDiagram });
+               OnPostLoadModelAndDiagram(serializationResult, modelPartition, modelFileName, diagramPartition, diagramFileName, modelRoot, new[] { newDiagram });
                transaction.Commit();
             }
          }
@@ -165,7 +153,7 @@ namespace Sawczyn.EFDesigner.EFModel
             {
                using (Package pkgOutputDoc = Package.Open(diagramFileName, FileMode.Open, FileAccess.Read))
                {
-                  DomainXmlSerializerDirectory directory = GetDirectory(store);
+                  DomainXmlSerializerDirectory directory = GetDirectory(diagramPartition.Store);
                   DomainClassXmlSerializer diagramSerializer = directory.GetSerializer(EFModelDiagram.DomainClassId);
 
                   if (diagramSerializer != null)
@@ -202,7 +190,7 @@ namespace Sawczyn.EFDesigner.EFModel
                            }
                         }
 
-                        OnPostLoadModelAndDiagram(serializationResult, store.DefaultPartition, modelFileName, diagramPartition, diagramFileName, modelRoot, diagrams);
+                        OnPostLoadModelAndDiagram(serializationResult, modelPartition, modelFileName, diagramPartition, diagramFileName, modelRoot, diagrams);
 
                         // Do load-time validation if a ValidationController is provided.
                         if (!serializationResult.Failed && validationController != null)
@@ -229,7 +217,7 @@ namespace Sawczyn.EFDesigner.EFModel
             catch (FileFormatException)
             {
                // old-style xml diagram file; not a zip. use old school processing
-               modelRoot = base.LoadModelAndDiagram(serializationResult, store, modelFileName, diagramFileName, schemaResolver, validationController, serializerLocator);
+               modelRoot = base.LoadModelAndDiagram(serializationResult, modelPartition, modelFileName, diagramPartition, diagramFileName, schemaResolver, validationController, serializerLocator);
             }
          }
 

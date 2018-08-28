@@ -256,6 +256,7 @@
     <Compile Include="CustomCode\Type Descriptors\ModelRootTypeDescriptor.cs" />
     <Compile Include="CustomCode\Connection Builders\UnidirectionalAssociationBuilder.cs" />
     <Compile Include="CustomCode\Rules\ModelAttributeAddRules.cs" />
+    <Compile Include="CustomCode\Rules\DiagramFixup.cs" />
     <Compile Include="CustomCode\Utilities\FileDropHelper.cs" />
     <Compile Include="CustomCode\Utilities\Nuget\NuGetHelper.cs" />
     <Compile Include="CustomCode\Utilities\Nuget\Models\NuGetDisplay.cs" />

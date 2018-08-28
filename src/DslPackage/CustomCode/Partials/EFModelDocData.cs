@@ -56,6 +56,16 @@ namespace Sawczyn.EFDesigner.EFModel
          return base.CanSave(allowUserInterface);
       }
 
+      /// <summary>
+      /// Loads the given file.
+      /// </summary>
+      protected override void Load(string fileName, bool isReload)
+      {
+         base.Load(fileName, isReload);
+         Store.RuleManager.DisableRule(typeof(FixUpDiagram));
+         Store.RuleManager.EnableRule(typeof(DiagramFixup));
+      }
+
       public void EnsureCorrectNuGetPackages(ModelRoot modelRoot, bool force = true)
       {
          EFVersionDetails versionInfo = GetEFVersionDetails(modelRoot);
