@@ -1626,9 +1626,6 @@
           <XmlPropertyData XmlName="fillColor">
             <DomainPropertyMoniker Name="EFModelDiagram/FillColor" />
           </XmlPropertyData>
-          <XmlPropertyData XmlName="textColor">
-            <DomainPropertyMoniker Name="EFModelDiagram/TextColor" />
-          </XmlPropertyData>
         </ElementData>
       </XmlClassData>
       <XmlClassData TypeName="ModelEnum" MonikerAttributeName="" SerializeId="true" MonikerElementName="modelEnumMoniker" ElementName="modelEnum" MonikerTypeName="ModelEnumMoniker">
@@ -1807,14 +1804,9 @@
       </LinkConnectDirective>
     </ConnectionBuilder>
   </ConnectionBuilders>
-  <Diagram Id="4bd5b7e6-86b6-43d2-962d-b6e87ac4690a" Description="" Name="EFModelDiagram" DisplayName="Class Diagram" Namespace="Sawczyn.EFDesigner.EFModel" ExposesFillColor="true" ExposesTextColor="true">
+  <Diagram Id="4bd5b7e6-86b6-43d2-962d-b6e87ac4690a" Description="" Name="EFModelDiagram" DisplayName="Class Diagram" Namespace="Sawczyn.EFDesigner.EFModel" ExposesFillColor="true">
     <Properties>
       <DomainProperty Id="1f98fc11-fb8f-4cec-a9d1-050a5f3ce467" Description="Diagram background color" Name="FillColor" DisplayName="Background Color" Kind="CustomStorage" Category="Display">
-        <Type>
-          <ExternalTypeMoniker Name="/System.Drawing/Color" />
-        </Type>
-      </DomainProperty>
-      <DomainProperty Id="b0117940-5dec-42c8-990b-b6bd619be766" Description="Diagram text color" Name="TextColor" DisplayName="Text Color" Kind="CustomStorage" Category="Display">
         <Type>
           <ExternalTypeMoniker Name="/System.Drawing/Color" />
         </Type>

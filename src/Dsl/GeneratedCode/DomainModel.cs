@@ -212,7 +212,6 @@ namespace Sawczyn.EFDesigner.EFModel
 				new DomainMemberInfo(typeof(BidirectionalAssociation), "SourceDescription", BidirectionalAssociation.SourceDescriptionDomainPropertyId, typeof(BidirectionalAssociation.SourceDescriptionPropertyHandler)),
 				new DomainMemberInfo(typeof(BidirectionalAssociation), "SourceSummary", BidirectionalAssociation.SourceSummaryDomainPropertyId, typeof(BidirectionalAssociation.SourceSummaryPropertyHandler)),
 				new DomainMemberInfo(typeof(EFModelDiagram), "FillColor", EFModelDiagram.FillColorDomainPropertyId, typeof(EFModelDiagram.FillColorPropertyHandler)),
-				new DomainMemberInfo(typeof(EFModelDiagram), "TextColor", EFModelDiagram.TextColorDomainPropertyId, typeof(EFModelDiagram.TextColorPropertyHandler)),
 				new DomainMemberInfo(typeof(AssociationConnector), "Color", AssociationConnector.ColorDomainPropertyId, typeof(AssociationConnector.ColorPropertyHandler)),
 				new DomainMemberInfo(typeof(AssociationConnector), "DashStyle", AssociationConnector.DashStyleDomainPropertyId, typeof(AssociationConnector.DashStylePropertyHandler)),
 				new DomainMemberInfo(typeof(ClassShape), "FillColor", ClassShape.FillColorDomainPropertyId, typeof(ClassShape.FillColorPropertyHandler)),

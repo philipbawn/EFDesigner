@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
-
-using EnvDTE;
-
+﻿using EnvDTE;
 using EnvDTE80;
-
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Modeling;
 using Microsoft.VisualStudio.Modeling.Diagrams;
 using Microsoft.VisualStudio.Modeling.Shell;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-
 using NuGet.VisualStudio;
-
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using VSLangProj;
 
 namespace Sawczyn.EFDesigner.EFModel
@@ -65,6 +60,7 @@ namespace Sawczyn.EFDesigner.EFModel
          Store.RuleManager.DisableRule(typeof(FixUpDiagram));
          Store.RuleManager.EnableRule(typeof(DiagramFixup));
       }
+
 
       public void EnsureCorrectNuGetPackages(ModelRoot modelRoot, bool force = true)
       {
@@ -150,12 +146,12 @@ namespace Sawczyn.EFDesigner.EFModel
       private static EFVersionDetails GetEFVersionDetails(ModelRoot modelRoot)
       {
          EFVersionDetails versionInfo = new EFVersionDetails
-                                        {
-                                           TargetPackageId = modelRoot.NuGetPackageVersion.PackageId,
-                                           TargetPackageVersion = modelRoot.NuGetPackageVersion.ActualPackageVersion,
-                                           CurrentPackageId = null,
-                                           CurrentPackageVersion = null
-                                        };
+         {
+            TargetPackageId = modelRoot.NuGetPackageVersion.PackageId,
+            TargetPackageVersion = modelRoot.NuGetPackageVersion.ActualPackageVersion,
+            CurrentPackageId = null,
+            CurrentPackageVersion = null
+         };
 
          References references = ((VSProject)ActiveProject.Object).References;
 
@@ -255,6 +251,9 @@ namespace Sawczyn.EFDesigner.EFModel
             tx.Commit();
          }
 
+         foreach (EFModelDiagram diagram in PresentationViewsSubject.GetPresentation(modelRoot).OfType<EFModelDiagram>())
+            diagram.SubscribeCompartmentItemsEvents();
+
          SetDocDataDirty(0);
       }
 
@@ -267,9 +266,47 @@ namespace Sawczyn.EFDesigner.EFModel
          ValidationController?.ClearMessages();
       }
 
+      public override void OpenView(Guid logicalView, object viewContextObj)
+      {
+         if (!(viewContextObj is string))
+            base.OpenView(logicalView, viewContextObj);
+
+         string viewContext = (string)viewContextObj;
+         Diagram diagram = Store.ElementDirectory.FindElements<EFModelDiagram>().SingleOrDefault(d => d.Name == viewContext);
+
+         if (diagram == null)
+         {
+            using (Transaction transaction = Store.TransactionManager.BeginTransaction("DocData.OpenView", true))
+            {
+               // ReSharper disable once UseObjectOrCollectionInitializer
+               diagram = new EFModelDiagram(Store, new PropertyAssignment(Diagram.NameDomainPropertyId, viewContext));
+               diagram.ModelElement = RootElement;
+
+               transaction.Commit();
+            }
+         }
+
+         base.OpenView(logicalView, viewContextObj);
+      }
+
+
       protected override void OnDocumentSaved(EventArgs e)
       {
          base.OnDocumentSaved(e);
+
+         // Notify the Running Document Table that the subordinate has been saved
+         // If this was a SaveAs, then let the subordinate document do this notification itself.
+         // Otherwise VS will never ask the subordinate to save itself.
+         if (e is DocumentSavedEventArgs savedEventArgs && ServiceProvider != null)
+         {
+            if (StringComparer.OrdinalIgnoreCase.Compare(savedEventArgs.OldFileName, savedEventArgs.NewFileName) == 0)
+            {
+               IVsRunningDocumentTable rdt = (IVsRunningDocumentTable)ServiceProvider.GetService(typeof(IVsRunningDocumentTable));
+
+               if (rdt != null && diagramDocumentLockHolder?.SubordinateDocData != null)
+                  Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(rdt.NotifyOnAfterSave(diagramDocumentLockHolder.SubordinateDocData.Cookie));
+            }
+         }
 
          if (RootElement is ModelRoot modelRoot)
          {
@@ -344,6 +381,50 @@ namespace Sawczyn.EFDesigner.EFModel
          }
       }
 
+      protected override void SaveSubordinateFile(DocData subordinateDocument, string fileName)
+      {
+         SerializationResult serializationResult = new SerializationResult();
+         List<EFModelDiagram> diagrams = PresentationViewsSubject.GetPresentation(RootElement).OfType<EFModelDiagram>().ToList();
+         if (diagrams.Any())
+         {
+            try
+            {
+               SuspendFileChangeNotification(fileName);
+               EFModelSerializationHelper.Instance.SaveDiagrams(serializationResult, diagrams.ToArray(), fileName, Encoding, false);
+            }
+            finally
+            {
+               ResumeFileChangeNotification(fileName);
+            }
+         }
+
+         // Report serialization messages.
+         SuspendErrorListRefresh();
+         try
+         {
+            foreach (SerializationMessage serializationMessage in serializationResult)
+               AddErrorListItem(new SerializationErrorListItem(ServiceProvider, serializationMessage));
+         }
+         finally
+         {
+            ResumeErrorListRefresh();
+         }
+
+         if (!serializationResult.Failed)
+         {
+            // Notify the Running Document Table that the subordinate has been saved
+            IVsRunningDocumentTable rdt = (IVsRunningDocumentTable)ServiceProvider?.GetService(typeof(IVsRunningDocumentTable));
+
+            if (rdt != null && diagramDocumentLockHolder?.SubordinateDocData != null)
+               Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(rdt.NotifyOnAfterSave(diagramDocumentLockHolder.SubordinateDocData.Cookie));
+         }
+         else
+         {
+            // Save failed.
+            throw new InvalidOperationException(EFModelDomainModel.SingletonResourceManager.GetString("CannotSaveDocument"));
+         }
+      }
+
       private bool ShouldLoadPackages(ModelRoot modelRoot, EFVersionDetails versionInfo)
       {
          Version currentPackageVersion = new Version(versionInfo.CurrentPackageVersion);
@@ -355,10 +436,7 @@ namespace Sawczyn.EFDesigner.EFModel
                  ShowQuestionBox($"Referenced libraries don't match Entity Framework {modelRoot.NuGetPackageVersion.ActualPackageVersion}. Fix that now?") == DialogResult.Yes);
       }
 
-      private bool ShowBooleanQuestionBox(string question)
-      {
-         return ShowQuestionBox(question) == DialogResult.Yes;
-      }
+      private bool ShowBooleanQuestionBox(string question) => ShowQuestionBox(question) == DialogResult.Yes;
 
       private void ShowError(string message)
       {
@@ -367,20 +445,11 @@ namespace Sawczyn.EFDesigner.EFModel
       }
 
       // ReSharper disable once UnusedMember.Local
-      private void ShowMessage(string message)
-      {
-         Messages.AddMessage(message);
-      }
+      private void ShowMessage(string message) => Messages.AddMessage(message);
 
-      private DialogResult ShowQuestionBox(string question)
-      {
-         return PackageUtility.ShowMessageBox(ServiceProvider, question, OLEMSGBUTTON.OLEMSGBUTTON_YESNO, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_SECOND, OLEMSGICON.OLEMSGICON_QUERY);
-      }
+      private DialogResult ShowQuestionBox(string question) => PackageUtility.ShowMessageBox(ServiceProvider, question, OLEMSGBUTTON.OLEMSGBUTTON_YESNO, OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_SECOND, OLEMSGICON.OLEMSGICON_QUERY);
 
-      private void ShowWarning(string message)
-      {
-         Messages.AddWarning(message);
-      }
+      private void ShowWarning(string message) => Messages.AddWarning(message);
 
       private class EFVersionDetails
       {

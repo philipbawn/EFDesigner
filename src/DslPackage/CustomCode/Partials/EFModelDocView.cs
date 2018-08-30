@@ -1,20 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 
 using Microsoft.VisualStudio.Modeling;
-using Microsoft.VisualStudio.Modeling.Shell;
-using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Modeling.Diagrams;
 
 namespace Sawczyn.EFDesigner.EFModel
 {
    internal partial class EFModelDocView
    {
+      protected EFModelExplorerToolWindow ModelExplorerWindow => EFModelPackage.Instance?.GetToolWindow(typeof(EFModelExplorerToolWindow), true) as EFModelExplorerToolWindow;
+      private string physicalView;
+
+      public EFModelDocView(EFModelDocData docData, IServiceProvider serviceProvider, string physicalView) : base(docData, serviceProvider)
+      {
+         this.physicalView = physicalView;
+      }
+
+      protected override bool LoadView()
+      {
+         BaseLoadView();
+
+         Debug.Assert(DocData.RootElement != null);
+
+         if (DocData.RootElement == null)
+            return false;
+
+         List<EFModelDiagram> diagrams = DocData.Store.ElementDirectory.AllElements.OfType<EFModelDiagram>().ToList();
+
+         if (!diagrams.Any())
+            return false;
+
+         Diagram = string.IsNullOrEmpty(physicalView)
+                                     ? diagrams[0]
+                                     : diagrams.FirstOrDefault(d => d.Name == physicalView);
+
+         return (Diagram != null);
+      }
+
       /// <summary>
-      /// Called when selection changes in this window.
+      ///    Called when selection changes in this window.
       /// </summary>
       /// <remarks>
-      /// Overriden to update the F1 help keyword for the selection.
+      ///    Overriden to update the F1 help keyword for the selection.
       /// </remarks>
       /// <param name="e"></param>
       protected override void OnSelectionChanged(EventArgs e)
@@ -36,7 +66,5 @@ namespace Sawczyn.EFDesigner.EFModel
          //      ModelExplorerWindow.SetSelectedComponents(selected_diagram);
          //}
       }
-
-      protected EFModelExplorerToolWindow ModelExplorerWindow => EFModelPackage.Instance?.GetToolWindow(typeof(EFModelExplorerToolWindow), true) as EFModelExplorerToolWindow;
    }
 }

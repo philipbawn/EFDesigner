@@ -2625,18 +2625,6 @@
     <value>Display</value>
     <comment>Category for DomainProperty &apos;FillColor&apos; on DomainClass &apos;EFModelDiagram&apos;</comment>
   </data>
-  <data name="Sawczyn.EFDesigner.EFModel.EFModelDiagram/TextColor.Description" xml:space="preserve">
-    <value>Diagram text color</value>
-    <comment>Description for DomainProperty &apos;TextColor&apos; on DomainClass &apos;EFModelDiagram&apos;</comment>
-  </data>
-  <data name="Sawczyn.EFDesigner.EFModel.EFModelDiagram/TextColor.DisplayName" xml:space="preserve">
-    <value>Text Color</value>
-    <comment>DisplayName for DomainProperty &apos;TextColor&apos; on DomainClass &apos;EFModelDiagram&apos;</comment>
-  </data>
-  <data name="Sawczyn.EFDesigner.EFModel.EFModelDiagram/TextColor.Category" xml:space="preserve">
-    <value>Display</value>
-    <comment>Category for DomainProperty &apos;TextColor&apos; on DomainClass &apos;EFModelDiagram&apos;</comment>
-  </data>
   <data name="Class DiagramsToolboxTab" xml:space="preserve">
     <value>Class Diagrams</value>
     <comment>Toolbox item tab name</comment>

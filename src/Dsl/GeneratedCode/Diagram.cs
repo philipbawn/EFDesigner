@@ -99,31 +99,6 @@ namespace Sawczyn.EFDesigner.EFModel
 			this.Invalidate();
 		}
 		
-		/// <summary>
-		/// Custom storage for domain property FillColor.
-		/// </summary>
-		private global::System.Drawing.Color GetTextColorValue()
-		{
-			DslDiagrams::BrushSettings settings = this.StyleSet.GetOverriddenBrushSettings(DslDiagrams::DiagramBrushes.DiagramText);
-			if(settings != null && settings.IsOverridden(DslDiagrams::BrushSettingsFlags.Color))
-			{
-				return settings.Color;
-			}
-			return global::System.Drawing.Color.FromKnownColor(global::System.Drawing.KnownColor.Black);
-		}
-		
-		/// <summary>
-		/// Custom storage for domain property FillColor.
-		/// </summary>
-		private void SetTextColorValue(global::System.Drawing.Color newValue)
-		{
-			DslDiagrams::BrushSettings settings = this.StyleSet.GetOverriddenBrushSettings(DslDiagrams::DiagramBrushes.DiagramText);
-			if(settings == null) settings = new DslDiagrams::BrushSettings();
-			settings.Color = newValue;
-			this.StyleSet.OverrideBrush(DslDiagrams::DiagramBrushes.DiagramText, settings);
-			this.Invalidate();
-		}
-		
 		#endregion
 		#region Auto-placement
 		/// <summary>
@@ -903,96 +878,6 @@ namespace Sawczyn.EFDesigner.EFModel
 					// set to CustomStorage. Please provide the SetFillColorValue()
 					// method on the domain class.
 					element.SetFillColorValue(newValue);
-					ValueChanged(element, oldValue, GetValue(element));
-				}
-			}
-		}
-		
-		#endregion
-		#region TextColor domain property code
-		
-		/// <summary>
-		/// TextColor domain property Id.
-		/// </summary>
-		public static readonly global::System.Guid TextColorDomainPropertyId = new global::System.Guid(0xb0117940, 0x5dec, 0x42c8, 0x99, 0x0b, 0xb6, 0xbd, 0x61, 0x9b, 0xe7, 0x66);
-		
-		/// <summary>
-		/// Gets or sets the value of TextColor domain property.
-		/// Diagram text color
-		/// </summary>
-		[DslDesign::DisplayNameResource("Sawczyn.EFDesigner.EFModel.EFModelDiagram/TextColor.DisplayName", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
-		[DslDesign::CategoryResource("Sawczyn.EFDesigner.EFModel.EFModelDiagram/TextColor.Category", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
-		[DslDesign::DescriptionResource("Sawczyn.EFDesigner.EFModel.EFModelDiagram/TextColor.Description", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
-		[DslModeling::DomainProperty(Kind = DslModeling::DomainPropertyKind.CustomStorage)]
-		[DslModeling::DomainObjectId("b0117940-5dec-42c8-990b-b6bd619be766")]
-		public global::System.Drawing.Color TextColor
-		{
-			[global::System.Diagnostics.DebuggerStepThrough]
-			get
-			{
-				return TextColorPropertyHandler.Instance.GetValue(this);
-			}
-			[global::System.Diagnostics.DebuggerStepThrough]
-			set
-			{
-				TextColorPropertyHandler.Instance.SetValue(this, value);
-			}
-		}
-		/// <summary>
-		/// Value handler for the EFModelDiagram.TextColor domain property.
-		/// </summary>
-		internal sealed partial class TextColorPropertyHandler : DslModeling::DomainPropertyValueHandler<EFModelDiagram, global::System.Drawing.Color>
-		{
-			private TextColorPropertyHandler() { }
-		
-			/// <summary>
-			/// Gets the singleton instance of the EFModelDiagram.TextColor domain property value handler.
-			/// </summary>
-			public static readonly TextColorPropertyHandler Instance = new TextColorPropertyHandler();
-		
-			/// <summary>
-			/// Gets the Id of the EFModelDiagram.TextColor domain property.
-			/// </summary>
-			public sealed override global::System.Guid DomainPropertyId
-			{
-				[global::System.Diagnostics.DebuggerStepThrough]
-				get
-				{
-					return TextColorDomainPropertyId;
-				}
-			}
-			
-			/// <summary>
-			/// Gets a strongly-typed value of the property on specified element.
-			/// </summary>
-			/// <param name="element">Element which owns the property.</param>
-			/// <returns>Property value.</returns>
-			public override sealed global::System.Drawing.Color GetValue(EFModelDiagram element)
-			{
-				if (element == null) throw new global::System.ArgumentNullException("element");
-				// There is no storage for TextColor because its Kind is
-				// set to CustomStorage. Please provide the GetTextColorValue()
-				// method on the domain class.
-				return element.GetTextColorValue();
-			}
-		
-			/// <summary>
-			/// Sets property value on an element.
-			/// </summary>
-			/// <param name="element">Element which owns the property.</param>
-			/// <param name="newValue">New property value.</param>
-			public override sealed void SetValue(EFModelDiagram element, global::System.Drawing.Color newValue)
-			{
-				if (element == null) throw new global::System.ArgumentNullException("element");
-		
-				global::System.Drawing.Color oldValue = GetValue(element);
-				if (newValue != oldValue)
-				{
-					ValueChanging(element, oldValue, newValue);
-					// There is no storage for TextColor because its Kind is
-					// set to CustomStorage. Please provide the SetTextColorValue()
-					// method on the domain class.
-					element.SetTextColorValue(newValue);
 					ValueChanged(element, oldValue, GetValue(element));
 				}
 			}

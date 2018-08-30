@@ -21554,23 +21554,6 @@ namespace Sawczyn.EFDesigner.EFModel
 					}
 				}
 			}
-			// TextColor
-			if (!serializationContext.Result.Failed)
-			{
-				string attribTextColor = EFModelSerializationHelper.Instance.ReadAttribute(serializationContext, element, reader, "textColor");
-				if (attribTextColor != null)
-				{
-					global::System.Drawing.Color valueOfTextColor;
-					if (DslModeling::SerializationUtilities.TryGetValue<global::System.Drawing.Color>(serializationContext, attribTextColor, out valueOfTextColor))
-					{
-						instanceOfEFModelDiagram.TextColor = valueOfTextColor;
-					}
-					else
-					{	// Invalid property value, ignored.
-						EFModelSerializationBehaviorSerializationMessages.IgnoredPropertyValue(serializationContext, reader, "textColor", typeof(global::System.Drawing.Color), attribTextColor);
-					}
-				}
-			}
 		}
 	
 		#region TryCreateInstance
@@ -21981,16 +21964,6 @@ namespace Sawczyn.EFDesigner.EFModel
 				if (!serializationContext.Result.Failed)
 				{
 					EFModelSerializationHelper.Instance.WriteAttributeString(serializationContext, element, writer, "fillColor", serializedPropValue);
-				}
-			}
-			// TextColor
-			if (!serializationContext.Result.Failed)
-			{
-				global::System.Drawing.Color propValue = instanceOfEFModelDiagram.TextColor;
-				string serializedPropValue = DslModeling::SerializationUtilities.GetString<global::System.Drawing.Color>(serializationContext, propValue);
-				if (!serializationContext.Result.Failed)
-				{
-					EFModelSerializationHelper.Instance.WriteAttributeString(serializationContext, element, writer, "textColor", serializedPropValue);
 				}
 			}
 		}
