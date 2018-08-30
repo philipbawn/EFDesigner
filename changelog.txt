@@ -1,3 +1,6 @@
+1.3.0
+   - Added customizable diagram background and text colors
+
 1.2.5.0
    - Fix for issue #19 - Recognize "Id" as primary key on import (https://github.com/msawczyn/EFDesigner/issues/19)
 

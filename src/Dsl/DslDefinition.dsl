@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Dsl xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="9987f227-3d05-49b7-b151-857879f5dfb8" Description="Entity Framework visual editor for EF6, EFCore and beyond." Name="EFModel" DisplayName="Entity Framework Visual Editor" Namespace="Sawczyn.EFDesigner.EFModel" MinorVersion="2" Build="5" ProductName="EFDesigner" CompanyName="Michael Sawczyn" PackageGuid="56bbe1ba-aaee-4883-848f-e3c8656f8db2" PackageNamespace="Sawczyn.EFDesigner.EFModel" xmlns="http://schemas.microsoft.com/VisualStudio/2005/DslTools/DslDefinitionModel">
+<Dsl xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="9987f227-3d05-49b7-b151-857879f5dfb8" Description="Entity Framework visual editor for EF6, EFCore and beyond." Name="EFModel" DisplayName="Entity Framework Visual Editor" Namespace="Sawczyn.EFDesigner.EFModel" MinorVersion="3" ProductName="EFDesigner" CompanyName="Michael Sawczyn" PackageGuid="56bbe1ba-aaee-4883-848f-e3c8656f8db2" PackageNamespace="Sawczyn.EFDesigner.EFModel" xmlns="http://schemas.microsoft.com/VisualStudio/2005/DslTools/DslDefinitionModel">
   <Classes>
     <DomainClass Id="d614f8fd-ad3a-4cbb-8eac-b67f22504430" Description="" Name="NamedElement" DisplayName="Named Element" InheritanceModifier="Abstract" Namespace="Sawczyn.EFDesigner.EFModel">
       <Properties>
@@ -1622,6 +1622,14 @@
       </XmlClassData>
       <XmlClassData TypeName="EFModelDiagram" MonikerAttributeName="" SerializeId="true" MonikerElementName="eFModelDiagramMoniker" ElementName="eFModelDiagram" MonikerTypeName="EFModelDiagramMoniker">
         <DiagramMoniker Name="EFModelDiagram" />
+        <ElementData>
+          <XmlPropertyData XmlName="fillColor">
+            <DomainPropertyMoniker Name="EFModelDiagram/FillColor" />
+          </XmlPropertyData>
+          <XmlPropertyData XmlName="textColor">
+            <DomainPropertyMoniker Name="EFModelDiagram/TextColor" />
+          </XmlPropertyData>
+        </ElementData>
       </XmlClassData>
       <XmlClassData TypeName="ModelEnum" MonikerAttributeName="" SerializeId="true" MonikerElementName="modelEnumMoniker" ElementName="modelEnum" MonikerTypeName="ModelEnumMoniker">
         <DomainClassMoniker Name="ModelEnum" />
@@ -1799,7 +1807,19 @@
       </LinkConnectDirective>
     </ConnectionBuilder>
   </ConnectionBuilders>
-  <Diagram Id="4bd5b7e6-86b6-43d2-962d-b6e87ac4690a" Description="" Name="EFModelDiagram" DisplayName="Class Diagram" Namespace="Sawczyn.EFDesigner.EFModel">
+  <Diagram Id="4bd5b7e6-86b6-43d2-962d-b6e87ac4690a" Description="" Name="EFModelDiagram" DisplayName="Class Diagram" Namespace="Sawczyn.EFDesigner.EFModel" ExposesFillColor="true" ExposesTextColor="true">
+    <Properties>
+      <DomainProperty Id="1f98fc11-fb8f-4cec-a9d1-050a5f3ce467" Description="Diagram background color" Name="FillColor" DisplayName="Background Color" Kind="CustomStorage" Category="Display">
+        <Type>
+          <ExternalTypeMoniker Name="/System.Drawing/Color" />
+        </Type>
+      </DomainProperty>
+      <DomainProperty Id="b0117940-5dec-42c8-990b-b6bd619be766" Description="Diagram text color" Name="TextColor" DisplayName="Text Color" Kind="CustomStorage" Category="Display">
+        <Type>
+          <ExternalTypeMoniker Name="/System.Drawing/Color" />
+        </Type>
+      </DomainProperty>
+    </Properties>
     <Class>
       <DomainClassMoniker Name="ModelRoot" />
     </Class>

@@ -128,6 +128,23 @@ namespace Sawczyn.EFDesigner.EFModel
             throw new ArgumentNullException(nameof(diagramFileName));
          #endregion
 
+         // before loading anything, let's check to see if the diagram is old-school or our new compressed version
+         // if it's the new one, we don't want to load anything and pollute the Store
+         // if anyone knows of a better way of doing this than catching an exception, please post a comment on Github! :-)
+
+         try
+         {
+            using (Package _ = Package.Open(diagramFileName, FileMode.Open, FileAccess.Read))
+            {
+
+            }
+         }
+         catch (FileFormatException)
+         {
+            // old-style xml diagram file; not a zip. use old school processing
+            return base.LoadModelAndDiagram(serializationResult, modelPartition, modelFileName, diagramPartition, diagramFileName, schemaResolver, validationController, serializerLocator);
+         }
+
          // Load the model
          ModelRoot modelRoot = LoadModel(serializationResult, modelPartition.Store, modelFileName, schemaResolver, validationController, null);
 
