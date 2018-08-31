@@ -500,6 +500,7 @@
     <Content Include="Resources\Association.bmp" />
     <Content Include="Resources\AssociationLinkTool.bmp" />
     <Content Include="Resources\AssociationTool.bmp" />
+    <Content Include="Resources\Attribute.bmp" />
     <Content Include="Resources\Calculated.png" />
     <Content Include="Resources\CalculatedInternal.png" />
     <Content Include="Resources\CalculatedProtected.png" />
@@ -507,6 +508,7 @@
     <Content Include="Resources\CommentTool.bmp" />
     <Content Include="Resources\EntityGlyph.bmp" />
     <Content Include="Resources\EnumTool.bmp" />
+    <Content Include="Resources\EnumValue.bmp" />
     <Content Include="Resources\File.ico" />
     <Content Include="Resources\GeneralizationTool.bmp" />
     <Content Include="Resources\Internal.png" />

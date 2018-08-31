@@ -271,20 +271,31 @@ namespace Sawczyn.EFDesigner.EFModel
          if (!(viewContextObj is string))
             base.OpenView(logicalView, viewContextObj);
 
-         string viewContext = (string)viewContextObj;
-         Diagram diagram = Store.ElementDirectory.FindElements<EFModelDiagram>().SingleOrDefault(d => d.Name == viewContext);
+         string viewName = (string)viewContextObj;
+         EFModelDiagram diagram = Store.ElementDirectory.FindElements<EFModelDiagram>().SingleOrDefault(d => d.Name == viewName);
+         ModelDiagram modelDiagram = Store.ElementDirectory.FindElements<ModelDiagram>().SingleOrDefault(d => d.Name == viewName);
 
-         if (diagram == null)
+         if (diagram == null || modelDiagram == null)
          {
             using (Transaction transaction = Store.TransactionManager.BeginTransaction("DocData.OpenView", true))
             {
-               // ReSharper disable once UseObjectOrCollectionInitializer
-               diagram = new EFModelDiagram(Store, new PropertyAssignment(Diagram.NameDomainPropertyId, viewContext));
-               diagram.ModelElement = RootElement;
+               if (diagram == null)
+               {
+                  // ReSharper disable once UseObjectOrCollectionInitializer
+                  diagram = new EFModelDiagram(GetDiagramPartition(), new PropertyAssignment(Diagram.NameDomainPropertyId, viewName));
+                  diagram.ModelElement = RootElement;
+               }
+
+               if (modelDiagram == null)
+               {
+                  modelDiagram = new ModelDiagram(Store, new PropertyAssignment(ModelDiagram.NameDomainPropertyId, viewName ?? "Default"));
+                  ModelRoot modelRoot = (ModelRoot)RootElement;
+                  modelRoot.ModelDiagrams.Add(modelDiagram);
+               }
 
                transaction.Commit();
             }
-         }
+         } 
 
          base.OpenView(logicalView, viewContextObj);
       }

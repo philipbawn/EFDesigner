@@ -76,6 +76,7 @@ namespace Sawczyn.EFDesigner.EFModel
 				typeof(ClassModelElement),
 				typeof(ModelEnum),
 				typeof(ModelEnumValue),
+				typeof(ModelDiagram),
 				typeof(Association),
 				typeof(UnidirectionalAssociation),
 				typeof(ClassHasAttributes),
@@ -86,6 +87,7 @@ namespace Sawczyn.EFDesigner.EFModel
 				typeof(CommentReferencesSubjects),
 				typeof(ModelRootHasEnums),
 				typeof(ModelEnumHasValues),
+				typeof(ModelRootHasModelDiagrams),
 				typeof(EFModelDiagram),
 				typeof(AssociationConnector),
 				typeof(UnidirectionalConnector),
@@ -192,6 +194,7 @@ namespace Sawczyn.EFDesigner.EFModel
 				new DomainMemberInfo(typeof(ModelEnum), "IsOutputDirectoryTracking", ModelEnum.IsOutputDirectoryTrackingDomainPropertyId, typeof(ModelEnum.IsOutputDirectoryTrackingPropertyHandler)),
 				new DomainMemberInfo(typeof(ModelEnumValue), "Name", ModelEnumValue.NameDomainPropertyId, typeof(ModelEnumValue.NamePropertyHandler)),
 				new DomainMemberInfo(typeof(ModelEnumValue), "Value", ModelEnumValue.ValueDomainPropertyId, typeof(ModelEnumValue.ValuePropertyHandler)),
+				new DomainMemberInfo(typeof(ModelDiagram), "Name", ModelDiagram.NameDomainPropertyId, typeof(ModelDiagram.NamePropertyHandler)),
 				new DomainMemberInfo(typeof(Association), "SourceMultiplicity", Association.SourceMultiplicityDomainPropertyId, typeof(Association.SourceMultiplicityPropertyHandler)),
 				new DomainMemberInfo(typeof(Association), "TargetMultiplicity", Association.TargetMultiplicityDomainPropertyId, typeof(Association.TargetMultiplicityPropertyHandler)),
 				new DomainMemberInfo(typeof(Association), "TargetPropertyName", Association.TargetPropertyNameDomainPropertyId, typeof(Association.TargetPropertyNamePropertyHandler)),
@@ -256,6 +259,8 @@ namespace Sawczyn.EFDesigner.EFModel
 				new DomainRolePlayerInfo(typeof(ModelRootHasEnums), "ModelEnum", ModelRootHasEnums.ModelEnumDomainRoleId),
 				new DomainRolePlayerInfo(typeof(ModelEnumHasValues), "Enum", ModelEnumHasValues.EnumDomainRoleId),
 				new DomainRolePlayerInfo(typeof(ModelEnumHasValues), "Value", ModelEnumHasValues.ValueDomainRoleId),
+				new DomainRolePlayerInfo(typeof(ModelRootHasModelDiagrams), "ModelRoot", ModelRootHasModelDiagrams.ModelRootDomainRoleId),
+				new DomainRolePlayerInfo(typeof(ModelRootHasModelDiagrams), "ModelDiagram", ModelRootHasModelDiagrams.ModelDiagramDomainRoleId),
 			};
 		}
 		#endregion
@@ -277,21 +282,22 @@ namespace Sawczyn.EFDesigner.EFModel
 	
 			if (createElementMap == null)
 			{
-				createElementMap = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(18);
+				createElementMap = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(19);
 				createElementMap.Add(typeof(ModelRoot), 0);
 				createElementMap.Add(typeof(ModelClass), 1);
 				createElementMap.Add(typeof(ModelAttribute), 2);
 				createElementMap.Add(typeof(Comment), 3);
 				createElementMap.Add(typeof(ModelEnum), 4);
 				createElementMap.Add(typeof(ModelEnumValue), 5);
-				createElementMap.Add(typeof(EFModelDiagram), 6);
-				createElementMap.Add(typeof(UnidirectionalConnector), 7);
-				createElementMap.Add(typeof(BidirectionalConnector), 8);
-				createElementMap.Add(typeof(GeneralizationConnector), 9);
-				createElementMap.Add(typeof(CommentConnector), 10);
-				createElementMap.Add(typeof(CommentBoxShape), 11);
-				createElementMap.Add(typeof(ClassShape), 12);
-				createElementMap.Add(typeof(EnumShape), 13);
+				createElementMap.Add(typeof(ModelDiagram), 6);
+				createElementMap.Add(typeof(EFModelDiagram), 7);
+				createElementMap.Add(typeof(UnidirectionalConnector), 8);
+				createElementMap.Add(typeof(BidirectionalConnector), 9);
+				createElementMap.Add(typeof(GeneralizationConnector), 10);
+				createElementMap.Add(typeof(CommentConnector), 11);
+				createElementMap.Add(typeof(CommentBoxShape), 12);
+				createElementMap.Add(typeof(ClassShape), 13);
+				createElementMap.Add(typeof(EnumShape), 14);
 			}
 			int index;
 			if (!createElementMap.TryGetValue(elementType, out index))
@@ -311,14 +317,15 @@ namespace Sawczyn.EFDesigner.EFModel
 				case 3: return new Comment(partition, propertyAssignments);
 				case 4: return new ModelEnum(partition, propertyAssignments);
 				case 5: return new ModelEnumValue(partition, propertyAssignments);
-				case 6: return new EFModelDiagram(partition, propertyAssignments);
-				case 7: return new UnidirectionalConnector(partition, propertyAssignments);
-				case 8: return new BidirectionalConnector(partition, propertyAssignments);
-				case 9: return new GeneralizationConnector(partition, propertyAssignments);
-				case 10: return new CommentConnector(partition, propertyAssignments);
-				case 11: return new CommentBoxShape(partition, propertyAssignments);
-				case 12: return new ClassShape(partition, propertyAssignments);
-				case 13: return new EnumShape(partition, propertyAssignments);
+				case 6: return new ModelDiagram(partition, propertyAssignments);
+				case 7: return new EFModelDiagram(partition, propertyAssignments);
+				case 8: return new UnidirectionalConnector(partition, propertyAssignments);
+				case 9: return new BidirectionalConnector(partition, propertyAssignments);
+				case 10: return new GeneralizationConnector(partition, propertyAssignments);
+				case 11: return new CommentConnector(partition, propertyAssignments);
+				case 12: return new CommentBoxShape(partition, propertyAssignments);
+				case 13: return new ClassShape(partition, propertyAssignments);
+				case 14: return new EnumShape(partition, propertyAssignments);
 				default: return null;
 			}
 		}
@@ -341,7 +348,7 @@ namespace Sawczyn.EFDesigner.EFModel
 	
 			if (createElementLinkMap == null)
 			{
-				createElementLinkMap = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(10);
+				createElementLinkMap = new global::System.Collections.Generic.Dictionary<global::System.Type, int>(11);
 				createElementLinkMap.Add(typeof(UnidirectionalAssociation), 0);
 				createElementLinkMap.Add(typeof(ClassHasAttributes), 1);
 				createElementLinkMap.Add(typeof(ModelRootHasComments), 2);
@@ -351,6 +358,7 @@ namespace Sawczyn.EFDesigner.EFModel
 				createElementLinkMap.Add(typeof(CommentReferencesSubjects), 6);
 				createElementLinkMap.Add(typeof(ModelRootHasEnums), 7);
 				createElementLinkMap.Add(typeof(ModelEnumHasValues), 8);
+				createElementLinkMap.Add(typeof(ModelRootHasModelDiagrams), 9);
 			}
 			int index;
 			if (!createElementLinkMap.TryGetValue(elementLinkType, out index))
@@ -374,6 +382,7 @@ namespace Sawczyn.EFDesigner.EFModel
 				case 6: return new CommentReferencesSubjects(partition, roleAssignments, propertyAssignments);
 				case 7: return new ModelRootHasEnums(partition, roleAssignments, propertyAssignments);
 				case 8: return new ModelEnumHasValues(partition, roleAssignments, propertyAssignments);
+				case 9: return new ModelRootHasModelDiagrams(partition, roleAssignments, propertyAssignments);
 				default: return null;
 			}
 		}
@@ -559,6 +568,7 @@ namespace Sawczyn.EFDesigner.EFModel
 			DomainRoles.Add(global::Sawczyn.EFDesigner.EFModel.ModelRootHasTypes.TypeDomainRoleId, true);
 			DomainRoles.Add(global::Sawczyn.EFDesigner.EFModel.ModelRootHasEnums.ModelEnumDomainRoleId, true);
 			DomainRoles.Add(global::Sawczyn.EFDesigner.EFModel.ModelEnumHasValues.ValueDomainRoleId, true);
+			DomainRoles.Add(global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelDiagrams.ModelDiagramDomainRoleId, true);
 			#endregion
 		}
 		/// <summary>

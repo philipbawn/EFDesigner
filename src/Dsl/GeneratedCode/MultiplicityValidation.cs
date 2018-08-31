@@ -10,5 +10,29 @@
 using DslModeling = global::Microsoft.VisualStudio.Modeling;
 using DslDesign = global::Microsoft.VisualStudio.Modeling.Design;
 using DslValidation = global::Microsoft.VisualStudio.Modeling.Validation;
+namespace Sawczyn.EFDesigner.EFModel
+{
+	[DslValidation::ValidationState(DslValidation::ValidationState.Enabled)]
+	public partial class ModelRoot
+	{
+		/// <summary>
+		/// Checks that the relationships that have a multiplicity of One or OneMany do actually have a link.
+		/// </summary>
+		[global::System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Generated code.")]
+		[DslValidation::ValidationMethod(DslValidation::ValidationCategories.Open | DslValidation::ValidationCategories.Save | DslValidation::ValidationCategories.Menu)]
+		private void ValidateModelRootMultiplicity (DslValidation::ValidationContext context)
+		{
+			if (this.ModelDiagrams.Count == 0)
+			{
+				context.LogViolation(DslValidation::ViolationType.Error,
+					string.Format(global::System.Globalization.CultureInfo.CurrentCulture, 
+						Sawczyn.EFDesigner.EFModel.EFModelDomainModel.SingletonResourceManager.GetString("MinimumMultiplicityMissingLink"), 
+						"ModelRoot", this.EntityContainerName, "ModelDiagrams"),
+						"DSL0001", this);
+			}
+		} // ValidateModelRootMultiplicity
+	} // class ModelRoot
+} // Sawczyn.EFDesigner.EFModel
+
 	
  

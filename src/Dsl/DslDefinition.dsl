@@ -250,6 +250,14 @@
             <DomainPath>ModelRootHasEnums.Enums</DomainPath>
           </LinkCreationPaths>
         </ElementMergeDirective>
+        <ElementMergeDirective>
+          <Index>
+            <DomainClassMoniker Name="ModelDiagram" />
+          </Index>
+          <LinkCreationPaths>
+            <DomainPath>ModelRootHasModelDiagrams.ModelDiagrams</DomainPath>
+          </LinkCreationPaths>
+        </ElementMergeDirective>
       </ElementMergeDirectives>
     </DomainClass>
     <DomainClass Id="237aa10f-ae74-41be-bdcf-56d97de6e4c8" Description="" Name="ModelClass" DisplayName="Entity" Namespace="Sawczyn.EFDesigner.EFModel">
@@ -588,6 +596,18 @@
         </DomainProperty>
       </Properties>
     </DomainClass>
+    <DomainClass Id="0e968b1c-0191-4a61-bae6-83161e791585" Description="Only for purpose of explorer" Name="ModelDiagram" DisplayName="Diagram" Namespace="Sawczyn.EFDesigner.EFModel">
+      <BaseClass>
+        <DomainClassMoniker Name="NamedElement" />
+      </BaseClass>
+      <Properties>
+        <DomainProperty Id="61384b88-9c6c-4a91-bc7e-2cc16ea9990c" Description="Description for Sawczyn.EFDesigner.EFModel.ModelDiagram.Name" Name="Name" DisplayName="Name" IsElementName="true">
+          <Type>
+            <ExternalTypeMoniker Name="/System/String" />
+          </Type>
+        </DomainProperty>
+      </Properties>
+    </DomainClass>
   </Classes>
   <Relationships>
     <DomainRelationship Id="ce77f831-a92d-4274-823a-3a8441a65f3a" Description="Associations between Classes." Name="Association" DisplayName="Association" InheritanceModifier="Abstract" Namespace="Sawczyn.EFDesigner.EFModel" AllowsDuplicates="true">
@@ -879,6 +899,22 @@
         <DomainRole Id="a9be9f1b-6dc5-4dae-b345-a47b3db19d2b" Description="No description available" Name="Value" DisplayName="Value" PropertyName="Enum" Multiplicity="ZeroOne" PropagatesDelete="true" PropertyDisplayName="Enum">
           <RolePlayer>
             <DomainClassMoniker Name="ModelEnumValue" />
+          </RolePlayer>
+        </DomainRole>
+      </Target>
+    </DomainRelationship>
+    <DomainRelationship Id="70dff428-6217-4203-9db2-ed111875bdda" Description="Description for Sawczyn.EFDesigner.EFModel.ModelRootHasModelDiagrams" Name="ModelRootHasModelDiagrams" DisplayName="Model Root Has Model Diagrams" Namespace="Sawczyn.EFDesigner.EFModel" IsEmbedding="true">
+      <Source>
+        <DomainRole Id="143e1aad-d6f9-4b1e-b90c-612856056cdd" Description="Description for Sawczyn.EFDesigner.EFModel.ModelRootHasModelDiagrams.ModelRoot" Name="ModelRoot" DisplayName="Model Root" PropertyName="ModelDiagrams" Multiplicity="OneMany" PropagatesCopy="PropagatesCopyToLinkAndOppositeRolePlayer" PropertyDisplayName="Model Diagrams">
+          <RolePlayer>
+            <DomainClassMoniker Name="ModelRoot" />
+          </RolePlayer>
+        </DomainRole>
+      </Source>
+      <Target>
+        <DomainRole Id="fc9473ff-f14f-44e3-a7c1-6132ea8bb0b7" Description="Description for Sawczyn.EFDesigner.EFModel.ModelRootHasModelDiagrams.ModelDiagram" Name="ModelDiagram" DisplayName="Model Diagram" PropertyName="ModelRoot" Multiplicity="One" PropagatesDelete="true" PropertyDisplayName="Model Root">
+          <RolePlayer>
+            <DomainClassMoniker Name="ModelDiagram" />
           </RolePlayer>
         </DomainRole>
       </Target>
@@ -1396,6 +1432,9 @@
           <XmlPropertyData XmlName="dbSetAccess">
             <DomainPropertyMoniker Name="ModelRoot/DbSetAccess" />
           </XmlPropertyData>
+          <XmlRelationshipData UseFullForm="true" RoleElementName="modelDiagrams">
+            <DomainRelationshipMoniker Name="ModelRootHasModelDiagrams" />
+          </XmlRelationshipData>
         </ElementData>
       </XmlClassData>
       <XmlClassData TypeName="ModelClass" MonikerAttributeName="" SerializeId="true" MonikerElementName="modelClassMoniker" ElementName="modelClass" MonikerTypeName="ModelClassMoniker">
@@ -1697,6 +1736,17 @@
           </XmlPropertyData>
         </ElementData>
       </XmlClassData>
+      <XmlClassData TypeName="ModelDiagram" MonikerAttributeName="name" SerializeId="true" MonikerElementName="modelDiagramMoniker" ElementName="modelDiagram" MonikerTypeName="ModelDiagramMoniker">
+        <DomainClassMoniker Name="ModelDiagram" />
+        <ElementData>
+          <XmlPropertyData XmlName="name" IsMonikerKey="true">
+            <DomainPropertyMoniker Name="ModelDiagram/Name" />
+          </XmlPropertyData>
+        </ElementData>
+      </XmlClassData>
+      <XmlClassData TypeName="ModelRootHasModelDiagrams" MonikerAttributeName="" SerializeId="true" MonikerElementName="modelRootHasModelDiagramsMoniker" ElementName="modelRootHasModelDiagrams" MonikerTypeName="ModelRootHasModelDiagramsMoniker">
+        <DomainRelationshipMoniker Name="ModelRootHasModelDiagrams" />
+      </XmlClassData>
     </ClassData>
   </XmlSerializationBehavior>
   <ExplorerBehavior Name="EFModelExplorer">
@@ -1719,6 +1769,11 @@
       <ExplorerNodeSettings IconToDisplay="Resources\EnumValue.bmp">
         <Class>
           <DomainClassMoniker Name="ModelEnumValue" />
+        </Class>
+      </ExplorerNodeSettings>
+      <ExplorerNodeSettings>
+        <Class>
+          <DomainClassMoniker Name="ModelDiagram" />
         </Class>
       </ExplorerNodeSettings>
     </CustomNodeSettings>
