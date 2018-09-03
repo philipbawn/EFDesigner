@@ -22,6 +22,18 @@ namespace Sawczyn.EFDesigner.EFModel
          RouteJumpType = VGPageLineJumpCode.NoJumps;
       }
 
+      public EFModelDiagramProxy Proxy
+      {
+         get
+         {
+            return Store
+                  .ElementDirectory
+                  .AllElements
+                  .OfType<EFModelDiagramProxy>()
+                  .FirstOrDefault(d => d.Name == Name || (string.IsNullOrEmpty(Name) && d.Name == "Default"));
+
+         }
+      }
       public static bool IsDropping { get; private set; }
 
       public override void OnDragOver(DiagramDragEventArgs diagramDragEventArgs)

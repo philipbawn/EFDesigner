@@ -12,6 +12,24 @@ namespace Sawczyn.EFDesigner.EFModel
    {
       #region ModelClass
 
+      public static IEnumerable<string> GetErrors(EFModelDiagramProxy element)
+      {
+         return new string[0];
+
+         // for later
+
+         //ModelRoot modelRoot = element.ModelRoot;
+         //Store store = modelRoot.Store;
+         //List<string> errorMessages = new List<string>();
+
+         //if (modelRoot.EntityFrameworkVersion == EFVersion.EFCore)
+         //{
+
+         //}
+
+         //return errorMessages;
+      }
+
       public static IEnumerable<string> GetErrors(ModelClass element)
       {
          return new string[0];

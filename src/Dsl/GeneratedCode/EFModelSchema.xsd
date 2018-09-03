@@ -931,9 +931,9 @@
     </xsd:complexContent>
   </xsd:complexType>
   
-  <!-- ModelDiagram -->
-  <xsd:element name="modelDiagram" type="ModelDiagram" substitutionGroup="namedElement" />
-  <xsd:complexType name="ModelDiagram">
+  <!-- EFModelDiagramProxy -->
+  <xsd:element name="eFModelDiagramProxy" type="EFModelDiagramProxy" substitutionGroup="namedElement" />
+  <xsd:complexType name="EFModelDiagramProxy">
     <xsd:annotation>
       <xsd:documentation>Only for purpose of explorer</xsd:documentation>
     </xsd:annotation>
@@ -951,11 +951,11 @@
     </xsd:complexContent>
   </xsd:complexType>
   
-  <!-- ModelDiagram Moniker -->
-  <xsd:element name="modelDiagramMoniker" type="ModelDiagramMoniker" substitutionGroup="namedElementMoniker" />
-  <xsd:complexType name="ModelDiagramMoniker">
+  <!-- EFModelDiagramProxy Moniker -->
+  <xsd:element name="eFModelDiagramProxyMoniker" type="EFModelDiagramProxyMoniker" substitutionGroup="namedElementMoniker" />
+  <xsd:complexType name="EFModelDiagramProxyMoniker">
     <xsd:annotation>
-      <xsd:documentation>Moniker for ModelDiagram instance.</xsd:documentation>
+      <xsd:documentation>Moniker for EFModelDiagramProxy instance.</xsd:documentation>
     </xsd:annotation>
     <xsd:complexContent>
       <xsd:extension base="NamedElementMoniker">
@@ -1462,8 +1462,8 @@
     <xsd:complexContent>
       <xsd:extension base="core:ModelElement">
         <xsd:sequence minOccurs="0" maxOccurs="1">
-          <!-- Target end ModelDiagram -->
-          <xsd:element ref="modelDiagram" minOccurs="1" maxOccurs="1">
+          <!-- Target end EFModelDiagramProxy -->
+          <xsd:element ref="eFModelDiagramProxy" minOccurs="1" maxOccurs="1">
             <xsd:annotation>
               <xsd:documentation>[Target role-player]</xsd:documentation>
             </xsd:annotation>

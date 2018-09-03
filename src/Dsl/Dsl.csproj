@@ -238,6 +238,7 @@
     <Compile Include="CustomCode\Partials\BidirectionalConnector.cs" />
     <Compile Include="CustomCode\Partials\CommentConnector.cs" />
     <Compile Include="CustomCode\Partials\EFModelDiagram.cs" />
+    <Compile Include="CustomCode\Partials\EFModelDiagramProxy.cs" />
     <Compile Include="CustomCode\Partials\EFModelSerializationHelper.cs" />
     <Compile Include="CustomCode\Partials\EnumShape.cs" />
     <Compile Include="CustomCode\Partials\EnumShapeBase.cs" />
@@ -248,6 +249,8 @@
     <Compile Include="CustomCode\Partials\IModelElementCompartmented.cs" />
     <Compile Include="CustomCode\Partials\IModelElementWithCompartments.cs" />
     <Compile Include="CustomCode\Partials\ModelAttribute.cs" />
+    <Compile Include="CustomCode\Rules\DiagramProxyAddRules.cs" />
+    <Compile Include="CustomCode\Rules\DiagramProxyChangeRules.cs" />
     <Compile Include="CustomCode\Type Descriptors\ModelAttributeTypeDescriptor.cs" />
     <Compile Include="CustomCode\Partials\ModelEnum.cs" />
     <Compile Include="CustomCode\Type Descriptors\ModelEnumTypeDescriptor.cs" />
@@ -506,6 +509,7 @@
     <Content Include="Resources\CalculatedProtected.png" />
     <Content Include="Resources\CommentLinkTool.bmp" />
     <Content Include="Resources\CommentTool.bmp" />
+    <Content Include="Resources\Diagram.bmp" />
     <Content Include="Resources\EntityGlyph.bmp" />
     <Content Include="Resources\EnumTool.bmp" />
     <Content Include="Resources\EnumValue.bmp" />

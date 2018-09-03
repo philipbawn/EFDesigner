@@ -40,6 +40,8 @@ namespace Sawczyn.EFDesigner.EFModel
                                                  ? activeSolutionProjects.GetValue(0) as Project
                                                  : null;
 
+      public static EFModelDocData Current { get; private set; }
+
       /// <summary>
       ///    Validate the model before the file is saved.
       /// </summary>
@@ -59,8 +61,8 @@ namespace Sawczyn.EFDesigner.EFModel
          base.Load(fileName, isReload);
          Store.RuleManager.DisableRule(typeof(FixUpDiagram));
          Store.RuleManager.EnableRule(typeof(DiagramFixup));
+         Current = this;
       }
-
 
       public void EnsureCorrectNuGetPackages(ModelRoot modelRoot, bool force = true)
       {
@@ -254,6 +256,16 @@ namespace Sawczyn.EFDesigner.EFModel
          foreach (EFModelDiagram diagram in PresentationViewsSubject.GetPresentation(modelRoot).OfType<EFModelDiagram>())
             diagram.SubscribeCompartmentItemsEvents();
 
+         // Update legacy diagrams to contain appropriate display proxy
+         if (!Store.ElementDirectory.AllElements.OfType<EFModelDiagramProxy>().Any())
+         {
+            using (Transaction tx = Store.TransactionManager.BeginTransaction("Create EFModelDiagramProxy"))
+            {
+               modelRoot.ModelDiagrams.Add(new EFModelDiagramProxy(Store.DefaultPartition, new PropertyAssignment(EFModelDiagramProxy.NameDomainPropertyId, "Default")));
+               tx.Commit();
+            }
+         }
+
          SetDocDataDirty(0);
       }
 
@@ -268,36 +280,37 @@ namespace Sawczyn.EFDesigner.EFModel
 
       public override void OpenView(Guid logicalView, object viewContextObj)
       {
-         if (!(viewContextObj is string))
-            base.OpenView(logicalView, viewContextObj);
-
-         string viewName = (string)viewContextObj;
-         EFModelDiagram diagram = Store.ElementDirectory.FindElements<EFModelDiagram>().SingleOrDefault(d => d.Name == viewName);
-         ModelDiagram modelDiagram = Store.ElementDirectory.FindElements<ModelDiagram>().SingleOrDefault(d => d.Name == viewName);
-
-         if (diagram == null || modelDiagram == null)
+         if (viewContextObj is string viewName)
          {
-            using (Transaction transaction = Store.TransactionManager.BeginTransaction("DocData.OpenView", true))
+            EFModelDiagram diagram = Store.ElementDirectory.FindElements<EFModelDiagram>().SingleOrDefault(d => d.Name == viewName);
+            EFModelDiagramProxy diagramProxy = Store.ElementDirectory.FindElements<EFModelDiagramProxy>().SingleOrDefault(d => d.Name == viewName);
+
+            if (diagram == null || diagramProxy == null)
             {
-               if (diagram == null)
+               using (Transaction transaction = Store.TransactionManager.BeginTransaction("DocData.OpenView", true))
                {
-                  // ReSharper disable once UseObjectOrCollectionInitializer
-                  diagram = new EFModelDiagram(GetDiagramPartition(), new PropertyAssignment(Diagram.NameDomainPropertyId, viewName));
-                  diagram.ModelElement = RootElement;
+                  if (diagram == null)
+                  {
+                     // ReSharper disable once UseObjectOrCollectionInitializer
+                     diagram = new EFModelDiagram(GetDiagramPartition(), new PropertyAssignment(Diagram.NameDomainPropertyId, viewName));
+                     diagram.ModelElement = RootElement;
+                  }
+
+                  if (diagramProxy == null)
+                  {
+                     diagramProxy = new EFModelDiagramProxy(Store, new PropertyAssignment(EFModelDiagramProxy.NameDomainPropertyId, viewName ?? "Default"));
+                     ModelRoot modelRoot = (ModelRoot)RootElement;
+                     modelRoot.ModelDiagrams.Add(diagramProxy);
+                  }
+
+                  transaction.Commit();
                }
+            } 
 
-               if (modelDiagram == null)
-               {
-                  modelDiagram = new ModelDiagram(Store, new PropertyAssignment(ModelDiagram.NameDomainPropertyId, viewName ?? "Default"));
-                  ModelRoot modelRoot = (ModelRoot)RootElement;
-                  modelRoot.ModelDiagrams.Add(modelDiagram);
-               }
-
-               transaction.Commit();
-            }
-         } 
-
-         base.OpenView(logicalView, viewContextObj);
+            base.OpenView(logicalView, diagram);
+         }
+         else
+            base.OpenView(logicalView, viewContextObj);
       }
 
 

@@ -11,6 +11,8 @@ namespace Sawczyn.EFDesigner.EFModel
          typeof(DiagramFixup),
          typeof(AssociationAddRules),
          typeof(AssociationChangeRules),
+         typeof(DiagramProxyAddRules),
+         typeof(DiagramProxyChangeRules),
          typeof(GeneralizationAddRules),
          typeof(GeneralizationChangeRules),
          typeof(ModelAttributeAddRules),

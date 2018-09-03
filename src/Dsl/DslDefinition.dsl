@@ -252,7 +252,7 @@
         </ElementMergeDirective>
         <ElementMergeDirective>
           <Index>
-            <DomainClassMoniker Name="ModelDiagram" />
+            <DomainClassMoniker Name="EFModelDiagramProxy" />
           </Index>
           <LinkCreationPaths>
             <DomainPath>ModelRootHasModelDiagrams.ModelDiagrams</DomainPath>
@@ -596,12 +596,12 @@
         </DomainProperty>
       </Properties>
     </DomainClass>
-    <DomainClass Id="0e968b1c-0191-4a61-bae6-83161e791585" Description="Only for purpose of explorer" Name="ModelDiagram" DisplayName="Diagram" Namespace="Sawczyn.EFDesigner.EFModel">
+    <DomainClass Id="0e968b1c-0191-4a61-bae6-83161e791585" Description="Only for purpose of explorer" Name="EFModelDiagramProxy" DisplayName="Diagram" Namespace="Sawczyn.EFDesigner.EFModel">
       <BaseClass>
         <DomainClassMoniker Name="NamedElement" />
       </BaseClass>
       <Properties>
-        <DomainProperty Id="61384b88-9c6c-4a91-bc7e-2cc16ea9990c" Description="Description for Sawczyn.EFDesigner.EFModel.ModelDiagram.Name" Name="Name" DisplayName="Name" IsElementName="true">
+        <DomainProperty Id="61384b88-9c6c-4a91-bc7e-2cc16ea9990c" Description="Description for Sawczyn.EFDesigner.EFModel.EFModelDiagramProxy.Name" Name="Name" DisplayName="Name" IsElementName="true">
           <Type>
             <ExternalTypeMoniker Name="/System/String" />
           </Type>
@@ -905,16 +905,16 @@
     </DomainRelationship>
     <DomainRelationship Id="70dff428-6217-4203-9db2-ed111875bdda" Description="Description for Sawczyn.EFDesigner.EFModel.ModelRootHasModelDiagrams" Name="ModelRootHasModelDiagrams" DisplayName="Model Root Has Model Diagrams" Namespace="Sawczyn.EFDesigner.EFModel" IsEmbedding="true">
       <Source>
-        <DomainRole Id="143e1aad-d6f9-4b1e-b90c-612856056cdd" Description="Description for Sawczyn.EFDesigner.EFModel.ModelRootHasModelDiagrams.ModelRoot" Name="ModelRoot" DisplayName="Model Root" PropertyName="ModelDiagrams" Multiplicity="OneMany" PropagatesCopy="PropagatesCopyToLinkAndOppositeRolePlayer" PropertyDisplayName="Model Diagrams">
+        <DomainRole Id="143e1aad-d6f9-4b1e-b90c-612856056cdd" Description="Description for Sawczyn.EFDesigner.EFModel.ModelRootHasModelDiagrams.ModelRoot" Name="ModelRoot" DisplayName="Model Root" PropertyName="ModelDiagrams" Multiplicity="OneMany" PropagatesCopy="PropagatesCopyToLinkAndOppositeRolePlayer" PropertyDisplayName="Diagrams">
           <RolePlayer>
             <DomainClassMoniker Name="ModelRoot" />
           </RolePlayer>
         </DomainRole>
       </Source>
       <Target>
-        <DomainRole Id="fc9473ff-f14f-44e3-a7c1-6132ea8bb0b7" Description="Description for Sawczyn.EFDesigner.EFModel.ModelRootHasModelDiagrams.ModelDiagram" Name="ModelDiagram" DisplayName="Model Diagram" PropertyName="ModelRoot" Multiplicity="One" PropagatesDelete="true" PropertyDisplayName="Model Root">
+        <DomainRole Id="fc9473ff-f14f-44e3-a7c1-6132ea8bb0b7" Description="The design surface" Name="EFModelDiagramProxy" DisplayName="Diagram" PropertyName="ModelRoot" Multiplicity="ZeroOne" PropagatesDelete="true" PropertyDisplayName="Model Root">
           <RolePlayer>
-            <DomainClassMoniker Name="ModelDiagram" />
+            <DomainClassMoniker Name="EFModelDiagramProxy" />
           </RolePlayer>
         </DomainRole>
       </Target>
@@ -1736,11 +1736,11 @@
           </XmlPropertyData>
         </ElementData>
       </XmlClassData>
-      <XmlClassData TypeName="ModelDiagram" MonikerAttributeName="name" SerializeId="true" MonikerElementName="modelDiagramMoniker" ElementName="modelDiagram" MonikerTypeName="ModelDiagramMoniker">
-        <DomainClassMoniker Name="ModelDiagram" />
+      <XmlClassData TypeName="EFModelDiagramProxy" MonikerAttributeName="name" SerializeId="true" MonikerElementName="eFModelDiagramProxyMoniker" ElementName="eFModelDiagramProxy" MonikerTypeName="EFModelDiagramProxyMoniker">
+        <DomainClassMoniker Name="EFModelDiagramProxy" />
         <ElementData>
           <XmlPropertyData XmlName="name" IsMonikerKey="true">
-            <DomainPropertyMoniker Name="ModelDiagram/Name" />
+            <DomainPropertyMoniker Name="EFModelDiagramProxy/Name" />
           </XmlPropertyData>
         </ElementData>
       </XmlClassData>
@@ -1771,9 +1771,9 @@
           <DomainClassMoniker Name="ModelEnumValue" />
         </Class>
       </ExplorerNodeSettings>
-      <ExplorerNodeSettings>
+      <ExplorerNodeSettings IconToDisplay="Resources\Diagram.bmp">
         <Class>
-          <DomainClassMoniker Name="ModelDiagram" />
+          <DomainClassMoniker Name="EFModelDiagramProxy" />
         </Class>
       </ExplorerNodeSettings>
     </CustomNodeSettings>

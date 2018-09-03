@@ -1421,16 +1421,16 @@ namespace Sawczyn.EFDesigner.EFModel
 				}
 				else
 				{	// Maybe the relationship is serialized in short-form by mistake.
-					DslModeling::DomainClassXmlSerializer newModelDiagramOfModelRootHasModelDiagramsSerializer = serializationContext.Directory.GetSerializer(ModelDiagram.DomainClassId);
-					global::System.Diagnostics.Debug.Assert(newModelDiagramOfModelRootHasModelDiagramsSerializer != null, "Cannot find serializer for ModelDiagram!");
-					ModelDiagram newModelDiagramOfModelRootHasModelDiagrams = newModelDiagramOfModelRootHasModelDiagramsSerializer.TryCreateInstance(serializationContext, reader, element.Partition) as ModelDiagram;
-					if (newModelDiagramOfModelRootHasModelDiagrams != null)
+					DslModeling::DomainClassXmlSerializer newEFModelDiagramProxyOfModelRootHasModelDiagramsSerializer = serializationContext.Directory.GetSerializer(EFModelDiagramProxy.DomainClassId);
+					global::System.Diagnostics.Debug.Assert(newEFModelDiagramProxyOfModelRootHasModelDiagramsSerializer != null, "Cannot find serializer for EFModelDiagramProxy!");
+					EFModelDiagramProxy newEFModelDiagramProxyOfModelRootHasModelDiagrams = newEFModelDiagramProxyOfModelRootHasModelDiagramsSerializer.TryCreateInstance(serializationContext, reader, element.Partition) as EFModelDiagramProxy;
+					if (newEFModelDiagramProxyOfModelRootHasModelDiagrams != null)
 					{
 						EFModelSerializationBehaviorSerializationMessages.ExpectingFullFormRelationship(serializationContext, reader, typeof(ModelRootHasModelDiagrams));
-						element.ModelDiagrams.Add(newModelDiagramOfModelRootHasModelDiagrams);
-						DslModeling::DomainClassXmlSerializer targetSerializer = serializationContext.Directory.GetSerializer (newModelDiagramOfModelRootHasModelDiagrams.GetDomainClass().Id);	
-						global::System.Diagnostics.Debug.Assert (targetSerializer != null, "Cannot find serializer for " + newModelDiagramOfModelRootHasModelDiagrams.GetDomainClass().Name + "!");
-						targetSerializer.Read(serializationContext, newModelDiagramOfModelRootHasModelDiagrams, reader);
+						element.ModelDiagrams.Add(newEFModelDiagramProxyOfModelRootHasModelDiagrams);
+						DslModeling::DomainClassXmlSerializer targetSerializer = serializationContext.Directory.GetSerializer (newEFModelDiagramProxyOfModelRootHasModelDiagrams.GetDomainClass().Id);	
+						global::System.Diagnostics.Debug.Assert (targetSerializer != null, "Cannot find serializer for " + newEFModelDiagramProxyOfModelRootHasModelDiagrams.GetDomainClass().Name + "!");
+						targetSerializer.Read(serializationContext, newEFModelDiagramProxyOfModelRootHasModelDiagrams, reader);
 					}
 					else
 					{	// Unknown element, skip.
@@ -8358,15 +8358,15 @@ namespace Sawczyn.EFDesigner.EFModel
 namespace Sawczyn.EFDesigner.EFModel
 {
 	/// <summary>
-	/// Serializer ModelDiagramSerializer for DomainClass ModelDiagram.
+	/// Serializer EFModelDiagramProxySerializer for DomainClass EFModelDiagramProxy.
 	/// </summary>
-	public partial class ModelDiagramSerializer : NamedElementSerializer
+	public partial class EFModelDiagramProxySerializer : NamedElementSerializer
 	{
 		#region Constructor
 		/// <summary>
-		/// ModelDiagramSerializer Constructor
+		/// EFModelDiagramProxySerializer Constructor
 		/// </summary>
-		public ModelDiagramSerializer ()
+		public EFModelDiagramProxySerializer ()
 			: base ()
 		{
 		}
@@ -8392,25 +8392,25 @@ namespace Sawczyn.EFDesigner.EFModel
 	
 		#region Public Properties
 		/// <summary>
-		/// This is the XML tag name used to serialize an instance of ModelDiagram.
+		/// This is the XML tag name used to serialize an instance of EFModelDiagramProxy.
 		/// </summary>
 		public override string XmlTagName
 		{
 			[global::System.Diagnostics.DebuggerStepThrough]
-			get { return @"modelDiagram"; }
+			get { return @"eFModelDiagramProxy"; }
 		}
 	
 		/// <summary>
-		/// This is the XML tag name used to serialize a monikerized instance of ModelDiagram.
+		/// This is the XML tag name used to serialize a monikerized instance of EFModelDiagramProxy.
 		/// </summary>
 		public override string MonikerTagName
 		{
 			[global::System.Diagnostics.DebuggerStepThrough]
-			get { return @"modelDiagramMoniker"; }
+			get { return @"eFModelDiagramProxyMoniker"; }
 		}
 		
 		/// <summary>
-		/// This is the name of the XML attribute that stores the moniker of ModelDiagram in a serialized monikerized instance.
+		/// This is the name of the XML attribute that stores the moniker of EFModelDiagramProxy in a serialized monikerized instance.
 		/// </summary>
 		public override string MonikerAttributeName
 		{
@@ -8421,16 +8421,16 @@ namespace Sawczyn.EFDesigner.EFModel
 	
 		#region Read Methods
 		/// <summary>
-		/// Public Read() method that deserializes one ModelDiagram instance from XML.
+		/// Public Read() method that deserializes one EFModelDiagramProxy instance from XML.
 		/// </summary>
 		/// <remarks>
 		/// When this method is called, caller guarantees that the passed-in XML reader is positioned at the open XML tag
-		/// of the ModelDiagram element that is about to be deserialized. 
+		/// of the EFModelDiagramProxy element that is about to be deserialized. 
 		/// The method needs to ensure that when it returns, the reader is positioned at the open XML tag of the next sibling element,
 		/// or the close tag of the parent element (or EOF).
 		/// </remarks>
 		/// <param name="serializationContext">Serialization context.</param>
-		/// <param name="element">In-memory ModelDiagram instance that will get the deserialized data.</param>
+		/// <param name="element">In-memory EFModelDiagramProxy instance that will get the deserialized data.</param>
 		/// <param name="reader">XmlReader to read serialized data from.</param>
 		public override void Read(DslModeling::SerializationContext serializationContext, DslModeling::ModelElement element, global::System.Xml.XmlReader reader)
 		{
@@ -8488,7 +8488,7 @@ namespace Sawczyn.EFDesigner.EFModel
 		/// The caller will guarantee that the reader is positioned on the open XML tag of the current element being deserialized.
 		/// </remarks>
 		/// <param name="serializationContext">Serialization context.</param>
-		/// <param name="element">In-memory ModelDiagram instance that will get the deserialized data.</param>
+		/// <param name="element">In-memory EFModelDiagramProxy instance that will get the deserialized data.</param>
 		/// <param name="reader">XmlReader to read serialized data from.</param>
 		[global::System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Generated code.")]
 		protected override void ReadPropertiesFromAttributes(DslModeling::SerializationContext serializationContext, DslModeling::ModelElement element, global::System.Xml.XmlReader reader)
@@ -8496,8 +8496,8 @@ namespace Sawczyn.EFDesigner.EFModel
 			// Always call the base class so any extensions are deserialized
 			base.ReadPropertiesFromAttributes(serializationContext, element, reader);
 	
-			ModelDiagram instanceOfModelDiagram = element as ModelDiagram;
-			global::System.Diagnostics.Debug.Assert(instanceOfModelDiagram != null, "Expecting an instance of ModelDiagram");
+			EFModelDiagramProxy instanceOfEFModelDiagramProxy = element as EFModelDiagramProxy;
+			global::System.Diagnostics.Debug.Assert(instanceOfEFModelDiagramProxy != null, "Expecting an instance of EFModelDiagramProxy");
 	
 			// Name
 			if (!serializationContext.Result.Failed)
@@ -8508,7 +8508,7 @@ namespace Sawczyn.EFDesigner.EFModel
 					global::System.String valueOfName;
 					if (DslModeling::SerializationUtilities.TryGetValue<global::System.String>(serializationContext, attribName, out valueOfName))
 					{
-						instanceOfModelDiagram.Name = valueOfName;
+						instanceOfEFModelDiagramProxy.Name = valueOfName;
 					}
 					else
 					{	// Invalid property value, ignored.
@@ -8520,8 +8520,8 @@ namespace Sawczyn.EFDesigner.EFModel
 	
 		#region TryCreateInstance
 		/// <summary>
-		/// This method creates a correct instance of ModelDiagram based on the tag currently pointed by the reader. If the reader
-		/// is positioned at a serialized ModelDiagram, a new ModelDiagram instance will be created in the given partition, otherwise 
+		/// This method creates a correct instance of EFModelDiagramProxy based on the tag currently pointed by the reader. If the reader
+		/// is positioned at a serialized EFModelDiagramProxy, a new EFModelDiagramProxy instance will be created in the given partition, otherwise 
 		/// null is returned.
 		/// </summary>
 		/// <remarks>
@@ -8531,7 +8531,7 @@ namespace Sawczyn.EFDesigner.EFModel
 		/// <param name="serializationContext">Serialization context.</param>
 		/// <param name="reader">XmlReader to read serialized data from.</param>
 		/// <param name="partition">Partition in which new elements should be created.</param>	
-		/// <returns>Created ModelDiagram instance, or null if the reader is not pointing to a serialized ModelDiagram instance.</returns>
+		/// <returns>Created EFModelDiagramProxy instance, or null if the reader is not pointing to a serialized EFModelDiagramProxy instance.</returns>
 		public override DslModeling::ModelElement TryCreateInstance(DslModeling::SerializationContext serializationContext, global::System.Xml.XmlReader reader, DslModeling::Partition partition)
 		{
 			#region Check Parameters
@@ -8551,18 +8551,18 @@ namespace Sawczyn.EFDesigner.EFModel
 			{
 				string localName = reader.LocalName;
 				if (string.Compare (localName, this.XmlTagName, global::System.StringComparison.CurrentCulture) == 0)
-				{	// New "ModelDiagram" instance.
+				{	// New "EFModelDiagramProxy" instance.
 					result = this.CreateInstance(serializationContext, reader, partition);
 				}
 				else
-				{	// Check for derived classes of "ModelDiagram".
+				{	// Check for derived classes of "EFModelDiagramProxy".
 					if (this.derivedClasses == null)
 						this.ConstructDerivedClassesLookupTable(serializationContext, partition.DomainDataDirectory);
 					global::System.Diagnostics.Debug.Assert (this.derivedClasses != null);
 					DslModeling::DomainClassInfo derivedClass = null;
 					if (this.derivedClasses.TryGetValue (localName, out derivedClass) && derivedClass != null)
 					{	// New derived class instance.
-						ModelDiagramSerializer derivedSerializer = serializationContext.Directory.GetSerializer(derivedClass.Id) as ModelDiagramSerializer;
+						EFModelDiagramProxySerializer derivedSerializer = serializationContext.Directory.GetSerializer(derivedClass.Id) as EFModelDiagramProxySerializer;
 						global::System.Diagnostics.Debug.Assert(derivedSerializer != null, "Cannot find serializer for " + derivedClass.Name + "!");
 						result = derivedSerializer.CreateInstance(serializationContext, reader, partition);
 					}
@@ -8573,8 +8573,8 @@ namespace Sawczyn.EFDesigner.EFModel
 		}
 	
 		/// <summary>
-		/// This method creates an instance of ModelDiagram based on the tag currently pointed by the reader. The reader is guaranteed (by the caller)
-		/// to be pointed at a serialized instance of ModelDiagram.
+		/// This method creates an instance of EFModelDiagramProxy based on the tag currently pointed by the reader. The reader is guaranteed (by the caller)
+		/// to be pointed at a serialized instance of EFModelDiagramProxy.
 		/// </summary>
 		/// <remarks>
 		/// The caller will guarantee that the reader is positioned at open XML tag of the ModelRoot instance being read. This method should
@@ -8582,8 +8582,8 @@ namespace Sawczyn.EFDesigner.EFModel
 		/// </remarks>
 		/// <param name="serializationContext">Serialization context.</param>
 		/// <param name="reader">XmlReader to read serialized data from.</param>
-		/// <param name="partition">Partition in which new ModelDiagram instance should be created.</param>	
-		/// <returns>Created ModelDiagram instance.</returns>
+		/// <param name="partition">Partition in which new EFModelDiagramProxy instance should be created.</param>	
+		/// <returns>Created EFModelDiagramProxy instance.</returns>
 		protected override DslModeling::ModelElement CreateInstance(DslModeling::SerializationContext serializationContext, global::System.Xml.XmlReader reader, DslModeling::Partition partition)
 		{
 			string idStr = reader.GetAttribute ("Id");
@@ -8599,7 +8599,7 @@ namespace Sawczyn.EFDesigner.EFModel
 				{
 					id = new global::System.Guid (idStr);
 				}
-				return new ModelDiagram(partition, new DslModeling::PropertyAssignment(DslModeling::ElementFactory.IdPropertyAssignment, id));
+				return new EFModelDiagramProxy(partition, new DslModeling::PropertyAssignment(DslModeling::ElementFactory.IdPropertyAssignment, id));
 			}
 			catch (global::System.ArgumentNullException /* anEx */)
 			{	
@@ -8617,12 +8617,12 @@ namespace Sawczyn.EFDesigner.EFModel
 		}
 	
 		/// <summary>
-		/// Stores a mapping from XmlTagName to DomainClassInfo that derives from ModelDiagram, created on demand.
+		/// Stores a mapping from XmlTagName to DomainClassInfo that derives from EFModelDiagramProxy, created on demand.
 		/// </summary>
 		private global::System.Collections.Generic.Dictionary<string, DslModeling::DomainClassInfo> derivedClasses;
 	
 		/// <summary>
-		/// Construct the apping from XmlTagName to DomainClassInfo that derives from ModelDiagram.
+		/// Construct the apping from XmlTagName to DomainClassInfo that derives from EFModelDiagramProxy.
 		/// </summary>
 		/// <param name="serializationContext">Serialization context.</param>
 		/// <param name="domainDataDirectory">DomainDataDirectory to be used to discover all derived classes.</param>
@@ -8631,7 +8631,7 @@ namespace Sawczyn.EFDesigner.EFModel
 			global::System.Diagnostics.Debug.Assert(this.derivedClasses == null); // Shouldn't construct the table more than once.
 			this.derivedClasses = new global::System.Collections.Generic.Dictionary<string, DslModeling::DomainClassInfo> (global::System.StringComparer.CurrentCulture);
 	
-			DslModeling::DomainClassInfo thisClass = domainDataDirectory.GetDomainClass(ModelDiagram.DomainClassId);
+			DslModeling::DomainClassInfo thisClass = domainDataDirectory.GetDomainClass(EFModelDiagramProxy.DomainClassId);
 			global::System.Diagnostics.Debug.Assert(thisClass != null, "Cannot find DomainClassInfo for ModelRoot!");
 	
 			global::System.Collections.ObjectModel.ReadOnlyCollection<DslModeling::DomainClassInfo> descendents = thisClass.AllDescendants;
@@ -8663,7 +8663,7 @@ namespace Sawczyn.EFDesigner.EFModel
 	
 		#region TryCreateMonikerInstance
 		/// <summary>
-		/// This method creates a Moniker of the correct derived (including ModelDiagram itself) instance of ModelDiagram based on the tag currently pointed by the reader.
+		/// This method creates a Moniker of the correct derived (including EFModelDiagramProxy itself) instance of EFModelDiagramProxy based on the tag currently pointed by the reader.
 		/// </summary>
 		/// <remarks>
 		/// The caller will guarantee that the reader is positioned at open XML tag of the next element being read. This method should
@@ -8697,18 +8697,18 @@ namespace Sawczyn.EFDesigner.EFModel
 			{
 				string localName = reader.LocalName;
 				if (string.Compare (localName, this.MonikerTagName, global::System.StringComparison.CurrentCulture) == 0)
-				{	// New "ModelDiagram" moniker instance.
+				{	// New "EFModelDiagramProxy" moniker instance.
 					result = this.CreateMonikerInstance(serializationContext, reader, sourceRolePlayer, relDomainClassId, partition);
 				}
 				else
-				{	// Check for derived classes of "ModelDiagram".
+				{	// Check for derived classes of "EFModelDiagramProxy".
 					if (this.derivedClassMonikers == null)
 						this.ConstructDerivedClassMonikersLookupTable(serializationContext, partition.DomainDataDirectory);
 					global::System.Diagnostics.Debug.Assert(this.derivedClassMonikers != null);
 					DslModeling::DomainClassInfo derivedClass = null;
 					if (this.derivedClassMonikers.TryGetValue (localName, out derivedClass) && derivedClass != null)
 					{	// New derived class moniker instance.
-						ModelDiagramSerializer derivedSerializer = serializationContext.Directory.GetSerializer(derivedClass.Id) as ModelDiagramSerializer;
+						EFModelDiagramProxySerializer derivedSerializer = serializationContext.Directory.GetSerializer(derivedClass.Id) as EFModelDiagramProxySerializer;
 						global::System.Diagnostics.Debug.Assert(derivedSerializer != null, "Cannot find serializer for " + derivedClass.Name + "!");
 						result = derivedSerializer.CreateMonikerInstance(serializationContext, reader, sourceRolePlayer, relDomainClassId, partition);
 					}
@@ -8719,7 +8719,7 @@ namespace Sawczyn.EFDesigner.EFModel
 		}
 		
 		/// <summary>
-		/// This method creates a Moniker of ModelDiagram based on the tag currently pointed by the reader.
+		/// This method creates a Moniker of EFModelDiagramProxy based on the tag currently pointed by the reader.
 		/// </summary>
 		/// <remarks>
 		/// The caller will guarantee that the reader is positioned at open XML tag of the next element being read. This method should
@@ -8742,7 +8742,7 @@ namespace Sawczyn.EFDesigner.EFModel
 			}
 			DslModeling::DomainRelationshipXmlSerializer relSerializer = serializationContext.Directory.GetSerializer(relDomainClassId) as DslModeling::DomainRelationshipXmlSerializer;
 			global::System.Diagnostics.Debug.Assert(relSerializer != null, "Cannot find serializer for DomainRelationship with Id " + relDomainClassId + "!");
-			DslModeling::Moniker result = relSerializer.MonikerizeReference(serializationContext, sourceRolePlayer, ModelDiagram.DomainClassId, monikerString, partition.Store);
+			DslModeling::Moniker result = relSerializer.MonikerizeReference(serializationContext, sourceRolePlayer, EFModelDiagramProxy.DomainClassId, monikerString, partition.Store);
 			// Set location info if possible.
 			result.Location = serializationContext.Location;
 			global::System.Xml.IXmlLineInfo xmlLineInfo = reader as global::System.Xml.IXmlLineInfo;
@@ -8755,12 +8755,12 @@ namespace Sawczyn.EFDesigner.EFModel
 		}
 	
 		/// <summary>
-		/// Stores a mapping from Moniker Xml tag name to DomainClassInfo that derives from ModelDiagram, created on demand.
+		/// Stores a mapping from Moniker Xml tag name to DomainClassInfo that derives from EFModelDiagramProxy, created on demand.
 		/// </summary>
 		private global::System.Collections.Generic.Dictionary<string, DslModeling::DomainClassInfo> derivedClassMonikers;
 	
 		/// <summary>
-		/// Construct the mapping from Moniker Xml tag name to DomainClassInfo that derives from ModelDiagram.
+		/// Construct the mapping from Moniker Xml tag name to DomainClassInfo that derives from EFModelDiagramProxy.
 		/// </summary>
 		/// <param name="serializationContext">Serialization context.</param>
 		/// <param name="domainDataDirectory">DomainDataDirectory to be used to discover all derived classes.</param>
@@ -8769,7 +8769,7 @@ namespace Sawczyn.EFDesigner.EFModel
 			global::System.Diagnostics.Debug.Assert(this.derivedClassMonikers == null); // Shouldn't construct the table more than once.
 			this.derivedClassMonikers = new global::System.Collections.Generic.Dictionary<string, DslModeling::DomainClassInfo> (global::System.StringComparer.CurrentCulture);
 	
-			DslModeling::DomainClassInfo thisClass = domainDataDirectory.GetDomainClass(ModelDiagram.DomainClassId);
+			DslModeling::DomainClassInfo thisClass = domainDataDirectory.GetDomainClass(EFModelDiagramProxy.DomainClassId);
 			global::System.Diagnostics.Debug.Assert(thisClass != null, "Cannot find DomainClassInfo for ModelRoot!");
 	
 			global::System.Collections.ObjectModel.ReadOnlyCollection<DslModeling::DomainClassInfo> descendents = thisClass.AllDescendants;
@@ -8795,13 +8795,13 @@ namespace Sawczyn.EFDesigner.EFModel
 	
 		#region Write Methods
 		/// <summary>
-		/// Public WriteMoniker() method that writes a monikerized ModelDiagram instance into XML.
+		/// Public WriteMoniker() method that writes a monikerized EFModelDiagramProxy instance into XML.
 		/// </summary>
 		/// <param name="serializationContext">Serialization context.</param>
-		/// <param name="element">ModelDiagram instance to be monikerized.</param>
+		/// <param name="element">EFModelDiagramProxy instance to be monikerized.</param>
 		/// <param name="writer">XmlWriter to write serialized data to.</param>
-		/// <param name="sourceRolePlayer">Source element that references the ModelDiagram instance being monikerized.</param>
-		/// <param name="relSerializer">Serializer that handles the relationship connecting the source element to the ModelDiagram instance being monikerized.</param>
+		/// <param name="sourceRolePlayer">Source element that references the EFModelDiagramProxy instance being monikerized.</param>
+		/// <param name="relSerializer">Serializer that handles the relationship connecting the source element to the EFModelDiagramProxy instance being monikerized.</param>
 		public override void WriteMoniker(DslModeling::SerializationContext serializationContext, DslModeling::ModelElement element, global::System.Xml.XmlWriter writer, DslModeling::ModelElement sourceRolePlayer, DslModeling::DomainRelationshipXmlSerializer relSerializer)
 		{
 			#region Check Parameters
@@ -8830,10 +8830,10 @@ namespace Sawczyn.EFDesigner.EFModel
 		}
 		
 		/// <summary>
-		/// Public Write() method that serializes one ModelDiagram instance into XML.
+		/// Public Write() method that serializes one EFModelDiagramProxy instance into XML.
 		/// </summary>
 		/// <param name="serializationContext">Serialization context.</param>
-		/// <param name="element">ModelDiagram instance to be serialized.</param>
+		/// <param name="element">EFModelDiagramProxy instance to be serialized.</param>
 		/// <param name="writer">XmlWriter to write serialized data to.</param>
 		/// <param name="rootElementSettings">
 		/// The root element settings if the passed in element is serialized as a root element in the XML. The root element contains additional
@@ -8894,7 +8894,7 @@ namespace Sawczyn.EFDesigner.EFModel
 		/// Write all properties that need to be serialized as XML attributes.
 		/// </summary>
 		/// <param name="serializationContext">Serialization context.</param>
-		/// <param name="element">ModelDiagram instance to be serialized.</param>
+		/// <param name="element">EFModelDiagramProxy instance to be serialized.</param>
 		/// <param name="writer">XmlWriter to write serialized data to.</param> 
 		[global::System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Generated code.")]
 		protected override void WritePropertiesAsAttributes(DslModeling::SerializationContext serializationContext, DslModeling::ModelElement element, global::System.Xml.XmlWriter writer)
@@ -8902,13 +8902,13 @@ namespace Sawczyn.EFDesigner.EFModel
 			// Always call the base class so any extensions are serialized
 			base.WritePropertiesAsAttributes(serializationContext, element, writer);
 	
-			ModelDiagram instanceOfModelDiagram = element as ModelDiagram;
-			global::System.Diagnostics.Debug.Assert(instanceOfModelDiagram != null, "Expecting an instance of ModelDiagram");
+			EFModelDiagramProxy instanceOfEFModelDiagramProxy = element as EFModelDiagramProxy;
+			global::System.Diagnostics.Debug.Assert(instanceOfEFModelDiagramProxy != null, "Expecting an instance of EFModelDiagramProxy");
 	
 			// Name
 			if (!serializationContext.Result.Failed)
 			{
-				global::System.String propValue = instanceOfModelDiagram.Name;
+				global::System.String propValue = instanceOfEFModelDiagramProxy.Name;
 				if (!serializationContext.Result.Failed)
 				{
 					EFModelSerializationHelper.Instance.WriteAttributeString(serializationContext, element, writer, "name", propValue);
@@ -8919,11 +8919,11 @@ namespace Sawczyn.EFDesigner.EFModel
 	
 		#region Moniker Support
 		/// <summary>
-		/// This method calculates a moniker to a given ModelDiagram instance.
+		/// This method calculates a moniker to a given EFModelDiagramProxy instance.
 		/// </summary>
 		/// <param name="directory">Directory to look up serializer based on model element type.</param>
-		/// <param name="element">ModelDiagram instance to calculate qualified name for.</param>
-		/// <returns>A fully qualified string moniker to the ModelDiagram instance.</returns>
+		/// <param name="element">EFModelDiagramProxy instance to calculate qualified name for.</param>
+		/// <returns>A fully qualified string moniker to the EFModelDiagramProxy instance.</returns>
 		public override string CalculateQualifiedName(DslModeling::DomainXmlSerializerDirectory directory, DslModeling::ModelElement element)
 		{
 			#region Check Parameters
@@ -8935,12 +8935,12 @@ namespace Sawczyn.EFDesigner.EFModel
 				throw new global::System.ArgumentNullException("element");
 			#endregion	
 			
-			ModelDiagram instance = element as ModelDiagram;
-			global::System.Diagnostics.Debug.Assert(instance != null, "Expecting an instance of ModelDiagram!");
+			EFModelDiagramProxy instance = element as EFModelDiagramProxy;
+			global::System.Diagnostics.Debug.Assert(instance != null, "Expecting an instance of EFModelDiagramProxy!");
 	
 			string key = instance.Name;
 			string containerMoniker = null;
-			DslModeling::ModelElement container = instance.ModelRoot;
+			DslModeling::ModelElement container = DslModeling::DomainClassInfo.FindEmbeddingElement(instance);
 			if(container != null)
 			{
 				DslModeling::DomainClassXmlSerializer containerSerializer = directory.GetSerializer(container.GetDomainClass().Id);
@@ -8967,7 +8967,7 @@ namespace Sawczyn.EFDesigner.EFModel
 		/// returns empty string.
 		/// </summary>
 		/// <param name="directory">Directory to look up serializer based on model element type.</param>
-		/// <param name="element">ModelDiagram instance to get moniker qualifier from.</param>
+		/// <param name="element">EFModelDiagramProxy instance to get moniker qualifier from.</param>
 		/// <returns>
 		/// Value of this element's moniker qualifier property, if it has one, or the value of the container's moniker qualifier property. Or empty string if this
 		/// element is not monikerized using standard /qualifier/key mechanism.
@@ -8983,9 +8983,9 @@ namespace Sawczyn.EFDesigner.EFModel
 				throw new global::System.ArgumentNullException("element");
 			#endregion	
 			
-			ModelDiagram instance = element as ModelDiagram;
-			global::System.Diagnostics.Debug.Assert(instance != null, "Expecting an instance of ModelDiagram!");
-			DslModeling::ModelElement container = instance.ModelRoot;
+			EFModelDiagramProxy instance = element as EFModelDiagramProxy;
+			global::System.Diagnostics.Debug.Assert(instance != null, "Expecting an instance of EFModelDiagramProxy!");
+			DslModeling::ModelElement container = DslModeling::DomainClassInfo.FindEmbeddingElement(instance);
 			if(container != null)
 			{
 				DslModeling::DomainClassXmlSerializer containerSerializer = directory.GetSerializer(container.GetDomainClass().Id);
@@ -17230,7 +17230,7 @@ namespace Sawczyn.EFDesigner.EFModel
 			// Read properties serialized as XML attributes.
 			ReadPropertiesFromAttributes(serializationContext, element, reader);
 				
-			// Read nested XML elements, which include at least the instance of target role-player ModelDiagram
+			// Read nested XML elements, which include at least the instance of target role-player EFModelDiagramProxy
 			if (!serializationContext.Result.Failed)
 			{
 				if (!reader.IsEmptyElement)
@@ -17241,7 +17241,7 @@ namespace Sawczyn.EFDesigner.EFModel
 					// Read any extension element data under this XML element
 					EFModelSerializationHelper.Instance.ReadExtensions(serializationContext, element, reader);
 					
-					// Read target role-player ModelDiagram.
+					// Read target role-player EFModelDiagramProxy.
 					ReadTargetRolePlayer(serializationContext, element, reader);
 	
 					// Read nested XML elements, they can be either properties serialized as XML elements, or child 
@@ -17269,7 +17269,7 @@ namespace Sawczyn.EFDesigner.EFModel
 		
 	
 		/// <summary>
-		/// This method reads the target role player ModelDiagram.
+		/// This method reads the target role player EFModelDiagramProxy.
 		/// </summary>
 		/// <remarks>
 		/// The caller will guarantee that the reader is positioned at the open tag of the first child XML element.
@@ -17283,7 +17283,7 @@ namespace Sawczyn.EFDesigner.EFModel
 		/// 3) EOF.
 		/// </remarks>
 		/// <param name="serializationContext">Serialization context.</param>
-		/// <param name="element">In-memory ModelRootHasModelDiagrams instance that will link to the target ModelDiagram instance.</param>
+		/// <param name="element">In-memory ModelRootHasModelDiagrams instance that will link to the target EFModelDiagramProxy instance.</param>
 		/// <param name="reader">XmlReader to read serialized data from.</param>
 		protected virtual void ReadTargetRolePlayer(DslModeling::SerializationContext serializationContext, DslModeling::ModelElement element, global::System.Xml.XmlReader reader)
 		{
@@ -17299,10 +17299,10 @@ namespace Sawczyn.EFDesigner.EFModel
 				throw new global::System.ArgumentNullException ("reader");
 			#endregion
 	
-			// Read the instance of target role-player ModelDiagram
+			// Read the instance of target role-player EFModelDiagramProxy
 			DslModeling::ModelElement targetRolePlayer = null;
-			DslModeling::DomainClassXmlSerializer targetRoleSerializer = serializationContext.Directory.GetSerializer(ModelDiagram.DomainClassId);
-			global::System.Diagnostics.Debug.Assert(targetRoleSerializer != null, "Cannot find serializer for ModelDiagram!");
+			DslModeling::DomainClassXmlSerializer targetRoleSerializer = serializationContext.Directory.GetSerializer(EFModelDiagramProxy.DomainClassId);
+			global::System.Diagnostics.Debug.Assert(targetRoleSerializer != null, "Cannot find serializer for EFModelDiagramProxy!");
 	
 			while (!serializationContext.Result.Failed && !reader.EOF && reader.NodeType == global::System.Xml.XmlNodeType.Element)
 			{
@@ -17310,7 +17310,7 @@ namespace Sawczyn.EFDesigner.EFModel
 				if (targetRolePlayer != null)
 				{
 					// Attach the target role-player.
-					DslModeling::DomainRoleInfo.SetRolePlayer(element as DslModeling::ElementLink, ModelRootHasModelDiagrams.ModelDiagramDomainRoleId, targetRolePlayer);
+					DslModeling::DomainRoleInfo.SetRolePlayer(element as DslModeling::ElementLink, ModelRootHasModelDiagrams.EFModelDiagramProxyDomainRoleId, targetRolePlayer);
 					// Read target role-player.
 					DslModeling::DomainClassXmlSerializer targetSerializer = serializationContext.Directory.GetSerializer (targetRolePlayer.GetDomainClass().Id);	
 					global::System.Diagnostics.Debug.Assert (targetSerializer != null, "Cannot find serializer for " + targetRolePlayer.GetDomainClass().Name + "!");
@@ -17497,7 +17497,7 @@ namespace Sawczyn.EFDesigner.EFModel
 					partition,
 					new DslModeling::RoleAssignment[] {
 						DslModeling::RoleAssignment.CreatePlaceholderRoleAssignment (ModelRootHasModelDiagrams.ModelRootDomainRoleId), 
-						DslModeling::RoleAssignment.CreatePlaceholderRoleAssignment (ModelRootHasModelDiagrams.ModelDiagramDomainRoleId)
+						DslModeling::RoleAssignment.CreatePlaceholderRoleAssignment (ModelRootHasModelDiagrams.EFModelDiagramProxyDomainRoleId)
 					},
 					new DslModeling::PropertyAssignment[] {
 						new DslModeling::PropertyAssignment(DslModeling::ElementFactory.IdPropertyAssignment, id)
@@ -17801,7 +17801,7 @@ namespace Sawczyn.EFDesigner.EFModel
 			ModelRootHasModelDiagrams instance = element as ModelRootHasModelDiagrams;
 			global::System.Diagnostics.Debug.Assert(instance != null, "Expecting an instance of ModelRootHasModelDiagrams!");
 	
-			DslModeling::ModelElement targetElement = instance.ModelDiagram;
+			DslModeling::ModelElement targetElement = instance.EFModelDiagramProxy;
 			DslModeling::DomainClassXmlSerializer targetSerializer = serializationContext.Directory.GetSerializer(targetElement.GetDomainClass().Id);
 			global::System.Diagnostics.Debug.Assert(targetSerializer != null, "Cannot find serializer for " + targetElement.GetDomainClass().Name + "!");
 			targetSerializer.Write(serializationContext, targetElement, writer);
@@ -23601,7 +23601,7 @@ namespace Sawczyn.EFDesigner.EFModel
 					EFModelSerializationBehavior.serializerTypes.Add(new DslModeling::DomainXmlSerializerDirectoryEntry(ClassModelElement.DomainClassId, typeof(ClassModelElementSerializer)));
 					EFModelSerializationBehavior.serializerTypes.Add(new DslModeling::DomainXmlSerializerDirectoryEntry(ModelEnum.DomainClassId, typeof(ModelEnumSerializer)));
 					EFModelSerializationBehavior.serializerTypes.Add(new DslModeling::DomainXmlSerializerDirectoryEntry(ModelEnumValue.DomainClassId, typeof(ModelEnumValueSerializer)));
-					EFModelSerializationBehavior.serializerTypes.Add(new DslModeling::DomainXmlSerializerDirectoryEntry(ModelDiagram.DomainClassId, typeof(ModelDiagramSerializer)));
+					EFModelSerializationBehavior.serializerTypes.Add(new DslModeling::DomainXmlSerializerDirectoryEntry(EFModelDiagramProxy.DomainClassId, typeof(EFModelDiagramProxySerializer)));
 					EFModelSerializationBehavior.serializerTypes.Add(new DslModeling::DomainXmlSerializerDirectoryEntry(Association.DomainClassId, typeof(AssociationSerializer)));
 					EFModelSerializationBehavior.serializerTypes.Add(new DslModeling::DomainXmlSerializerDirectoryEntry(UnidirectionalAssociation.DomainClassId, typeof(UnidirectionalAssociationSerializer)));
 					EFModelSerializationBehavior.serializerTypes.Add(new DslModeling::DomainXmlSerializerDirectoryEntry(ClassHasAttributes.DomainClassId, typeof(ClassHasAttributesSerializer)));

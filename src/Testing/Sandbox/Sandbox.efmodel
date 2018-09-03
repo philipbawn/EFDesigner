@@ -40,4 +40,9 @@
       </modelEnum>
     </modelRootHasEnums>
   </enums>
+  <modelDiagrams>
+    <modelRootHasModelDiagrams Id="edde54a0-7fee-4221-9f25-5699e2debe86">
+      <eFModelDiagramProxy Id="4dad4855-f01a-471b-bac4-de824068122b" name="Default" />
+    </modelRootHasModelDiagrams>
+  </modelDiagrams>
 </modelRoot>

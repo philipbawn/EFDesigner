@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 
 using Microsoft.VisualStudio.Modeling;
 
@@ -11,8 +13,17 @@ namespace Sawczyn.EFDesigner.EFModel
          base.OnSelectionChanged(e);
 
          // select element on active diagram
-         if (PrimarySelection != null && PrimarySelection is ModelElement modelElement)
-            modelElement.LocateInDiagram(true);
+         if (PrimarySelection != null)
+         {
+            if (PrimarySelection is ModelElement modelElement)
+            {
+               modelElement.LocateInDiagram(true);
+            }
+            else if (PrimarySelection is EFModelDiagramProxy diagramProxy)
+            {
+               EFModelDocData.Current.OpenView(EFModelDiagram.DomainClassId, diagramProxy.Name);
+            }
+         }
       }
    }
 }

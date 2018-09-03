@@ -76,7 +76,7 @@ namespace Sawczyn.EFDesigner.EFModel
 				typeof(ClassModelElement),
 				typeof(ModelEnum),
 				typeof(ModelEnumValue),
-				typeof(ModelDiagram),
+				typeof(EFModelDiagramProxy),
 				typeof(Association),
 				typeof(UnidirectionalAssociation),
 				typeof(ClassHasAttributes),
@@ -194,7 +194,7 @@ namespace Sawczyn.EFDesigner.EFModel
 				new DomainMemberInfo(typeof(ModelEnum), "IsOutputDirectoryTracking", ModelEnum.IsOutputDirectoryTrackingDomainPropertyId, typeof(ModelEnum.IsOutputDirectoryTrackingPropertyHandler)),
 				new DomainMemberInfo(typeof(ModelEnumValue), "Name", ModelEnumValue.NameDomainPropertyId, typeof(ModelEnumValue.NamePropertyHandler)),
 				new DomainMemberInfo(typeof(ModelEnumValue), "Value", ModelEnumValue.ValueDomainPropertyId, typeof(ModelEnumValue.ValuePropertyHandler)),
-				new DomainMemberInfo(typeof(ModelDiagram), "Name", ModelDiagram.NameDomainPropertyId, typeof(ModelDiagram.NamePropertyHandler)),
+				new DomainMemberInfo(typeof(EFModelDiagramProxy), "Name", EFModelDiagramProxy.NameDomainPropertyId, typeof(EFModelDiagramProxy.NamePropertyHandler)),
 				new DomainMemberInfo(typeof(Association), "SourceMultiplicity", Association.SourceMultiplicityDomainPropertyId, typeof(Association.SourceMultiplicityPropertyHandler)),
 				new DomainMemberInfo(typeof(Association), "TargetMultiplicity", Association.TargetMultiplicityDomainPropertyId, typeof(Association.TargetMultiplicityPropertyHandler)),
 				new DomainMemberInfo(typeof(Association), "TargetPropertyName", Association.TargetPropertyNameDomainPropertyId, typeof(Association.TargetPropertyNamePropertyHandler)),
@@ -260,7 +260,7 @@ namespace Sawczyn.EFDesigner.EFModel
 				new DomainRolePlayerInfo(typeof(ModelEnumHasValues), "Enum", ModelEnumHasValues.EnumDomainRoleId),
 				new DomainRolePlayerInfo(typeof(ModelEnumHasValues), "Value", ModelEnumHasValues.ValueDomainRoleId),
 				new DomainRolePlayerInfo(typeof(ModelRootHasModelDiagrams), "ModelRoot", ModelRootHasModelDiagrams.ModelRootDomainRoleId),
-				new DomainRolePlayerInfo(typeof(ModelRootHasModelDiagrams), "ModelDiagram", ModelRootHasModelDiagrams.ModelDiagramDomainRoleId),
+				new DomainRolePlayerInfo(typeof(ModelRootHasModelDiagrams), "EFModelDiagramProxy", ModelRootHasModelDiagrams.EFModelDiagramProxyDomainRoleId),
 			};
 		}
 		#endregion
@@ -289,7 +289,7 @@ namespace Sawczyn.EFDesigner.EFModel
 				createElementMap.Add(typeof(Comment), 3);
 				createElementMap.Add(typeof(ModelEnum), 4);
 				createElementMap.Add(typeof(ModelEnumValue), 5);
-				createElementMap.Add(typeof(ModelDiagram), 6);
+				createElementMap.Add(typeof(EFModelDiagramProxy), 6);
 				createElementMap.Add(typeof(EFModelDiagram), 7);
 				createElementMap.Add(typeof(UnidirectionalConnector), 8);
 				createElementMap.Add(typeof(BidirectionalConnector), 9);
@@ -317,7 +317,7 @@ namespace Sawczyn.EFDesigner.EFModel
 				case 3: return new Comment(partition, propertyAssignments);
 				case 4: return new ModelEnum(partition, propertyAssignments);
 				case 5: return new ModelEnumValue(partition, propertyAssignments);
-				case 6: return new ModelDiagram(partition, propertyAssignments);
+				case 6: return new EFModelDiagramProxy(partition, propertyAssignments);
 				case 7: return new EFModelDiagram(partition, propertyAssignments);
 				case 8: return new UnidirectionalConnector(partition, propertyAssignments);
 				case 9: return new BidirectionalConnector(partition, propertyAssignments);
@@ -568,7 +568,7 @@ namespace Sawczyn.EFDesigner.EFModel
 			DomainRoles.Add(global::Sawczyn.EFDesigner.EFModel.ModelRootHasTypes.TypeDomainRoleId, true);
 			DomainRoles.Add(global::Sawczyn.EFDesigner.EFModel.ModelRootHasEnums.ModelEnumDomainRoleId, true);
 			DomainRoles.Add(global::Sawczyn.EFDesigner.EFModel.ModelEnumHasValues.ValueDomainRoleId, true);
-			DomainRoles.Add(global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelDiagrams.ModelDiagramDomainRoleId, true);
+			DomainRoles.Add(global::Sawczyn.EFDesigner.EFModel.ModelRootHasModelDiagrams.EFModelDiagramProxyDomainRoleId, true);
 			#endregion
 		}
 		/// <summary>
