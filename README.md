@@ -43,13 +43,32 @@ You can read more about how to use the designer in the [Documentation site](http
 
  ### Change Log
 
-***1.2.5.0***
+***1.2.6.2***
+   - Added XML docs to DbContext, DatabaseInitializer and DbMigrationsConfiguration
+   - Enabled drag and drop reordering of enum values and class properties
+   - Gave some color to the enum value glyph in the model explorer - it was so boring!
+   - Class properties and enum values with warnings now show a warning icon on the design surface
+   - Design surface has a property to turn on or off the display of the warning icons 
+   - Recategorized a few "Misc" properties on the design surface
+
+**1.2.5.1**
+   - Addressed [issue #20 - Abstract/inherited/TPC code still there for abstract class](https://github.com/msawczyn/EFDesigner/issues/20). While the discussion centered around abstract classes and TPC inheritance (which was behaving properly), it did uncover a problem with code generation when namespaces changed from class to class. 
+     
+<details>
+<summary><b>1.2.5.0</b></summary>
+
    - Fix for [issue #19 - Recognize "Id" as primary key on import](https://github.com/msawczyn/EFDesigner/issues/19)
 
-**1.2.4.0**
+</details>
+
+<details>
+<summary><b>1.2.4.0</b></summary>
+
    - Retargeted immediate error and warning messages to Visual Studio output window rather than error window so they could be cleared
    - Added drag validation to Generalization (inheritance) tool
    - Automatically propagate enum name and value name changes to classes that use them
+
+</details>
 
 <details>
 <summary><b>1.2.3.3</b></summary>
@@ -60,7 +79,7 @@ You can read more about how to use the designer in the [Documentation site](http
 </details>
 
 <details>
-<summary><b>1.2.3</b></summary>
+<summary><b>1.2.3.0</b></summary>
 
    - When element selected in model explorer, no longer highlights in orange but instead selects, centers and zooms the element.
      This was done because the color change flagged the model as modified, making the user either undo or save the changes to keep
@@ -76,7 +95,7 @@ You can read more about how to use the designer in the [Documentation site](http
 </details>
 
 <details>
-<summary><b>1.2.2</b></summary>
+<summary><b>1.2.2.0</b></summary>
 
 - Fix issue with association role end changing without the other side autoatically changing
    - Fix issue with deleting a highlighted element throwing an error when trying to save the file
@@ -86,7 +105,7 @@ You can read more about how to use the designer in the [Documentation site](http
 </details>
 
 <details>
-<summary><b>1.2.1</b></summary>
+<summary><b>1.2.1.0</b></summary>
 
    - Bug fix for inheritance strategy automatically changing to table-per-hierarchy if targeting EF Core
    - Updated a few warning and error messages to make them more meaningful
@@ -97,7 +116,7 @@ You can read more about how to use the designer in the [Documentation site](http
 </details>
 
 <details>
-<summary><b>1.2.0</b></summary>
+<summary><b>1.2.0.0</b></summary>
 
    - **New Features**
       - Roslyn-based code analysis now allows dragging C# files onto the design surface to add or update classes and enums
@@ -118,7 +137,7 @@ You can read more about how to use the designer in the [Documentation site](http
 </details>
 
 <details>
-<summary><b>1.1.0</b></summary>
+<summary><b>1.1.0.0</b></summary>
 
    - Bug fixes for exceptions thrown when bad input to model attributes as text
    - Added MinLength string property (used in EF6 only as of this writing)
@@ -223,7 +242,7 @@ You can read more about how to use the designer in the [Documentation site](http
 </details>
 
 <details>
-<summary><b>1.0.0</b></summary>
+<summary><b>1.0.0.0</b></summary>
 
    - Initial release
 

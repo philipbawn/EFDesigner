@@ -160,9 +160,8 @@
     <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+    <Reference Include="System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Net.Http.4.3.3\lib\net46\System.Net.Http.dll</HintPath>
-      <Private>True</Private>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Numerics" />
@@ -245,9 +244,11 @@
     <Compile Include="CustomCode\Partials\Generalization.cs" />
     <Compile Include="CustomCode\Connection Builders\GeneralizationBuilder.cs" />
     <Compile Include="CustomCode\Partials\GeneralizationConnector.cs" />
-    <Compile Include="CustomCode\Partials\IHighlightFromModelExplorer.cs" />
-    <Compile Include="CustomCode\Partials\IModelElementCompartmented.cs" />
-    <Compile Include="CustomCode\Partials\IModelElementWithCompartments.cs" />
+    <Compile Include="CustomCode\ModelElement Interfaces\IDisplaysWarning.cs" />
+    <Compile Include="CustomCode\ModelElement Interfaces\IHighlightFromModelExplorer.cs" />
+    <Compile Include="CustomCode\ModelElement Interfaces\IModelElementCompartmented.cs" />
+    <Compile Include="CustomCode\ModelElement Interfaces\IModelElementWithCompartments.cs" />
+    <Compile Include="CustomCode\ModelElement Interfaces\IMouseActionTarget.cs" />
     <Compile Include="CustomCode\Partials\ModelAttribute.cs" />
     <Compile Include="CustomCode\Rules\DiagramProxyAddRules.cs" />
     <Compile Include="CustomCode\Rules\DiagramProxyChangeRules.cs" />
@@ -422,6 +423,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\EnumValue.png" />
+    <None Include="Resources\Move.cur" />
+    <Content Include="Resources\Warning.png" />
     <None Include="DslDefinition.dsl.diagram">
       <DependentUpon>DslDefinition.dsl</DependentUpon>
     </None>
@@ -550,6 +554,7 @@
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

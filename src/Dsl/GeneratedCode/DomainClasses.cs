@@ -2321,6 +2321,7 @@ namespace Sawczyn.EFDesigner.EFModel
 		/// If true, will generate warnings when summary documentation is missing
 		/// </summary>
 		[DslDesign::DisplayNameResource("Sawczyn.EFDesigner.EFModel.ModelRoot/WarnOnMissingDocumentation.DisplayName", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslDesign::CategoryResource("Sawczyn.EFDesigner.EFModel.ModelRoot/WarnOnMissingDocumentation.Category", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
 		[DslDesign::DescriptionResource("Sawczyn.EFDesigner.EFModel.ModelRoot/WarnOnMissingDocumentation.Description", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
 		[global::System.ComponentModel.DefaultValue(true)]
 		[DslModeling::DomainObjectId("247aa399-3d89-4b48-baeb-992e8cb3d47a")]
@@ -2744,6 +2745,273 @@ namespace Sawczyn.EFDesigner.EFModel
 				{
 					ValueChanging(element, oldValue, newValue);
 					element.dbSetAccessPropertyStorage = newValue;
+					ValueChanged(element, oldValue, newValue);
+				}
+			}
+		}
+		
+		#endregion
+		#region Description domain property code
+		
+		/// <summary>
+		/// Description domain property Id.
+		/// </summary>
+		public static readonly global::System.Guid DescriptionDomainPropertyId = new global::System.Guid(0xa95a5645, 0xb5d5, 0x4b11, 0xb1, 0x77, 0xd6, 0x74, 0xce, 0xe9, 0x12, 0x90);
+		
+		/// <summary>
+		/// Storage for Description
+		/// </summary>
+		private global::System.String descriptionPropertyStorage = string.Empty;
+		
+		/// <summary>
+		/// Gets or sets the value of Description domain property.
+		/// Detailed code documentation
+		/// </summary>
+		[DslDesign::DisplayNameResource("Sawczyn.EFDesigner.EFModel.ModelRoot/Description.DisplayName", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslDesign::CategoryResource("Sawczyn.EFDesigner.EFModel.ModelRoot/Description.Category", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslDesign::DescriptionResource("Sawczyn.EFDesigner.EFModel.ModelRoot/Description.Description", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[global::System.ComponentModel.DefaultValue("")]
+		[DslModeling::DomainObjectId("a95a5645-b5d5-4b11-b177-d674cee91290")]
+		public global::System.String Description
+		{
+			[global::System.Diagnostics.DebuggerStepThrough]
+			get
+			{
+				return descriptionPropertyStorage;
+			}
+			[global::System.Diagnostics.DebuggerStepThrough]
+			set
+			{
+				DescriptionPropertyHandler.Instance.SetValue(this, value);
+			}
+		}
+		/// <summary>
+		/// Value handler for the ModelRoot.Description domain property.
+		/// </summary>
+		internal sealed partial class DescriptionPropertyHandler : DslModeling::DomainPropertyValueHandler<ModelRoot, global::System.String>
+		{
+			private DescriptionPropertyHandler() { }
+		
+			/// <summary>
+			/// Gets the singleton instance of the ModelRoot.Description domain property value handler.
+			/// </summary>
+			public static readonly DescriptionPropertyHandler Instance = new DescriptionPropertyHandler();
+		
+			/// <summary>
+			/// Gets the Id of the ModelRoot.Description domain property.
+			/// </summary>
+			public sealed override global::System.Guid DomainPropertyId
+			{
+				[global::System.Diagnostics.DebuggerStepThrough]
+				get
+				{
+					return DescriptionDomainPropertyId;
+				}
+			}
+			
+			/// <summary>
+			/// Gets a strongly-typed value of the property on specified element.
+			/// </summary>
+			/// <param name="element">Element which owns the property.</param>
+			/// <returns>Property value.</returns>
+			public override sealed global::System.String GetValue(ModelRoot element)
+			{
+				if (element == null) throw new global::System.ArgumentNullException("element");
+				return element.descriptionPropertyStorage;
+			}
+		
+			/// <summary>
+			/// Sets property value on an element.
+			/// </summary>
+			/// <param name="element">Element which owns the property.</param>
+			/// <param name="newValue">New property value.</param>
+			public override sealed void SetValue(ModelRoot element, global::System.String newValue)
+			{
+				if (element == null) throw new global::System.ArgumentNullException("element");
+		
+				global::System.String oldValue = GetValue(element);
+				if (newValue != oldValue)
+				{
+					ValueChanging(element, oldValue, newValue);
+					element.descriptionPropertyStorage = newValue;
+					ValueChanged(element, oldValue, newValue);
+				}
+			}
+		}
+		
+		#endregion
+		#region Summary domain property code
+		
+		/// <summary>
+		/// Summary domain property Id.
+		/// </summary>
+		public static readonly global::System.Guid SummaryDomainPropertyId = new global::System.Guid(0xa25a2ffe, 0x9ae9, 0x408b, 0xa3, 0x46, 0x05, 0x68, 0x05, 0xde, 0x69, 0x75);
+		
+		/// <summary>
+		/// Storage for Summary
+		/// </summary>
+		private global::System.String summaryPropertyStorage = string.Empty;
+		
+		/// <summary>
+		/// Gets or sets the value of Summary domain property.
+		/// Brief code documentation
+		/// </summary>
+		[DslDesign::DisplayNameResource("Sawczyn.EFDesigner.EFModel.ModelRoot/Summary.DisplayName", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslDesign::CategoryResource("Sawczyn.EFDesigner.EFModel.ModelRoot/Summary.Category", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslDesign::DescriptionResource("Sawczyn.EFDesigner.EFModel.ModelRoot/Summary.Description", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslModeling::DomainObjectId("a25a2ffe-9ae9-408b-a346-056805de6975")]
+		public global::System.String Summary
+		{
+			[global::System.Diagnostics.DebuggerStepThrough]
+			get
+			{
+				return summaryPropertyStorage;
+			}
+			[global::System.Diagnostics.DebuggerStepThrough]
+			set
+			{
+				SummaryPropertyHandler.Instance.SetValue(this, value);
+			}
+		}
+		/// <summary>
+		/// Value handler for the ModelRoot.Summary domain property.
+		/// </summary>
+		internal sealed partial class SummaryPropertyHandler : DslModeling::DomainPropertyValueHandler<ModelRoot, global::System.String>
+		{
+			private SummaryPropertyHandler() { }
+		
+			/// <summary>
+			/// Gets the singleton instance of the ModelRoot.Summary domain property value handler.
+			/// </summary>
+			public static readonly SummaryPropertyHandler Instance = new SummaryPropertyHandler();
+		
+			/// <summary>
+			/// Gets the Id of the ModelRoot.Summary domain property.
+			/// </summary>
+			public sealed override global::System.Guid DomainPropertyId
+			{
+				[global::System.Diagnostics.DebuggerStepThrough]
+				get
+				{
+					return SummaryDomainPropertyId;
+				}
+			}
+			
+			/// <summary>
+			/// Gets a strongly-typed value of the property on specified element.
+			/// </summary>
+			/// <param name="element">Element which owns the property.</param>
+			/// <returns>Property value.</returns>
+			public override sealed global::System.String GetValue(ModelRoot element)
+			{
+				if (element == null) throw new global::System.ArgumentNullException("element");
+				return element.summaryPropertyStorage;
+			}
+		
+			/// <summary>
+			/// Sets property value on an element.
+			/// </summary>
+			/// <param name="element">Element which owns the property.</param>
+			/// <param name="newValue">New property value.</param>
+			public override sealed void SetValue(ModelRoot element, global::System.String newValue)
+			{
+				if (element == null) throw new global::System.ArgumentNullException("element");
+		
+				global::System.String oldValue = GetValue(element);
+				if (newValue != oldValue)
+				{
+					ValueChanging(element, oldValue, newValue);
+					element.summaryPropertyStorage = newValue;
+					ValueChanged(element, oldValue, newValue);
+				}
+			}
+		}
+		
+		#endregion
+		#region ShowWarningsInDesigner domain property code
+		
+		/// <summary>
+		/// ShowWarningsInDesigner domain property Id.
+		/// </summary>
+		public static readonly global::System.Guid ShowWarningsInDesignerDomainPropertyId = new global::System.Guid(0xb79884bd, 0x572a, 0x444c, 0xb6, 0x4e, 0x24, 0xd6, 0x6c, 0x8e, 0xfc, 0x29);
+		
+		/// <summary>
+		/// Storage for ShowWarningsInDesigner
+		/// </summary>
+		private global::System.Boolean showWarningsInDesignerPropertyStorage = true;
+		
+		/// <summary>
+		/// Gets or sets the value of ShowWarningsInDesigner domain property.
+		/// If true, will display warning glyphs with tooltips when model elements have
+		/// non-fatal issues detected
+		/// </summary>
+		[DslDesign::DisplayNameResource("Sawczyn.EFDesigner.EFModel.ModelRoot/ShowWarningsInDesigner.DisplayName", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslDesign::CategoryResource("Sawczyn.EFDesigner.EFModel.ModelRoot/ShowWarningsInDesigner.Category", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslDesign::DescriptionResource("Sawczyn.EFDesigner.EFModel.ModelRoot/ShowWarningsInDesigner.Description", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[global::System.ComponentModel.DefaultValue(true)]
+		[DslModeling::DomainObjectId("b79884bd-572a-444c-b64e-24d66c8efc29")]
+		public global::System.Boolean ShowWarningsInDesigner
+		{
+			[global::System.Diagnostics.DebuggerStepThrough]
+			get
+			{
+				return showWarningsInDesignerPropertyStorage;
+			}
+			[global::System.Diagnostics.DebuggerStepThrough]
+			set
+			{
+				ShowWarningsInDesignerPropertyHandler.Instance.SetValue(this, value);
+			}
+		}
+		/// <summary>
+		/// Value handler for the ModelRoot.ShowWarningsInDesigner domain property.
+		/// </summary>
+		internal sealed partial class ShowWarningsInDesignerPropertyHandler : DslModeling::DomainPropertyValueHandler<ModelRoot, global::System.Boolean>
+		{
+			private ShowWarningsInDesignerPropertyHandler() { }
+		
+			/// <summary>
+			/// Gets the singleton instance of the ModelRoot.ShowWarningsInDesigner domain property value handler.
+			/// </summary>
+			public static readonly ShowWarningsInDesignerPropertyHandler Instance = new ShowWarningsInDesignerPropertyHandler();
+		
+			/// <summary>
+			/// Gets the Id of the ModelRoot.ShowWarningsInDesigner domain property.
+			/// </summary>
+			public sealed override global::System.Guid DomainPropertyId
+			{
+				[global::System.Diagnostics.DebuggerStepThrough]
+				get
+				{
+					return ShowWarningsInDesignerDomainPropertyId;
+				}
+			}
+			
+			/// <summary>
+			/// Gets a strongly-typed value of the property on specified element.
+			/// </summary>
+			/// <param name="element">Element which owns the property.</param>
+			/// <returns>Property value.</returns>
+			public override sealed global::System.Boolean GetValue(ModelRoot element)
+			{
+				if (element == null) throw new global::System.ArgumentNullException("element");
+				return element.showWarningsInDesignerPropertyStorage;
+			}
+		
+			/// <summary>
+			/// Sets property value on an element.
+			/// </summary>
+			/// <param name="element">Element which owns the property.</param>
+			/// <param name="newValue">New property value.</param>
+			public override sealed void SetValue(ModelRoot element, global::System.Boolean newValue)
+			{
+				if (element == null) throw new global::System.ArgumentNullException("element");
+		
+				global::System.Boolean oldValue = GetValue(element);
+				if (newValue != oldValue)
+				{
+					ValueChanging(element, oldValue, newValue);
+					element.showWarningsInDesignerPropertyStorage = newValue;
 					ValueChanged(element, oldValue, newValue);
 				}
 			}
@@ -4279,6 +4547,72 @@ namespace Sawczyn.EFDesigner.EFModel
 					ValueChanged(element, oldValue, newValue);
 				}
 			}
+		}
+		
+		#endregion
+		#region GlyphType domain property code
+		
+		/// <summary>
+		/// GlyphType domain property Id.
+		/// </summary>
+		public static readonly global::System.Guid GlyphTypeDomainPropertyId = new global::System.Guid(0x90778922, 0x6b74, 0x40a8, 0xa9, 0xef, 0x14, 0x87, 0x1a, 0x78, 0x8d, 0x5e);
+		
+		/// <summary>
+		/// Gets or sets the value of GlyphType domain property.
+		/// Type of glyph to show on the design surface
+		/// </summary>
+		[DslDesign::DisplayNameResource("Sawczyn.EFDesigner.EFModel.ModelClass/GlyphType.DisplayName", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslDesign::DescriptionResource("Sawczyn.EFDesigner.EFModel.ModelClass/GlyphType.Description", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[global::System.ComponentModel.Browsable(false)]
+		[global::System.ComponentModel.ReadOnly(true)]
+		[DslModeling::DomainProperty(Kind = DslModeling::DomainPropertyKind.Calculated)]
+		[DslModeling::DomainObjectId("90778922-6b74-40a8-a9ef-14871a788d5e")]
+		internal global::System.String GlyphType
+		{
+			[global::System.Diagnostics.DebuggerStepThrough]
+			get
+			{
+				return GlyphTypePropertyHandler.Instance.GetValue(this);
+			}
+		}
+		/// <summary>
+		/// Value handler for the ModelClass.GlyphType domain property.
+		/// </summary>
+		internal sealed partial class GlyphTypePropertyHandler : DslModeling::CalculatedPropertyValueHandler<ModelClass, global::System.String>
+		{
+			private GlyphTypePropertyHandler() { }
+		
+			/// <summary>
+			/// Gets the singleton instance of the ModelClass.GlyphType domain property value handler.
+			/// </summary>
+			public static readonly GlyphTypePropertyHandler Instance = new GlyphTypePropertyHandler();
+		
+			/// <summary>
+			/// Gets the Id of the ModelClass.GlyphType domain property.
+			/// </summary>
+			public sealed override global::System.Guid DomainPropertyId
+			{
+				[global::System.Diagnostics.DebuggerStepThrough]
+				get
+				{
+					return GlyphTypeDomainPropertyId;
+				}
+			}
+			
+			/// <summary>
+			/// Gets a strongly-typed value of the property on specified element.
+			/// </summary>
+			/// <param name="element">Element which owns the property.</param>
+			/// <returns>Property value.</returns>
+			public override sealed global::System.String GetValue(ModelClass element)
+			{
+				if (element == null) throw new global::System.ArgumentNullException("element");
+				// There is no storage for GlyphType because its Kind is
+				// set to Calculated. Please provide the GetGlyphTypeValue()
+				// method on the domain class.
+				return element.GetGlyphTypeValue();
+			}
+		
 		}
 		
 		#endregion
@@ -7740,6 +8074,72 @@ namespace Sawczyn.EFDesigner.EFModel
 					ValueChanged(element, oldValue, newValue);
 				}
 			}
+		}
+		
+		#endregion
+		#region GlyphType domain property code
+		
+		/// <summary>
+		/// GlyphType domain property Id.
+		/// </summary>
+		public static readonly global::System.Guid GlyphTypeDomainPropertyId = new global::System.Guid(0xb643f6b2, 0xd807, 0x4318, 0xa2, 0x91, 0x42, 0x4b, 0x74, 0x89, 0x3f, 0x3c);
+		
+		/// <summary>
+		/// Gets or sets the value of GlyphType domain property.
+		/// Type of glyph to show on the design surface
+		/// </summary>
+		[DslDesign::DisplayNameResource("Sawczyn.EFDesigner.EFModel.ModelEnum/GlyphType.DisplayName", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[DslDesign::DescriptionResource("Sawczyn.EFDesigner.EFModel.ModelEnum/GlyphType.Description", typeof(global::Sawczyn.EFDesigner.EFModel.EFModelDomainModel), "Sawczyn.EFDesigner.EFModel.GeneratedCode.DomainModelResx")]
+		[global::System.ComponentModel.Browsable(false)]
+		[global::System.ComponentModel.ReadOnly(true)]
+		[DslModeling::DomainProperty(Kind = DslModeling::DomainPropertyKind.Calculated)]
+		[DslModeling::DomainObjectId("b643f6b2-d807-4318-a291-424b74893f3c")]
+		internal global::System.String GlyphType
+		{
+			[global::System.Diagnostics.DebuggerStepThrough]
+			get
+			{
+				return GlyphTypePropertyHandler.Instance.GetValue(this);
+			}
+		}
+		/// <summary>
+		/// Value handler for the ModelEnum.GlyphType domain property.
+		/// </summary>
+		internal sealed partial class GlyphTypePropertyHandler : DslModeling::CalculatedPropertyValueHandler<ModelEnum, global::System.String>
+		{
+			private GlyphTypePropertyHandler() { }
+		
+			/// <summary>
+			/// Gets the singleton instance of the ModelEnum.GlyphType domain property value handler.
+			/// </summary>
+			public static readonly GlyphTypePropertyHandler Instance = new GlyphTypePropertyHandler();
+		
+			/// <summary>
+			/// Gets the Id of the ModelEnum.GlyphType domain property.
+			/// </summary>
+			public sealed override global::System.Guid DomainPropertyId
+			{
+				[global::System.Diagnostics.DebuggerStepThrough]
+				get
+				{
+					return GlyphTypeDomainPropertyId;
+				}
+			}
+			
+			/// <summary>
+			/// Gets a strongly-typed value of the property on specified element.
+			/// </summary>
+			/// <param name="element">Element which owns the property.</param>
+			/// <returns>Property value.</returns>
+			public override sealed global::System.String GetValue(ModelEnum element)
+			{
+				if (element == null) throw new global::System.ArgumentNullException("element");
+				// There is no storage for GlyphType because its Kind is
+				// set to Calculated. Please provide the GetGlyphTypeValue()
+				// method on the domain class.
+				return element.GetGlyphTypeValue();
+			}
+		
 		}
 		
 		#endregion

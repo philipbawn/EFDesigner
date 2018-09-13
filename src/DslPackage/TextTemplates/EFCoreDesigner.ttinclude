@@ -7,7 +7,7 @@
 #><#@ import namespace="System.IO"
 #><#@ import namespace="System.Linq" #><#+
 
-// EFDesigner v1.2.3
+// EFDesigner v1.2.5.1
 // Copyright (c) 2017-2018 Michael Sawczyn
 // https://github.com/msawczyn/EFDesigner
 
@@ -111,6 +111,23 @@ void WriteDbContextEFCore(ModelRoot modelRoot)
 
    BeginNamespace(modelRoot.Namespace);
 
+   if (!string.IsNullOrEmpty(modelRoot.Summary))
+   {
+      Output("/// <summary>");
+      Output("/// {0}", modelRoot.Summary);
+      Output("/// </summary>");
+      if (!string.IsNullOrEmpty(modelRoot.Description))
+      {
+         Output("/// <remarks>");
+         Output("/// {0}", modelRoot.Description);
+         Output("/// </remarks>");
+      }
+   }
+   else
+   {
+      Output("/// <inheritdoc/>");
+   }
+
    Output($"{modelRoot.EntityContainerAccess.ToString().ToLower()} partial class {modelRoot.EntityContainerName} : Microsoft.EntityFrameworkCore.DbContext");
    Output("{");
 
@@ -137,6 +154,8 @@ void WriteDbContextEFCore(ModelRoot modelRoot)
 
    if (classesWithTables != null)
    {
+      Output("#region DbSets");
+      
       foreach (ModelClass modelClass in modelRoot.Types.OfType<ModelClass>().OrderBy(x => x.Name))
       {
          string dbSetName;
@@ -148,9 +167,17 @@ void WriteDbContextEFCore(ModelRoot modelRoot)
                ? pluralizationService.Pluralize(modelClass.Name)
                : modelClass.Name;
 
-         Output($"{modelRoot.DbSetAccess.ToString().ToLower()} Microsoft.EntityFrameworkCore.DbSet<{modelClass.Namespace}.{modelClass.Name}> {dbSetName} {{ get; set; }}");
+         if (!string.IsNullOrEmpty(modelClass.Summary))
+         {
+            NL();
+            Output("/// <summary>");
+            Output("/// Repository for {0} - {1}", modelClass.FullName, modelClass.Summary);
+            Output("/// </summary>");
+         }
+         Output($"{modelRoot.DbSetAccess.ToString().ToLower()} Microsoft.EntityFrameworkCore.DbSet<{modelClass.FullName}> {dbSetName} {{ get; set; }}");
       }
 
+      Output("#endregion DbSets");
       NL();
    }
 
@@ -164,14 +191,19 @@ void WriteDbContextEFCore(ModelRoot modelRoot)
                                    ? $"Name={modelRoot.ConnectionStringName}"
                                    : modelRoot.ConnectionString;
 
+      Output("/// <summary>");
+      Output("/// Default connection string");
+      Output("/// </summary>");
       Output($"public static string ConnectionString {{ get; set; }} = @\"{connectionString}\";");
       NL();
    }
    
+   Output("/// <inheritdoc />");
    Output($"public {modelRoot.EntityContainerName}() : base()");
    Output("{");
    Output("}");
    NL();
+   Output("/// <inheritdoc />");
    Output($"public {modelRoot.EntityContainerName}(DbContextOptions<{modelRoot.EntityContainerName}> options) : base(options)");
    Output("{");
    Output("}");
@@ -180,6 +212,7 @@ void WriteDbContextEFCore(ModelRoot modelRoot)
    Output("partial void CustomInit(DbContextOptionsBuilder optionsBuilder);");
    NL();
 
+   Output("/// <inheritdoc />");
    Output($"protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)");
    Output("{");
 
@@ -216,6 +249,7 @@ void WriteDbContextEFCore(ModelRoot modelRoot)
    /***********************************************************************/
    // OnModelCreating 
    /***********************************************************************/
+   Output("/// <inheritdoc />");
    Output("protected override void OnModelCreating(ModelBuilder modelBuilder)");
    Output("{");
    Output("base.OnModelCreating(modelBuilder);");
@@ -237,7 +271,7 @@ void WriteDbContextEFCore(ModelRoot modelRoot)
 
       // class level
       bool isDependent = modelClass.IsDependentType;
-      segments.Add($"modelBuilder.Entity<{modelClass.Namespace}.{modelClass.Name}>()");
+      segments.Add($"modelBuilder.Entity<{modelClass.FullName}>()");
 
       // note: this must come before the 'ToTable' call or there's a runtime error
       if (modelRoot.InheritanceStrategy == CodeStrategy.TablePerConcreteType && modelClass.Superclass != null)
@@ -269,10 +303,10 @@ void WriteDbContextEFCore(ModelRoot modelRoot)
 	  // indexed properties
       foreach (ModelAttribute indexed in modelClass.Attributes.Where(x => x.Indexed && !x.IsIdentity))
       {
-	     segments.Clear();
-         segments.Add($"modelBuilder.Entity<{modelClass.Namespace}.{modelClass.Name}>().HasIndex(t => t.{indexed.Name})");
+         segments.Clear();
+         segments.Add($"modelBuilder.Entity<{modelClass.FullName}>().HasIndex(t => t.{indexed.Name})");
          if (indexed.IndexedUnique) segments.Add("IsUnique()");
-		 if (segments.Count > 1)
+         if (segments.Count > 1)
          {
             if (modelRoot.ChopMethodChains)
                OutputChopped(segments);
@@ -312,7 +346,7 @@ void WriteDbContextEFCore(ModelRoot modelRoot)
 
          if (segments.Any())
          {
-            segments.Insert(0, $"modelBuilder.Entity<{modelClass.Namespace}.{modelClass.Name}>()");
+            segments.Insert(0, $"modelBuilder.Entity<{modelClass.FullName}>()");
             segments.Insert(1, $"Property(t => t.{modelAttribute.Name})");
 
             if (modelRoot.ChopMethodChains)
@@ -336,7 +370,7 @@ void WriteDbContextEFCore(ModelRoot modelRoot)
          visited.Add(association);
 
          segments.Clear();
-         segments.Add($"modelBuilder.Entity<{modelClass.Namespace}.{modelClass.Name}>()");
+         segments.Add($"modelBuilder.Entity<{modelClass.FullName}>()");
          bool required = false;
 
          switch (association.TargetMultiplicity) // realized by property on source
@@ -403,7 +437,7 @@ void WriteDbContextEFCore(ModelRoot modelRoot)
          bool required = false;
 
          segments.Clear();
-         segments.Add($"modelBuilder.Entity<{modelClass.Namespace}.{modelClass.Name}>()");
+         segments.Add($"modelBuilder.Entity<{modelClass.FullName}>()");
 
          switch (association.SourceMultiplicity) // realized by property on target
          {
