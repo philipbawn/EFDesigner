@@ -226,6 +226,9 @@
       <DependentUpon>CommandSet.tt</DependentUpon>
     </Compile>
     <Compile Include="CustomCode\WizardImplementation.cs" />
+    <Compile Include="VSPackage.Designer.cs">
+      <DependentUpon>VSPackage.resx</DependentUpon>
+    </Compile>
     <Content Include="changelog.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -260,6 +263,12 @@
     <Content Include="Microsoft.Data.ConnectionUI.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="Resources\Attribute.png" />
+    <Content Include="Resources\Cancel.png" />
+    <Content Include="Resources\Logo.bmp" />
+    <Content Include="Resources\Logo.ico" />
+    <Content Include="Resources\Logo.jpg" />
+    <Content Include="Resources\OK.png" />
     <Content Include="System.Spatial.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -421,11 +430,7 @@
     <EmbeddedResource Include="CustomCode\AddCodeForm.resx">
       <DependentUpon>AddCodeForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="VSPackage.resx">
-      <SubType>Designer</SubType>
-      <MergeWithCTO>true</MergeWithCTO>
-      <ManifestResourceName>VSPackage</ManifestResourceName>
-    </EmbeddedResource>
+    <EmbeddedResource Include="VSPackage.resx" />
   </ItemGroup>
   <ItemGroup>
     <VSItemTemplate Include="ProjectItemTemplates\CSharp.vstemplate">

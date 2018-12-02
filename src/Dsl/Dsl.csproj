@@ -97,6 +97,9 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL">
+      <HintPath>..\packages\ObjectListView.Official.2.9.1\lib\net20\ObjectListView.dll</HintPath>
+    </Reference>
     <Reference Include="SQLitePCLRaw.batteries_green, Version=1.1.11.121, Culture=neutral, PublicKeyToken=a84b7dcfb1391f7f, processorArchitecture=MSIL">
       <HintPath>..\packages\SQLitePCLRaw.bundle_green.1.1.11\lib\net45\SQLitePCLRaw.batteries_green.dll</HintPath>
     </Reference>
@@ -236,6 +239,7 @@
     <Compile Include="CustomCode\Gestures\CompartmentDragMouseAction.cs" />
     <Compile Include="CustomCode\Partials\AssociationConnector.cs" />
     <Compile Include="CustomCode\Rules\BidirectionalAssociationChangeRule.cs" />
+    <Compile Include="CustomCode\Type Converters\CustomAttributeTypeConverter.cs" />
     <Compile Include="CustomCode\Type Descriptors\AssociationTypeDescriptor.cs" />
     <Compile Include="CustomCode\Partials\BidirectionalAssociation.cs" />
     <Compile Include="CustomCode\Connection Builders\BidirectionalAssociationBuilder.cs" />
@@ -266,6 +270,13 @@
     <Compile Include="CustomCode\Type Descriptors\ModelRootTypeDescriptor.cs" />
     <Compile Include="CustomCode\Connection Builders\UnidirectionalAssociationBuilder.cs" />
     <Compile Include="CustomCode\Rules\ModelAttributeAddRules.cs" />
+    <Compile Include="CustomCode\Type Editors\AttributeEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomCode\Type Editors\AttributeEditor.Designer.cs">
+      <DependentUpon>AttributeEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomCode\Type Editors\AttributeUITypeEditor.cs" />
     <Compile Include="CustomCode\Utilities\FileDropHelper.cs" />
     <Compile Include="CustomCode\Utilities\ModelMigration.cs" />
     <Compile Include="CustomCode\Utilities\Nuget\NuGetHelper.cs" />
@@ -440,6 +451,9 @@
     <Content Include="Resources\cardinality-many-many.png" />
     <Content Include="Resources\EnumValue.png" />
     <None Include="Resources\Move.cur" />
+    <Content Include="Resources\TypeEditor\Attribute.png" />
+    <Content Include="Resources\TypeEditor\LParen.png" />
+    <Content Include="Resources\TypeEditor\RParen.png" />
     <Content Include="Resources\Warning.png" />
     <None Include="DslDefinition.dsl.diagram">
       <DependentUpon>DslDefinition.dsl</DependentUpon>
@@ -559,6 +573,9 @@
     <Service Include="{508349B6-6B84-4df5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CustomCode\Type Editors\AttributeEditor.resx">
+      <DependentUpon>AttributeEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GeneratedCode\DomainModelResx.resx">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

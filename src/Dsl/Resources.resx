@@ -121,6 +121,9 @@
   <data name="AbstractEntityGlyph" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\abstractentityglyph.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Attribute" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\typeeditor\attribute.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="AttributeGrammar" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>customcode\modelattribute parser\attributegrammar.egt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -169,6 +172,9 @@
   <data name="Internal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\internal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="LParen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\typeeditor\lparen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="MoveCursor" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\Move.cur;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
@@ -177,6 +183,9 @@
   </data>
   <data name="Public" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\public.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="RParen" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\typeeditor\rparen.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Spacer" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\spacer.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

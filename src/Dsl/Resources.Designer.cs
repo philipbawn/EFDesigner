@@ -71,6 +71,16 @@ namespace Sawczyn.EFDesigner.EFModel {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Attribute {
+            get {
+                object obj = ResourceManager.GetObject("Attribute", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] AttributeGrammar {
@@ -231,6 +241,16 @@ namespace Sawczyn.EFDesigner.EFModel {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap LParen {
+            get {
+                object obj = ResourceManager.GetObject("LParen", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
         internal static byte[] MoveCursor {
@@ -256,6 +276,16 @@ namespace Sawczyn.EFDesigner.EFModel {
         internal static System.Drawing.Bitmap Public {
             get {
                 object obj = ResourceManager.GetObject("Public", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap RParen {
+            get {
+                object obj = ResourceManager.GetObject("RParen", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
